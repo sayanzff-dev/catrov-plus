@@ -16,9 +16,9 @@ window.SITE = {
      thumb = optional image in assets/videos/ (used instead of YouTube's own thumbnail)
      The FIRST video is shown large as the featured one.            */
   videos: [
-    { id: "F4x_AjaT_ns", title: "5 Years of Trading | What I’ve Learned About Psychology, ICT, Prop Firms & Payouts", tag: "Start here", desc: "Psychology, ICT, prop firms and payouts, from five years of trading." },
-    { id: "79xtnqSylDQ", title: "I GOT PAID $1506 FROM FUNDED TRADER MARKET | LIVE PAYOUT", tag: "Payout", desc: "A live withdrawal from Funded Trader Markets, on camera." },
-    { id: "qvC63bOOOu4", title: "2nd Payout LIVE From the Same Account | Funded Trader Markets", tag: "Payout", desc: "The second live payout from the same account." },
+    { id: "F4x_AjaT_ns", thumb: "assets/videos/v1.jpg", title: "5 Years of Trading | What I’ve Learned About Psychology, ICT, Prop Firms & Payouts", tag: "Start here", desc: "Psychology, ICT, prop firms and payouts, from five years of trading." },
+    { id: "79xtnqSylDQ", thumb: "assets/videos/v2.jpg", title: "I GOT PAID $1506 FROM FUNDED TRADER MARKET | LIVE PAYOUT", tag: "Payout", desc: "A live withdrawal from Funded Trader Markets, on camera." },
+    { id: "qvC63bOOOu4", thumb: "assets/videos/v3.jpg", title: "2nd Payout LIVE From the Same Account | Funded Trader Markets", tag: "Payout", desc: "The second live payout from the same account." },
   ],
 
   /* ---------- PAYOUT TIMELINE ----------
