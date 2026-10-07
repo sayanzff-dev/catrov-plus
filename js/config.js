@@ -53,14 +53,14 @@ window.SITE = {
        sizes = [{ size, price, final }]  price = list price in USD,
                final = exact price at checkout with the code (optional).
      A firm with no plans is not shown. The whole section hides if no firm has data.
-     Numbers below come from Funded Trader Markets' checkout pages (account size $100K, MetaTrader 5). */
+     $100K prices come from Funded Trader Markets' checkout pages (MetaTrader 5). Sizes marked estimate: true are scaled from the $100K list price until the real list prices are added. Replace them and delete the flag. */
   simulator: {
     code: "EZZX",
     firms: [
       { name: "Funded Trader Markets", plans: [
-        { market: "CFD", plan: "1 Step Nitro",     base: 60, code: 10, sizes: [ { size: "$100K", price: 622, final: 225 } ] },
-        { market: "CFD", plan: "2 Step Plus",      base: 60, code: 10, sizes: [ { size: "$100K", price: 998, final: 360 } ] },
-        { market: "CFD", plan: "Instant Standard", base: 45, code: 5,  sizes: [ { size: "$100K", price: 723, final: 379 } ] }
+        { market: "CFD", plan: "1 Step Nitro",     base: 60, code: 10, sizes: [ { size: "$5K", price: 31, estimate: true }, { size: "$10K", price: 62, estimate: true }, { size: "$25K", price: 156, estimate: true }, { size: "$50K", price: 311, estimate: true }, { size: "$100K", price: 622, final: 225 } ] },
+        { market: "CFD", plan: "2 Step Plus",      base: 60, code: 10, sizes: [ { size: "$5K", price: 50, estimate: true }, { size: "$10K", price: 100, estimate: true }, { size: "$25K", price: 250, estimate: true }, { size: "$50K", price: 499, estimate: true }, { size: "$100K", price: 998, final: 360 } ] },
+        { market: "CFD", plan: "Instant Standard", base: 45, code: 5,  sizes: [ { size: "$5K", price: 36, estimate: true }, { size: "$10K", price: 72, estimate: true }, { size: "$25K", price: 181, estimate: true }, { size: "$50K", price: 362, estimate: true }, { size: "$100K", price: 723, final: 379 } ] }
       ] }
     ]
   },

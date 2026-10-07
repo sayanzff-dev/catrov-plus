@@ -532,3 +532,7 @@ footer{text-align:center;color:var(--muted-dim);font-size:12px;padding:70px 20px
   html{scroll-behavior:auto}
 }
 .sim-plans[hidden],.sim-seg[hidden]{display:none}
+
+.sim-est{align-self:flex-start;padding:6px 12px;border-radius:12px;font:500 12px 'IBM Plex Sans',sans-serif;color:#f3c98b;background:rgba(243,201,139,.1);border:1px solid rgba(243,201,139,.35)}
+.sim-est[hidden]{display:none}
+.sim-size-btn.est::after{content:"~";margin-left:3px;opacity:.6;font-size:16px}

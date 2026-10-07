@@ -512,7 +512,7 @@
       const ps = curPlans();
       plans.hidden = ps.length < 2; plans.previousElementSibling.hidden = ps.length < 2;
       plans.replaceChildren(...ps.map((p, i) => { const b = h('button', { class: 'sim-plan-btn', type: 'button', role: 'radio', 'aria-checked': i === pi, text: p.plan }); b.onclick = () => { pi = i; si = 0; build(); }; return b; }));
-      sizes.replaceChildren(...ps[pi].sizes.map((z, i) => { const b = h('button', { class: 'sim-size-btn', type: 'button', role: 'radio', 'aria-checked': i === si, text: z.size }); b.onclick = () => { si = i; build(); }; return b; }));
+      sizes.replaceChildren(...ps[pi].sizes.map((z, i) => { const b = h('button', { class: 'sim-size-btn' + (z.estimate ? ' est' : ''), type: 'button', role: 'radio', 'aria-checked': i === si, text: z.size }); b.onclick = () => { si = i; build(); }; return b; }));
       update();
     }
     function tween(to) {
@@ -530,6 +530,7 @@
       const save = $('#simSave'); const extraSaved = sale - withCode;
       save.classList.toggle('on', applied && extraSaved > 0); save.textContent = applied && extraSaved > 0 ? `${code} saves you ${money(extraSaved)} more (${extra}% off)` : '';
       tween(final);
+      $('#simEst').hidden = !z.estimate;
       $('#simCta').href = f.href || partner(f).href || '#';
       $('#simFine').textContent = (base ? `Includes the firm's current ${base}% sale. ` : '') + `Estimate only. Check ${f.name}'s checkout and make sure the code ${code} is applied.`;
     }
