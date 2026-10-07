@@ -53,14 +53,14 @@ window.SITE = {
        sizes = [{ size, price, final }]  price = list price in USD,
                final = exact price at checkout with the code (optional).
      A firm with no plans is not shown. The whole section hides if no firm has data.
-     $100K prices come from Funded Trader Markets' checkout pages (MetaTrader 5). FundedNext Futures fees and EZZX totals are from its checkout (Tradovate/NinjaTrader). Sizes marked estimate: true are scaled from the $100K list price until the real list prices are added. Replace them and delete the flag. */
+     Funded Trader Markets: code takes 75% off 1 Step / 2 Step plans and 50% off Instant (set by the owner); list prices at $100K are from its checkout pages (MetaTrader 5). FundedNext Futures fees and EZZX totals are from its checkout (Tradovate/NinjaTrader). Sizes marked estimate: true are scaled from the $100K list price until the real list prices are added. Replace them and delete the flag. */
   simulator: {
     code: "EZZX",
     firms: [
       { name: "Funded Trader Markets", plans: [
-        { market: "CFD", plan: "1 Step Nitro",     base: 60, code: 10, sizes: [ { size: "$5K", price: 31, estimate: true }, { size: "$10K", price: 62, estimate: true }, { size: "$25K", price: 156, estimate: true }, { size: "$50K", price: 311, estimate: true }, { size: "$100K", price: 622, final: 225 } ] },
-        { market: "CFD", plan: "2 Step Plus",      base: 60, code: 10, sizes: [ { size: "$5K", price: 50, estimate: true }, { size: "$10K", price: 100, estimate: true }, { size: "$25K", price: 250, estimate: true }, { size: "$50K", price: 499, estimate: true }, { size: "$100K", price: 998, final: 360 } ] },
-        { market: "CFD", plan: "Instant Standard", base: 45, code: 5,  sizes: [ { size: "$5K", price: 36, estimate: true }, { size: "$10K", price: 72, estimate: true }, { size: "$25K", price: 181, estimate: true }, { size: "$50K", price: 362, estimate: true }, { size: "$100K", price: 723, final: 379 } ] }
+        { market: "CFD", plan: "1 Step Nitro",     base: 0, code: 75, sizes: [ { size: "$5K", price: 31, estimate: true }, { size: "$10K", price: 62, estimate: true }, { size: "$25K", price: 156, estimate: true }, { size: "$50K", price: 311, estimate: true }, { size: "$100K", price: 622 } ] },
+        { market: "CFD", plan: "2 Step Plus",      base: 0, code: 75, sizes: [ { size: "$5K", price: 50, estimate: true }, { size: "$10K", price: 100, estimate: true }, { size: "$25K", price: 250, estimate: true }, { size: "$50K", price: 499, estimate: true }, { size: "$100K", price: 998 } ] },
+        { market: "CFD", plan: "Instant Standard", base: 0, code: 50,  sizes: [ { size: "$5K", price: 36, estimate: true }, { size: "$10K", price: 72, estimate: true }, { size: "$25K", price: 181, estimate: true }, { size: "$50K", price: 362, estimate: true }, { size: "$100K", price: 723 } ] }
       ] },
       { name: "FundedNext", plans: [
         { market: "CFD", plan: "Stellar 1-Step", base: 0, code: 31.82, sizes: [ { size: "$6K", price: 65.99, final: 44.99 }, { size: "$15K", price: 129.99, estimate: true }, { size: "$25K", price: 219.99, estimate: true }, { size: "$50K", price: 329.99, estimate: true }, { size: "$100K", price: 569.99, estimate: true }, { size: "$200K", price: 1099.99, estimate: true } ] },
