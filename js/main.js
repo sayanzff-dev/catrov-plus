@@ -160,32 +160,121 @@
   /* =========================================================
      HERO CHART — endlessly extending line, purely decorative
      ========================================================= */
-  function startHeroChart() {
-    const cv = $('#heroChart'); let { g, w, h: H } = fitCanvas(cv);
-    addEventListener('resize', () => ({ g, w, h: H } = fitCanvas(cv)));
-    const r = rng(99), N = 90, pts = [50];
-    for (let i = 1; i < N + 1; i++) pts.push(pts[i - 1] + (r() - .46) * 6);
-    let off = 0;
-    function draw() {
-      g.clearRect(0, 0, w, H);
-      const vis = pts.slice(-N), mn = Math.min(...vis), mx = Math.max(...vis), sx = (w - 22) / (N - 1);
-      const Yp = v => H * .1 + (1 - (v - mn) / (mx - mn || 1)) * H * .75;
-      g.strokeStyle = 'rgba(255,61,46,.08)';
-      for (let i = 1; i < 4; i++) { g.beginPath(); g.moveTo(0, H * i / 4); g.lineTo(w, H * i / 4); g.stroke(); }
-      const path = () => { g.beginPath(); vis.forEach((v, i) => { const x = (i - off) * sx, y = Yp(v); i ? g.lineTo(x, y) : g.moveTo(x, y); }); };
-      const grad = g.createLinearGradient(0, 0, 0, H); grad.addColorStop(0, 'rgba(255,61,46,.35)'); grad.addColorStop(1, 'rgba(255,61,46,0)');
-      path(); g.lineTo((N - 1 - off) * sx, H); g.lineTo(-off * sx, H); g.closePath(); g.fillStyle = grad; g.fill();
-      path(); g.strokeStyle = RED; g.lineWidth = 2; g.shadowColor = RED; g.shadowBlur = 14; g.stroke(); g.shadowBlur = 0;
-      const lx = (N - 1 - off) * sx, ly = Yp(vis[N - 1]);
-      g.fillStyle = '#fff'; g.beginPath(); g.arc(lx, ly, 4, 0, 6.3); g.fill();
-      g.strokeStyle = 'rgba(255,255,255,.4)'; g.beginPath(); g.arc(lx, ly, 4 + (performance.now() / 60 % 14), 0, 6.3); g.stroke();
+  function initPayoutChart() {
+    const host = $('#gChart'), tip = $('#gTip');
+    const list = [...(S.payouts || [])].sort((a, b) => a.date.localeCompare(b.date));
+    if (!list.length) { $('.growth').remove(); return; }
+    const NS = 'http://www.w3.org/2000/svg', DAY = 864e5, fmtD = d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    let run = 0;
+    const t0 = new Date(list[0].date + 'T00:00:00').getTime() - 24 * DAY;
+    const pts = [{ t: t0, v: 0, start: true }, ...list.map(p => ({ t: new Date(p.date + 'T00:00:00').getTime(), v: (run += p.amount), amount: p.amount, firm: p.firm }))];
+    const total = run, t1 = pts[pts.length - 1].t + 12 * DAY;
+    $('#gCount').textContent = `${list.length} payout${list.length > 1 ? 's' : ''}`;
+    $('#gRange').textContent = `${new Date(list[0].date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} to ${new Date(list.at(-1).date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
+    const money = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 });
+
+    let svg, progress = 0, played = false, geo = {}, raf;
+    const el = (n, a = {}, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); p && p.append(e); return e; };
+
+    // smooth, non-overshooting curve through the points (monotone cubic)
+    function curve(P) {
+      const n = P.length, d = [], m = [];
+      for (let i = 0; i < n - 1; i++) d[i] = (P[i + 1][1] - P[i][1]) / (P[i + 1][0] - P[i][0]);
+      m[0] = d[0]; m[n - 1] = d[n - 2];
+      for (let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
+      for (let i = 0; i < n - 1; i++) { if (d[i] === 0) { m[i] = m[i + 1] = 0; continue; } const a = m[i] / d[i], b = m[i + 1] / d[i], s = a * a + b * b; if (s > 9) { const t = 3 / Math.sqrt(s); m[i] = t * a * d[i]; m[i + 1] = t * b * d[i]; } }
+      let path = `M${P[0][0]} ${P[0][1]}`;
+      for (let i = 0; i < n - 1; i++) { const h = P[i + 1][0] - P[i][0]; path += ` C${P[i][0] + h / 3} ${P[i][1] + m[i] * h / 3} ${P[i + 1][0] - h / 3} ${P[i + 1][1] - m[i + 1] * h / 3} ${P[i + 1][0]} ${P[i + 1][1]}`; }
+      return path;
     }
-    (function loop() {
-      off += .03;
-      if (off >= 1) { off -= 1; pts.push(pts[pts.length - 1] + (r() - .46) * 6); pts.shift(); }
-      draw();
-      if (!reduceMotion) requestAnimationFrame(loop);
-    })();
+
+    function build() {
+      cancelAnimationFrame(raf); host.querySelector('svg')?.remove();
+      const W = host.clientWidth, H = host.clientHeight, pad = { l: 56, r: 26, t: 22, b: 38 };
+      const ymax = Math.ceil(total * 1.12 / 2000) * 2000, step = ymax / 4;
+      const X = t => pad.l + (t - t0) / (t1 - t0) * (W - pad.l - pad.r), Y = v => pad.t + (1 - v / ymax) * (H - pad.t - pad.b);
+      svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `Cumulative payouts growing to ${money(total)}` });
+      host.prepend(svg);
+      const defs = el('defs', {}, svg);
+      const lg = el('linearGradient', { id: 'gLine', gradientUnits: 'userSpaceOnUse', x1: pad.l, x2: W - pad.r, y1: 0, y2: 0 }, defs);
+      el('stop', { offset: 0, 'stop-color': '#e10600' }, lg); el('stop', { offset: .6, 'stop-color': '#ff4a38' }, lg); el('stop', { offset: 1, 'stop-color': '#ff8a6a' }, lg);
+      const ag = el('linearGradient', { id: 'gArea', x1: 0, x2: 0, y1: 0, y2: 1 }, defs);
+      el('stop', { offset: 0, 'stop-color': '#ff3d2e', 'stop-opacity': .42 }, ag); el('stop', { offset: 1, 'stop-color': '#ff3d2e', 'stop-opacity': 0 }, ag);
+      const gf = el('filter', { id: 'gGlow', x: '-10%', y: '-30%', width: '120%', height: '160%' }, defs);
+      el('feGaussianBlur', { stdDeviation: 4, result: 'b' }, gf); const mg = el('feMerge', {}, gf); el('feMergeNode', { in: 'b' }, mg); el('feMergeNode', { in: 'SourceGraphic' }, mg);
+      const cp = el('clipPath', { id: 'gClip' }, defs); const clipRect = el('rect', { x: 0, y: 0, width: 0, height: H }, cp);
+
+      const grid = el('g', { class: 'g-grid' }, svg), axis = el('g', { class: 'g-axis' }, svg);
+      for (let v = 0; v <= ymax; v += step) {
+        if (v > 0) el('line', { x1: pad.l, x2: W - pad.r, y1: Y(v), y2: Y(v) }, grid);
+        const t = el('text', { x: pad.l - 12, y: Y(v) + 4, 'text-anchor': 'end' }, axis); t.textContent = v === 0 ? '$0' : '$' + (v / 1000) + 'k';
+      }
+      const base = el('line', { x1: pad.l, x2: W - pad.r, y1: Y(0), y2: Y(0), stroke: 'rgba(255,255,255,.25)' }, svg);
+      const seen = new Set();
+      pts.forEach(p => { if (p.start) return; const d = new Date(p.t), key = d.getFullYear() + '-' + d.getMonth(); if (seen.has(key)) return; seen.add(key);
+        const t = el('text', { x: X(p.t), y: H - 12, 'text-anchor': 'middle' }, axis); t.textContent = d.toLocaleDateString('en-US', { month: 'short' }); });
+
+      const P = pts.map(p => [X(p.t), Y(p.v)]), d = curve(P);
+      const area = el('path', { d: `${d} L${P.at(-1)[0]} ${Y(0)} L${P[0][0]} ${Y(0)} Z`, fill: 'url(#gArea)', 'clip-path': 'url(#gClip)' }, svg);
+      const line = el('path', { d, class: 'g-line' }, svg);
+      const L = line.getTotalLength(); line.style.strokeDasharray = L; line.style.strokeDashoffset = L;
+      const sheen = el('path', { d, class: 'g-sheen' }, svg);
+      const cross = el('line', { class: 'g-cross', y1: pad.t, y2: Y(0) }, svg);
+      const dots = pts.map((p, i) => { if (p.start) return null; const c = el('circle', { class: 'g-pt', cx: P[i][0], cy: P[i][1], r: 6, tabindex: 0, 'aria-label': `${fmtD(p.t)}: ${money(p.amount)} from ${p.firm}, total ${money(p.v)}` }, svg); return c; });
+      const last = P.at(-1), ping = el('circle', { class: 'g-ping', cx: last[0], cy: last[1], r: 9 }, svg), end = el('circle', { class: 'g-end', cx: last[0], cy: last[1], r: 4.5 }, svg);
+      geo = { W, H, P, L, line, clipRect, dots, end, ping, sheen, cross, X, Y, pad, line };
+
+      // tooltip: hover / tap / keyboard focus
+      const show = i => {
+        const p = pts[i]; dots.forEach((c, k) => c && c.classList.toggle('hot', k === i));
+        tip.hidden = false; tip.innerHTML = `<small>${fmtD(p.t)}</small><b>+${money(p.amount)}</b><em>${p.firm} · total ${money(p.v)}</em>`;
+        tip.style.left = Math.min(Math.max(P[i][0], 100), W - 100) + 'px'; tip.style.top = P[i][1] + 'px';
+        cross.setAttribute('x1', P[i][0]); cross.setAttribute('x2', P[i][0]); cross.style.opacity = 1;
+      };
+      const hide = () => { tip.hidden = true; cross.style.opacity = 0; dots.forEach(c => c && c.classList.remove('hot')); };
+      dots.forEach((c, i) => { if (!c) return; c.addEventListener('pointerenter', () => show(i)); c.addEventListener('focus', () => show(i)); c.addEventListener('blur', hide); c.addEventListener('click', () => show(i)); });
+      svg.addEventListener('pointerleave', hide);
+      svg.addEventListener('pointermove', e => { const r = svg.getBoundingClientRect(), x = e.clientX - r.left; let best = -1, bd = 1e9; P.forEach((q, i) => { if (i && Math.abs(q[0] - x) < bd) { bd = Math.abs(q[0] - x); best = i; } }); if (best > 0 && bd < 46) show(best); else hide(); });
+      draw(played ? 1 : progress);
+    }
+
+    function draw(p) {
+      const { P, L, line, clipRect, dots, end, ping, sheen } = geo; progress = p;
+      line.style.strokeDashoffset = L * (1 - p);
+      const head = line.getPointAtLength(L * p);
+      clipRect.setAttribute('width', head.x + 2);                       // the area fill is revealed exactly as far as the line has drawn
+      dots.forEach((c, i) => c && c.classList.toggle('on', p >= 1 || head.x >= P[i][0] - 2));
+      end.classList.toggle('on', p >= 1); ping.classList.toggle('on', p >= 1);
+      $('#gTotal').textContent = money(total * Math.min(1, p));
+    }
+    const ease = t => 1 - Math.pow(1 - t, 4);
+
+    function play() {
+      if (played) return; played = true;
+      if (reduceMotion) { draw(1); return; }
+      const T = 2600, t0 = performance.now();
+      (function tick(now) {
+        const t = Math.min(1, (now - t0) / T); draw(ease(t));
+        if (t < 1) raf = requestAnimationFrame(tick); else shimmer();
+      })(t0);
+    }
+    // a bright highlight travels along the finished line, now and then
+    function shimmer() {
+      if (reduceMotion || !geo.sheen) return;
+      const { sheen, L } = geo; sheen.style.opacity = 1; const t0 = performance.now(), T = 1800;
+      (function s(now) {
+        if (!sheen.isConnected) return;
+        const t = (now - t0) / T;
+        if (t >= 1) { sheen.style.opacity = 0; setTimeout(() => requestAnimationFrame(shimmer), 3500); return; }
+        sheen.style.strokeDashoffset = -L * ease(t); requestAnimationFrame(s);
+      })(t0);
+    }
+
+    build();
+    const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { io.disconnect(); play(); } }, { threshold: .45 });
+    io.observe(host);
+    let rt; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(build, 120); }).observe(host);
+    $('#gTotal').textContent = '$0';
   }
 
   /* =========================================================
@@ -529,7 +618,7 @@
     $('#statFollowers').dataset.target = followers;
     if (!followers) { const f = $('#statFollowers'); f.removeAttribute('data-count'); f.textContent = '—'; }
     renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
-    startBackground(); startHeroChart(); initPortal(); initJourney(); initPillNav();
+    startBackground(); initPayoutChart(); initPortal(); initJourney(); initPillNav();
   }
 
   let seen = false;
