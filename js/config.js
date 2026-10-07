@@ -13,8 +13,8 @@ window.SITE = {
      tag   = small label (e.g. "Payout", "Education", "Live")
      The FIRST video is shown large as the featured one.            */
   videos: [
-    { id: "F4x_AjaT_ns", title: "Ezzarion — video 1 (send me the real title)", tag: "Video" },
-    { id: "79xtnqSylDQ", title: "Ezzarion — video 2 (send me the real title)", tag: "Video" },
+    { id: "F4x_AjaT_ns", title: "5 Years of Trading | What I’ve Learned About Psychology, ICT, Prop Firms & Payouts", tag: "Education" },
+    { id: "79xtnqSylDQ", title: "I GOT PAID $1506 FROM FUNDED TRADER MARKET | LIVE PAYOUT", tag: "Payout" },
   ],
 
   /* ---------- PAYOUT TIMELINE ----------
