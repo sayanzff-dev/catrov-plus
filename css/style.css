@@ -289,10 +289,10 @@ body.is-loading .reveal{animation:none}
 .vposter img{width:34px;height:34px;border-radius:50%;filter:drop-shadow(0 0 12px rgba(255,61,46,.7))}
 .vposter span{align-self:flex-start;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
 .vmedia.has .vposter{display:none}
-.vplay{position:absolute;z-index:2;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;border:1px solid rgba(255,255,255,.55);cursor:pointer;display:grid;place-items:center;
+.vplay{position:absolute;z-index:2;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:1px solid rgba(255,255,255,.55);cursor:pointer;display:grid;place-items:center;
   background:rgba(255,255,255,.82);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 10px 34px rgba(0,0,0,.45),inset 0 1px 0 #fff;transition:transform .4s cubic-bezier(.34,1.56,.64,1),background .3s}
-.vplay::after{content:"";border-left:17px solid #120a09;border-block:11px solid transparent;margin-left:5px}
-.vcard:hover .vplay{transform:scale(1.1);background:#fff}
+.vplay::after{content:"";border-left:11px solid #120a09;border-block:7px solid transparent;margin-left:3px}
+.vcard:hover .vplay{transform:scale(1.12);background:#fff}
 .vplay:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .vinfo{padding:18px 22px 24px}
 .vkick{font-family:Montserrat,sans-serif;font-size:11px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--red-bright)}
