@@ -340,18 +340,35 @@
     draw(null);
   }
 
+  function railInit(rail, prog, prev, next) {
+    const track = rail.firstElementChild;
+    const progress = () => { const mx = rail.scrollWidth - rail.clientWidth, vis = Math.max(rail.clientWidth / rail.scrollWidth, .08); prog.style.width = vis * 100 + '%'; prog.style.marginLeft = (mx > 0 ? rail.scrollLeft / mx * (1 - vis) * 100 : 0) + '%'; };
+    rail.addEventListener('scroll', progress, { passive: true }); addEventListener('resize', progress); progress();
+    const step = () => (track.firstElementChild?.getBoundingClientRect().width || 280) + 22;
+    prev.onclick = () => rail.scrollBy({ left: -step(), behavior: 'smooth' });
+    next.onclick = () => rail.scrollBy({ left: step(), behavior: 'smooth' });
+    let x0 = null, s0 = 0;
+    rail.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; x0 = e.clientX; s0 = rail.scrollLeft; delete rail.dataset.moved; });
+    addEventListener('pointermove', e => { if (x0 == null) return; const dx = e.clientX - x0; if (Math.abs(dx) > 5) { rail.classList.add('drag'); rail.dataset.moved = 1; } rail.scrollLeft = s0 - dx; });
+    addEventListener('pointerup', () => { if (x0 == null) return; x0 = null; rail.classList.remove('drag'); setTimeout(() => delete rail.dataset.moved, 0); });
+  }
+
   function renderCerts() {
     const fmt = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
-    const grid = $('#certGrid');
-    grid.append(...(S.certificates || []).map((c, i) => {
-      const img = h('div', { class: 'cert-img' }); img.style.backgroundImage = `url("${c.image}")`;
-      const el = h('button', { class: 'cert reveal', type: 'button', style: `--d:${(i % 3) * .08}s`, 'aria-label': `${c.firm} — ${c.title}` }, [
-        img, h('div', { class: 'cert-info' }, [h('div', { class: 'cert-firm', text: c.firm }), h('div', { class: 'cert-title', text: c.title }), c.date && h('div', { class: 'cert-date', text: fmt(c.date) })])
+    const grid = $('#certGrid'), rail = $('#cwRail');
+    const list = S.certificates || [];
+    if (!list.length) { rail.parentElement.querySelectorAll('.eyebrow.sub,.cw-title,.cw-rail,.pw-ctrl:last-of-type').forEach(n => n.remove()); return; }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .2 });
+    grid.append(...list.map((c, i) => {
+      const img = h('div', { class: 'cw-img' }); img.style.backgroundImage = `url("${c.image}")`;
+      const el = h('button', { class: 'cw-card', type: 'button', style: `--d:${i * .08}s`, 'aria-label': `${c.firm}: ${c.title}` }, [
+        h('span', { class: 'cw-seal', text: '✓', 'aria-hidden': 'true' }), img,
+        h('div', { class: 'cw-info' }, [h('div', { class: 'cw-firm', text: c.firm }), h('div', { class: 'cw-sub', text: c.title }), c.date && h('span', { class: 'cw-date', text: fmt(c.date) })])
       ]);
-      el.onclick = () => openLightbox(h('img', { src: c.image, alt: `${c.firm} certificate` }), `${c.firm} — ${c.title}`);
-      return el;
+      el.onclick = () => { if (!rail.dataset.moved) openLightbox(h('img', { src: c.image, alt: `${c.firm} certificate` }), `${c.firm} · ${c.title}`); };
+      io.observe(el); return el;
     }));
-    if (!grid.children.length) { grid.previousElementSibling.remove(); grid.remove(); }
+    railInit(rail, $('#cwProg'), $('#cwPrev'), $('#cwNext'));
   }
 
   /* =========================================================
