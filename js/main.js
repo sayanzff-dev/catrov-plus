@@ -445,7 +445,7 @@
      it, and the introduction opens up behind it
      ========================================================= */
   function initPortal() {
-    const sec = $('#portal'), heroEl = $('#pLogo'), photo = $('#heroPhoto'), cut = $('#heroCut'), type = $('#pText'), word = $('#heroWord'), cue = $('#pStraps');
+    const sec = $('#portal'), photo = $('#heroPhoto'), cut = $('#heroCut'), type = $('#pText'), word = $('#heroWord'), cue = $('#pStraps');
     type.classList.add('enter');
 
     // safety net: if the real font runs wider than planned, shrink until it clears the screen
@@ -471,11 +471,6 @@
       type.style.transform = live ? `translateY(${-46 * e}px) scale(${1 + .05 * e})` : '';        // type sits behind the person, lifts and fades
       type.style.opacity = live ? 1 - e : '';
       cue.style.opacity = 1 - clamp(p / .25);
-      // the next screen rises over the hero: the hero settles back, rounds off and dims
-      const c = ease(clamp((p - .1) / .9));
-      heroEl.style.transform = `scale(${1 - .07 * c})`;
-      heroEl.style.borderRadius = `${36 * c}px`;
-      heroEl.style.filter = `brightness(${1 - .55 * c})`;
     }
     function loop() {
       cur += (target - cur) * .16;
