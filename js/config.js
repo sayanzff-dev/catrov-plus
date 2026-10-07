@@ -11,6 +11,7 @@ window.SITE = {
              (youtube.com/watch?v=dQw4w9WgXcQ  ->  "dQw4w9WgXcQ")
      title = shown under the video
      tag   = small label (e.g. "Payout", "Education", "Live")
+     thumb = optional image in assets/videos/ (used instead of YouTube's own thumbnail)
      The FIRST video is shown large as the featured one.            */
   videos: [
     { id: "F4x_AjaT_ns", title: "5 Years of Trading | What I’ve Learned About Psychology, ICT, Prop Firms & Payouts", tag: "Education" },
@@ -48,18 +49,8 @@ window.SITE = {
       desc: "Not a prop firm — a search engine for them. Compares offers, discounts and rules across the industry before you buy." },
     { name: "Funded Trader Markets", logo: "assets/img/funded-trader-markets-logo.png", badge: "EZZX", promo: "-65% OFF", href: "https://fundedtradermarkets.com/ref/ezzarion",
       desc: "Get funded up to $1.2M with instant funding or evaluation challenges — on-demand rewards, no delays, no hidden rules." },
-    { name: "Alpha Capital Group", logo: "assets/img/alpha-capital-group-logo.jpg", badge: "EZZX", href: "https://app.alphacapitalgroup.uk/signup/EZZX",
-      desc: "Structured trading evaluations with a clear route toward an Alpha Capital funded account." },
-    { name: "Alpha Futures", logo: "assets/img/alpha-futures-logo.png", badge: "EZZX", promo: "-25% OFF", href: "https://app.alpha-futures.com/signup/EZZX/",
-      desc: "Futures evaluations built by ACG Futures, with straightforward rules and a clean path to a funded account." },
     { name: "E8 Markets", logo: "assets/img/e8-markets-logo.png", badge: "EZZX", href: "https://e8markets.com/d/EZZX",
       desc: "One of the highest-rated evaluation programs available, code EZZX." },
-    { name: "Forex Funds Flow", logo: "assets/img/forex-funds-flow-logo.png", badge: "EZZX", promo: "-5% OFF", href: "https://portal.forexfundsflow.com/ref/MREZZAW79J",
-      desc: "Manage your evaluation accounts, track payouts and monitor performance in one clean dashboard." },
-    { name: "AquaFunded", logo: "assets/img/aquafunded-logo.png", badge: "EZZX", href: "https://www.aquafunded.com/?afmc=EZZX",
-      desc: "Instant trading capital with 100% profit split, on-demand payouts and 24/7 support." },
-    { name: "HyroTrader", logo: "assets/img/hyrotrader-logo.png", badge: "EZZX", promo: "-10% OFF", href: "https://www.hyrotrader.com/?coupon=EZZX",
-      desc: "The crypto side of prop trading — real exchange execution with up to 90% profit split." },
     { name: "Tradesyncer", logo: "assets/img/tradesyncer-logo.png", badge: "EZZX", promo: "-30% OFF", href: "https://app.tradesyncer.com/r/TSCD098659",
       desc: "Web application for traders — sync and manage your accounts in one place." }
   ],

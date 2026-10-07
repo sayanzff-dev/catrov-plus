@@ -236,8 +236,19 @@
     const grid = $('#videoGrid'); $('#channelBtn').href = S.channelUrl;
     const vids = S.videos.length ? S.videos : Array.from({ length: 3 }, (_, i) => ({ empty: true, title: i ? 'Video coming soon' : 'Your featured video goes here', tag: 'Upload via config.js' }));
     grid.append(...vids.map((v, i) => {
-      const thumb = h('div', { class: 'thumb' }, v.empty ? h('span', { text: 'VIDEO' }) : h('span', { class: 'play' }));
-      if (!v.empty) thumb.style.backgroundImage = `url(https://i.ytimg.com/vi/${encodeURIComponent(v.id)}/${i ? 'hqdefault' : 'maxresdefault'}.jpg)`;
+      const poster = h('div', { class: 'poster' }, [h('img', { src: 'assets/img/ezzarion-brain-mark.png', alt: '' }), h('span', { text: v.tag || 'Video' })]);
+      const thumb = h('div', { class: 'thumb' }, v.empty ? h('span', { text: 'VIDEO' }) : [poster, h('span', { class: 'play' })]);
+      if (!v.empty) {
+        const tryImg = srcs => {                       // first image that loads wins; the poster stays if none do
+          const src = srcs.shift(); if (!src) return;
+          const im = new Image();
+          im.onload = () => { if (im.naturalWidth > 200) { thumb.style.backgroundImage = `url("${src}")`; thumb.classList.add('has'); } else tryImg(srcs); };
+          im.onerror = () => tryImg(srcs);
+          im.src = src;
+        };
+        const yt = q => `https://i.ytimg.com/vi/${encodeURIComponent(v.id)}/${q}.jpg`;
+        tryImg([v.thumb, i ? null : yt('maxresdefault'), yt('hqdefault')].filter(Boolean));
+      }
       const el = h(v.empty ? 'div' : 'button', { class: `video reveal${i ? '' : ' first'}${v.empty ? ' empty' : ''}`, type: v.empty ? false : 'button', style: `--d:${i * .08}s`, 'aria-label': v.empty ? false : 'Play ' + v.title }, [
         thumb, h('div', { class: 'video-info' }, [h('div', { class: 'video-tag', text: v.tag || 'Video' }), h('div', { class: 'video-title', text: v.title })])
       ]);

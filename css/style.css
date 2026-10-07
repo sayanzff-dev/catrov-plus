@@ -166,6 +166,10 @@ body.is-loading .reveal{animation:none}
 .video{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--panel-border);background:var(--panel-bot);cursor:pointer;text-align:left;padding:0;color:inherit;font:inherit;transition:transform .35s var(--ease),border-color .3s,box-shadow .35s}
 .video:hover{transform:translateY(-4px);border-color:rgba(255,61,46,.6);box-shadow:0 14px 44px -14px rgba(225,6,0,.5)}
 .video.first{grid-column:1/-1}
+.poster{position:absolute;inset:0;display:flex;align-items:flex-start;gap:12px;padding:16px;background:radial-gradient(circle at 50% 40%,rgba(225,6,0,.35),transparent 60%),repeating-linear-gradient(45deg,#0c0505 0 16px,#100707 16px 32px)}
+.poster img{width:36px;height:36px;border-radius:50%;filter:drop-shadow(0 0 14px rgba(255,61,46,.7))}
+.poster span{align-self:center;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.thumb.has .poster{display:none}
 .thumb{position:relative;aspect-ratio:16/9;background:#0c0505 center/cover no-repeat}
 .thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(3,2,2,.85))}
 .play{position:absolute;z-index:2;left:50%;top:50%;width:64px;height:64px;margin:-32px;border-radius:50%;background:rgba(225,6,0,.9);display:grid;place-items:center;box-shadow:0 0 0 0 rgba(255,61,46,.6);animation:ring 2.4s infinite;transition:transform .3s var(--ease)}
