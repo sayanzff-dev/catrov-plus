@@ -51,11 +51,13 @@ window.SITE = {
   partners: [
     { name: "PropFirmMatch", logo: "assets/img/propfirmmatch-logo.png", badge: "MATCH", href: "https://www.propfirmmatch.com/?a_aid=EZZARIon",
       desc: "Not a prop firm — a search engine for them. Compares offers, discounts and rules across the industry before you buy." },
-    { name: "Funded Trader Markets", logo: "assets/img/funded-trader-markets-logo.png", badge: "EZZX", promo: "-65% OFF", href: "https://fundedtradermarkets.com/ref/ezzarion",
+    { name: "Funded Trader Markets", logo: "assets/img/funded-trader-markets-logo.png", badge: "EZZX", href: "https://fundedtradermarkets.com/ref/ezzarion",
       desc: "Get funded up to $1.2M with instant funding or evaluation challenges — on-demand rewards, no delays, no hidden rules." },
+    { name: "FundedNext", logo: "assets/img/fundednext-logo.png", badge: "EZZX", href: "https://fundednext.com/?fpr=EZZX",
+      desc: "Multiple challenge models to pick from, with high profit splits and a clear payout schedule once you are funded." },
     { name: "E8 Markets", logo: "assets/img/e8-markets-logo.png", badge: "EZZX", href: "https://e8markets.com/d/EZZX",
       desc: "One of the highest-rated evaluation programs available, code EZZX." },
-    { name: "Tradesyncer", logo: "assets/img/tradesyncer-logo.png", badge: "EZZX", promo: "-30% OFF", href: "https://app.tradesyncer.com/r/TSCD098659",
+    { name: "Tradesyncer", logo: "assets/img/tradesyncer-logo.png", badge: "EZZX", href: "https://app.tradesyncer.com/r/TSCD098659",
       desc: "Web application for traders — sync and manage your accounts in one place." }
   ],
 

@@ -381,6 +381,20 @@ body.is-loading .reveal{animation:none}
 .partner-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .partner-grid .card{align-items:flex-start}
 .partner-grid .logo-tile{margin-top:2px}
+.partner-grid .card:last-child:nth-child(odd){grid-column:1/-1}
+/* glass partner cards and EZZX code pill */
+.partner-grid .card{border-radius:24px;padding:20px;gap:18px;
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.015) 55%,rgba(255,61,46,.04));
+  -webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%);
+  border:1px solid rgba(255,255,255,.13);box-shadow:inset 0 1px 0 rgba(255,255,255,.26),0 20px 50px -28px rgba(0,0,0,.8)}
+.partner-grid .card:hover{border-color:rgba(255,255,255,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 26px 60px -26px rgba(225,6,0,.5)}
+.partner-grid .logo-tile{border-radius:16px;border:1px solid rgba(255,255,255,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 8px 22px rgba(0,0,0,.35)}
+.partner-grid .badge{color:#fff;letter-spacing:.18em;padding:7px 14px;border-radius:999px;
+  background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.06));
+  -webkit-backdrop-filter:blur(12px) saturate(170%);backdrop-filter:blur(12px) saturate(170%);
+  border:1px solid rgba(255,255,255,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(255,255,255,.08),0 6px 18px rgba(0,0,0,.3);
+  text-shadow:0 1px 6px rgba(0,0,0,.4);transition:background .3s,transform .4s var(--ease)}
+.partner-grid .card:hover .badge{background:linear-gradient(135deg,rgba(255,90,70,.7),rgba(200,8,0,.45));transform:scale(1.05)}
 
 /* ---------- SOCIALS ---------- */
 .social-row{display:flex;gap:12px;flex-wrap:wrap}
