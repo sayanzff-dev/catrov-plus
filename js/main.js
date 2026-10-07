@@ -490,17 +490,29 @@
      ACCOUNT SIMULATOR — price with and without the discount code
      ========================================================= */
   function initSimulator() {
-    const cfg = S.simulator || {}, firms = (cfg.firms || []).filter(f => f.sizes && f.sizes.length);
+    const cfg = S.simulator || {};
+    const norm = f => ({ ...f, plans: (f.plans || (f.sizes ? [{ market: f.market || 'CFD', plan: f.plan || 'Challenge', sizes: f.sizes }] : [])).filter(p => p.sizes && p.sizes.length) });
+    const firms = (cfg.firms || []).map(norm).filter(f => f.plans.length);
     const sec = $('#simulator'); if (!firms.length) return;
     sec.hidden = false;
     const code = (cfg.code || 'EZZX').toUpperCase(), money = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 });
-    let fi = 0, si = 0, applied = false, shown = 0, raf;
-    const tabs = $('#simFirms'), sizes = $('#simSizes'), input = $('#simCode'), msg = $('#simMsg');
+    let fi = 0, mk = '', pi = 0, si = 0, applied = false, shown = 0, raf;
+    const tabs = $('#simFirms'), markets = $('#simMarkets'), plans = $('#simPlans'), sizes = $('#simSizes'), input = $('#simCode'), msg = $('#simMsg');
     const partner = f => (S.partners || []).find(p => p.name === f.name) || {};
+    const firm = () => firms[fi], mkts = () => [...new Set(firm().plans.map(p => p.market))];
+    const curPlans = () => firm().plans.filter(p => p.market === mk);
+    const reset = () => { mk = mkts()[0]; pi = 0; si = 0; };
+    reset();
 
     function build() {
-      tabs.replaceChildren(...firms.map((f, i) => { const p = partner(f), b = h('button', { class: 'sim-firm-btn', type: 'button', role: 'tab', 'aria-selected': i === fi }, [p.logo && h('img', { src: p.logo, alt: '' }), document.createTextNode(f.name)]); b.onclick = () => { fi = i; si = 0; build(); }; return b; }));
-      sizes.replaceChildren(...firms[fi].sizes.map((z, i) => { const b = h('button', { class: 'sim-size-btn', type: 'button', role: 'radio', 'aria-checked': i === si, text: z.size }); b.onclick = () => { si = i; build(); }; return b; }));
+      tabs.replaceChildren(...firms.map((f, i) => { const p = partner(f), b = h('button', { class: 'sim-firm-btn', type: 'button', role: 'tab', 'aria-selected': i === fi }, [p.logo && h('img', { src: p.logo, alt: '' }), document.createTextNode(f.name)]); b.onclick = () => { fi = i; reset(); build(); }; return b; }));
+      const ms = mkts();
+      markets.hidden = ms.length < 2; markets.previousElementSibling.hidden = ms.length < 2;
+      markets.replaceChildren(...ms.map(m => { const b = h('button', { type: 'button', role: 'radio', 'aria-checked': m === mk, text: m }); b.onclick = () => { mk = m; pi = 0; si = 0; build(); }; return b; }));
+      const ps = curPlans();
+      plans.hidden = ps.length < 2; plans.previousElementSibling.hidden = ps.length < 2;
+      plans.replaceChildren(...ps.map((p, i) => { const b = h('button', { class: 'sim-plan-btn', type: 'button', role: 'radio', 'aria-checked': i === pi, text: p.plan }); b.onclick = () => { pi = i; si = 0; build(); }; return b; }));
+      sizes.replaceChildren(...ps[pi].sizes.map((z, i) => { const b = h('button', { class: 'sim-size-btn', type: 'button', role: 'radio', 'aria-checked': i === si, text: z.size }); b.onclick = () => { si = i; build(); }; return b; }));
       update();
     }
     function tween(to) {
@@ -509,8 +521,8 @@
       (function tick(now) { const t = Math.min(1, (now - t0) / 650), e = 1 - Math.pow(1 - t, 4); shown = from + (to - from) * e; el.textContent = money(Math.round(shown * 100) / 100); if (t < 1) raf = requestAnimationFrame(tick); })(t0);
     }
     function update() {
-      const f = firms[fi], z = f.sizes[si], disc = applied ? (+f.discount || 0) : 0, final = Math.round(z.price * (1 - disc / 100) * 100) / 100;
-      $('#simFirmName').textContent = f.name; $('#simSizeName').textContent = `${z.size} account`;
+      const f = firm(), pl = curPlans()[pi], z = pl.sizes[si], disc = applied ? (+f.discount || 0) : 0, final = Math.round(z.price * (1 - disc / 100) * 100) / 100;
+      $('#simFirmName').textContent = f.name; $('#simSizeName').textContent = `${pl.market} · ${pl.plan} · ${z.size}`;
       $('#simOld').textContent = disc ? money(z.price) : '';
       const save = $('#simSave'); save.classList.toggle('on', !!disc); save.textContent = disc ? `You save ${money(z.price - final)} (${disc}% off)` : '';
       tween(final);

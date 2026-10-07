@@ -48,13 +48,17 @@ window.SITE = {
 
   /* ---------- ACCOUNT SIMULATOR ----------
      Leave `firms` empty and the section stays hidden.
-     For each firm:  name must match a partner, discount is a percent,
-     sizes is a list of { size: "$50K", price: 250 } (the normal price in USD).
-     Always check the firm's site for current prices and the real discount. */
+     Each firm has plans. A plan has a market ("Futures" or "CFD"), a name,
+     and the account sizes with their normal price in USD.
+     discount is the percent EZZX takes off at that firm.
+     Copy the numbers from each firm's own pricing page.            */
   simulator: {
     code: "EZZX",
     firms: [
-      // { name: "Funded Trader Markets", discount: 10, sizes: [ { size: "$25K", price: 150 }, { size: "$50K", price: 250 } ] },
+      // { name: "FundedNext", discount: 10, plans: [
+      //     { market: "CFD",     plan: "Stellar 2-Step", sizes: [ { size: "$25K", price: 0 }, { size: "$100K", price: 0 } ] },
+      //     { market: "Futures", plan: "Rapid",          sizes: [ { size: "$50K", price: 0 } ] }
+      // ] },
     ]
   },
 
