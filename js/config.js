@@ -53,7 +53,7 @@ window.SITE = {
        sizes = [{ size, price, final }]  price = list price in USD,
                final = exact price at checkout with the code (optional).
      A firm with no plans is not shown. The whole section hides if no firm has data.
-     Funded Trader Markets: code takes 75% off 1 Step / 2 Step plans and 50% off Instant (set by the owner); list prices at $100K are from its checkout pages (MetaTrader 5). FundedNext Futures fees and EZZX totals are from its checkout (Tradovate/NinjaTrader). Sizes marked estimate: true are scaled from the $100K list price until the real list prices are added. Replace them and delete the flag. */
+     Funded Trader Markets: code takes 75% off 1 Step / 2 Step plans and 50% off Instant (set by the owner); list prices at $100K are from its checkout pages (MetaTrader 5). FundedNext Futures fees and EZZX totals are from its checkout (Tradovate/NinjaTrader). Plans with unconfirmed: true have fees but no known EZZX price yet (shows an amber note). Sizes marked estimate: true are scaled from the $100K list price until the real list prices are added. Replace them and delete the flag. */
   simulator: {
     code: "EZZX",
     firms: [
@@ -63,6 +63,7 @@ window.SITE = {
         { market: "CFD", plan: "Instant Standard", base: 0, code: 50,  sizes: [ { size: "$5K", price: 36, estimate: true }, { size: "$10K", price: 72, estimate: true }, { size: "$25K", price: 181, estimate: true }, { size: "$50K", price: 362, estimate: true }, { size: "$100K", price: 723 } ] }
       ] },
       { name: "FundedNext", plans: [
+        { market: "CFD", plan: "Stellar 2-Step", base: 0, code: 0, unconfirmed: true, sizes: [ { size: "$6K", price: 59.99 }, { size: "$15K", price: 119.99 }, { size: "$25K", price: 199.99 }, { size: "$50K", price: 299.99 }, { size: "$100K", price: 549.99 }, { size: "$200K", price: 1099.99 } ] },
         { market: "CFD", plan: "Stellar 1-Step", base: 0, code: 31.82, sizes: [ { size: "$6K", price: 65.99, final: 44.99 }, { size: "$15K", price: 129.99, estimate: true }, { size: "$25K", price: 219.99, estimate: true }, { size: "$50K", price: 329.99, estimate: true }, { size: "$100K", price: 569.99, estimate: true }, { size: "$200K", price: 1099.99, estimate: true } ] },
         { market: "CFD", plan: "Stellar Lite",   base: 0, code: 9.09, sizes: [ { size: "$5K", price: 32.99, final: 29.99 }, { size: "$10K", price: 59.99, estimate: true }, { size: "$25K", price: 139.99, estimate: true }, { size: "$50K", price: 229.99, estimate: true }, { size: "$100K", price: 399.99, estimate: true }, { size: "$200K", price: 798.99, estimate: true } ] },
         { market: "CFD", plan: "Stellar Instant", base: 0, code: 16.67, sizes: [ { size: "$2K", price: 59.99, final: 49.99 }, { size: "$5K", price: 149.99, estimate: true }, { size: "$10K", price: 299.99, estimate: true }, { size: "$20K", price: 599.99, estimate: true } ] },

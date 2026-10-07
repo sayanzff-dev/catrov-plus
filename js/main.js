@@ -530,7 +530,8 @@
       const save = $('#simSave'); const extraSaved = sale - withCode;
       save.classList.toggle('on', applied && extraSaved > 0); save.textContent = applied && extraSaved > 0 ? `${code} saves you ${money(extraSaved)} more (${Math.round(extra * 10) / 10}% off)` : '';
       tween(final);
-      $('#simEst').hidden = !z.estimate;
+      $('#simEst').hidden = !(z.estimate || (pl.unconfirmed && applied));
+      $('#simEst').textContent = pl.unconfirmed && applied ? 'The EZZX price for this plan is not confirmed here. The fee shown is before the code, and the checkout shows your final price.' : 'Estimated price, worked out from this plan\'s discount. Check the checkout for the exact amount.';
       $('#simCta').href = f.href || partner(f).href || '#';
       $('#simFine').textContent = (base ? `Includes the firm's current ${base}% sale. ` : '') + `Estimate only. Check ${f.name}'s checkout and make sure the code ${code} is applied.`;
     }
