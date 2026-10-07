@@ -443,9 +443,21 @@
      it, and the introduction opens up behind it
      ========================================================= */
   function initPortal() {
-    const sec = $('#portal'), emb = $('#pEmblem'), disc = $('.disc', emb), txt = $('#pText'),
+    const sec = $('#portal'), wm = $('#wordmark'), emb = $('#pEmblem'), disc = $('.disc', emb), txt = $('#pText'),
+          wl = $('.wm-left', wm), wr = $('.wm-right', wm),
           rev = $('#pReveal'), logo = $('#pLogo'), content = $('#pContent'), bg = $('#pBg');
-    emb.classList.add('enter'); txt.classList.add('enter');
+    const parts = [wl, wr, emb, txt];
+    parts.forEach(n => n.classList.add('enter'));
+
+    // fit the wordmark to the screen width
+    function fit() {
+      wm.style.fontSize = '100px';
+      const w = wm.scrollWidth || wm.getBoundingClientRect().width;
+      const target = Math.min(innerWidth * .94, 1800);
+      wm.style.fontSize = (100 * target / w) + 'px';
+    }
+    fit();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { fit(); measure(); update(); });
     if (reduceMotion) { document.body.classList.add('static'); return; }
 
     let cx = 0, cy = 0, D = 1, S = 2, range = 1;
@@ -454,40 +466,43 @@
 
     function measure() {
       const keep = emb.style.transform; emb.style.transform = 'none';
-      const r = disc.getBoundingClientRect(); emb.style.transform = keep;
+      const r = emb.getBoundingClientRect(); emb.style.transform = keep;
       cx = r.left + r.width / 2; cy = r.top + r.height / 2; D = r.width;
       const far = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
-      S = (2 * far / D) * 1.04;
+      S = (2 * far / D) * 1.15;
       range = Math.max(1, sec.offsetHeight - innerHeight);
     }
 
     function update() {
       const p = clamp(-sec.getBoundingClientRect().top / range);
-      const t = clamp(p / .58), e = ease(t);
+      const t = clamp(p / .6), e = ease(t);
       const live = p > 0.001;
-      emb.classList.toggle('live', live); txt.classList.toggle('live', live);
+      parts.forEach(n => n.classList.toggle('live', live));
 
-      const scale = Math.pow(S, e);                          // exponential: constant-speed "fly-in" feel
-      emb.style.transform = live ? `scale(${scale})` : '';
-      disc.style.opacity = 1 - clamp((t - .35) / .5);
-      txt.style.opacity = live ? 1 - clamp(t / .22) : '';
+      emb.style.transform = live ? `scale(${Math.pow(S, e)})` : '';           // fly into the logo
+      disc.style.opacity = 1 - clamp((t - .62) / .38);
+      const spread = e * innerWidth * .55;                                      // the letters slide apart and fade
+      wl.style.transform = live ? `translateX(${-spread}px)` : '';
+      wr.style.transform = live ? `translateX(${spread}px)` : '';
+      wl.style.opacity = wr.style.opacity = live ? 1 - clamp(t / .5) : '';
+      txt.style.opacity = live ? 1 - clamp(t / .2) : '';
       txt.style.transform = live ? `translateY(${t * 46}px)` : '';
 
-      const f = ease(clamp((t - .4) / .6));                    // smooth cross-fade into the introduction
+      const f = ease(clamp((t - .3) / .6));                                    // smooth fade into the introduction
       rev.style.visibility = f > 0 ? 'visible' : 'hidden';
       rev.style.opacity = f;
       logo.style.visibility = t >= 1 ? 'hidden' : 'visible';
-      bg.style.transform = `scale(${1.35 - .35 * e})`;
-      const c = clamp((p - .4) / .2);
+      bg.style.transform = `scale(${1.3 - .3 * e})`;
+      const c = clamp((p - .45) / .18);
       content.style.opacity = c; content.style.transform = `translateY(${(1 - c) * 44}px) scale(${.96 + .04 * c})`;
     }
 
     let tick = false;
     addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(() => { tick = false; update(); }); } }, { passive: true });
-    const remeasure = () => { measure(); update(); };
+    const remeasure = () => { fit(); measure(); update(); };
     addEventListener('resize', remeasure); addEventListener('load', remeasure);
     measure(); update();
-    setTimeout(remeasure, 1300);                              // after the entrance animation settles
+    setTimeout(remeasure, 1300);
   }
 
   function boot() {

@@ -94,15 +94,10 @@ main{position:relative}
 .portal{height:340svh}
 .portal-stage{position:sticky;top:0;height:100svh;overflow:hidden}
 .portal-logo{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:3}
-.lockup{display:flex;flex-direction:column;align-items:center;gap:clamp(18px,3.4vh,34px);text-align:center;padding:72px 20px 40px}
-.emblem{--logo:clamp(210px,min(58vw,44vh),400px);position:relative;width:var(--logo);height:var(--logo);flex:none;will-change:transform;opacity:0;transform:scale(.85);transition:opacity 1s var(--ease),transform 1.2s var(--ease)}
-body.ready .emblem.enter{opacity:1;transform:none}
-.emblem.live{transition:none}
-.disc{position:absolute;left:12%;top:12%;width:76%;height:76%;object-fit:contain;filter:drop-shadow(0 0 14px rgba(255,61,46,.75)) drop-shadow(0 0 40px rgba(225,6,0,.5));animation:breathe 4.6s ease-in-out infinite}
+.lockup{width:100%;display:flex;flex-direction:column;align-items:center;gap:clamp(20px,4vh,40px);text-align:center;padding:72px 0 40px}
 .lockup-text{display:flex;flex-direction:column;align-items:center;will-change:transform,opacity;opacity:0;transform:translateY(16px);transition:opacity 1s var(--ease) .35s,transform 1s var(--ease) .35s}
 body.ready .lockup-text.enter{opacity:1;transform:none}
 .lockup-text.live{transition:none}
-.lockup-text h1{margin:0}
 .enter-cue{display:flex;align-items:center;gap:12px;margin-top:clamp(18px,4vh,36px);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
 .mouse{width:20px;height:32px;border:1.5px solid var(--muted-dim);border-radius:11px;position:relative}
 .mouse i{position:absolute;left:50%;top:6px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:var(--red-bright);animation:wheel 1.8s ease-in-out infinite}
@@ -131,6 +126,19 @@ body.static .portal{height:auto}
 body.static .portal-stage{position:relative;height:auto;min-height:100svh}
 body.static .portal-logo{display:none}
 body.static .portal-reveal{position:relative;visibility:visible;clip-path:none;min-height:100svh}
+
+/* wordmark: EZZARION with the logo as the O */
+.wordmark{margin:0;display:flex;align-items:center;justify-content:center;white-space:nowrap;font-family:Archivo,'Arial Black',sans-serif;font-weight:900;font-stretch:125%;font-variation-settings:'wdth' 125;
+  font-size:11vw;line-height:1;letter-spacing:-.005em;color:#f6efe9;text-transform:uppercase;text-shadow:0 0 70px rgba(225,6,0,.35);background:none;-webkit-background-clip:border-box;filter:none}
+.wm-left,.wm-right,.wm-o{display:block;will-change:transform,opacity;opacity:0;transition:opacity 1s var(--ease),transform 1.2s var(--ease)}
+.wm-left{transform:translateX(-5%)}
+.wm-right{transform:translateX(5%);transition-delay:.12s}
+.wm-o{position:relative;width:.8em;height:.98em;margin:0 .03em;transform:scale(.6);transition-delay:.2s;flex:none}
+body.ready .wm-left.enter,body.ready .wm-right.enter,body.ready .wm-o.enter{opacity:1;transform:none}
+.wm-left.live,.wm-right.live,.wm-o.live{transition:none}
+.disc{position:absolute;left:-16%;top:-6%;width:132%;height:112%;object-fit:contain;transform-style:preserve-3d;animation:spinY 6s linear infinite;filter:drop-shadow(0 0 .08em rgba(255,61,46,.8)) drop-shadow(0 0 .3em rgba(225,6,0,.5))}
+@keyframes spinY{to{transform:rotateY(360deg)}}
+.wm-o{perspective:900px}
 
 /* ---------- TAPE ---------- */
 .tape{overflow:hidden;border-block:1px solid var(--panel-border);background:rgba(9,4,4,.8);padding:12px 0}
