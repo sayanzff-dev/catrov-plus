@@ -74,7 +74,6 @@
       </div>
       <img class="hero-photo hero-cutout" id="heroCut" src="assets/photos/ezzarion-cutout.webp" alt="" aria-hidden="true">
       <div class="hero-shade" aria-hidden="true"></div>
-      <div class="hero-cue" id="pStraps" aria-hidden="true"><span>Scroll</span><i><b></b></i></div>
     </div>
     </div>
 
@@ -85,20 +84,20 @@
   <div class="growth reveal">
     <div class="g-head">
       <div class="g-title">
-        <div class="g-eyebrow">Payout growth</div>
-        <div class="g-total" id="gTotal">$0</div>
-        <div class="g-sub">withdrawn from one account <i>·</i> <span id="gRange"></span></div>
+        <div class="g-eyebrow">Audience</div>
+        <div class="g-total" id="gTotal">0</div>
+        <div class="g-sub">total followers <i>·</i> <span id="gPlat"></span></div>
       </div>
-      <div class="g-badges"><span id="gCount"></span><span>Funded Trader Markets</span></div>
+      <div class="g-badges"><span>Across all platforms</span></div>
     </div>
-    <div class="g-chart" id="gChart"><div class="g-tip" id="gTip" hidden></div></div>
-    <div class="g-foot">Each point is a withdrawal. Hover or tap a point for the receipt.</div>
+    <div class="f-stack" id="fStack" aria-hidden="true"></div>
+    <ul class="f-list" id="fList"></ul>
   </div>
   <div class="stats">
     <div class="stat reveal" style="--d:.05s"><b data-count id="statPayout" data-prefix="$">0</b><span>Paid out · one account</span></div>
     <div class="stat reveal" style="--d:.15s"><b data-count id="statCount">0</b><span>Payouts shown</span></div>
     <div class="stat reveal" style="--d:.25s"><b data-count id="statFirms">0</b><span>Partner firms</span></div>
-    <div class="stat reveal" style="--d:.35s"><b data-count data-compact id="statFollowers">0</b><span>Total followers</span></div>
+    <div class="stat reveal" style="--d:.35s"><b>5+</b><span>Years trading</span></div>
   </div>
 </section>
 
@@ -112,28 +111,35 @@
 <section id="community" class="section">
   <div class="eyebrow reveal">Community</div>
   <h2 class="reveal">Built for serious traders only</h2>
-  <a class="card feature reveal" href="https://discord.gg/AdADHMWBEH" target="_blank" rel="noopener">
-    <span class="corner tl"></span><span class="corner br"></span>
-    <div class="icon-badge">
-      <svg viewBox="0 0 32 32"><path d="M11 6.5 L21 6.5 L21 9 L23.5 9 L26 13 L26 22.5 Q26 25.5 23 25.5 L21.5 25.5 L20.3 22.3 Q16 23.4 11.7 22.3 L10.5 25.5 L9 25.5 Q6 25.5 6 22.5 L6 13 L8.5 9 L11 9 Z" fill="var(--red-bright)"/><ellipse cx="12.6" cy="16.4" rx="2.3" ry="2.6" fill="#0a0505"/><ellipse cx="19.4" cy="16.4" rx="2.3" ry="2.6" fill="#0a0505"/><path d="M12.2 20.2 Q16 23 19.8 20.2" stroke="#0a0505" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Ezzarion Academy — Discord</div>
-      <div class="card-sub">Market structure, risk management &amp; trader psychology, built for serious traders only.</div>
-    </div>
-    <span class="badge">FREE</span>
-  </a>
-
-  <div class="grid-2">
-    <a class="card reveal" href="https://youtube.com/@ezzarion?si=gjLdXVoK1gLFBX7Q" target="_blank" rel="noopener">
-      <div class="icon-badge"><img src="assets/img/youtube.png" alt="YouTube" width="28" height="28"></div>
-      <div class="card-body"><div class="card-title">YouTube</div><div class="card-sub">Live Trading • Education • Market Analysis</div></div>
-      <span class="badge live">LIVE</span>
+  <p class="cm-lead reveal">Learn the process in the Academy, then watch it traded live.</p>
+  <div class="bento">
+    <a class="cm-card cm-discord reveal" href="https://discord.gg/AdADHMWBEH" target="_blank" rel="noopener">
+      <div class="cm-top"><span class="cm-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></span><span class="cm-badge">Free</span></div>
+      <div class="cm-body">
+        <div class="cm-kicker">Discord · Academy</div>
+        <h3>Ezzarion Academy</h3>
+        <p>Market structure, risk management and trader psychology, built for serious traders only.</p>
+        <ul class="cm-chips"><li>Market structure</li><li>Risk management</li><li>Psychology</li></ul>
+      </div>
+      <div class="cm-cta"><span>Join the Discord</span><span class="cm-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div>
     </a>
-    <a class="card reveal" style="--d:.1s" href="https://kick.com/ezzarion" target="_blank" rel="noopener">
-      <div class="icon-badge"><img src="assets/img/kick.png" alt="Kick" width="26" height="26"></div>
-      <div class="card-body"><div class="card-title">Kick</div><div class="card-sub">Live Trading • Gaming • Community</div></div>
-      <span class="badge live">LIVE</span>
+    <a class="cm-card cm-live reveal" style="--d:.12s" href="https://youtube.com/@ezzarion?si=gjLdXVoK1gLFBX7Q" target="_blank" rel="noopener">
+      <div class="cm-top"><span class="cm-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M21.6 7.2a2.5 2.5 0 0 0-1.76-1.77C18.3 5 12 5 12 5s-6.3 0-7.84.43A2.5 2.5 0 0 0 2.4 7.2C2 8.76 2 12 2 12s0 3.24.4 4.8a2.5 2.5 0 0 0 1.76 1.77C5.7 19 12 19 12 19s6.3 0 7.84-.43a2.5 2.5 0 0 0 1.76-1.77C22 15.24 22 12 22 12s0-3.24-.4-4.8zM10 15V9l5.2 3z"/></svg></span><span class="cm-badge live">Live</span></div>
+      <div class="cm-body">
+        <div class="cm-kicker">YouTube</div>
+        <h3>Live trading &amp; education</h3>
+        <p>Market analysis, live sessions and payouts, on video.</p>
+      </div>
+      <div class="cm-foot"><span class="cm-count" data-follow="youtube"></span><span class="cm-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div>
+    </a>
+    <a class="cm-card cm-live reveal" style="--d:.24s" href="https://kick.com/ezzarion" target="_blank" rel="noopener">
+      <div class="cm-top"><span class="cm-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h5.2v6h2.2l3.6-6H20l-5.4 8L20.5 21h-6.2l-3.9-6.6H8.2V21H3z"/></svg></span><span class="cm-badge live">Live</span></div>
+      <div class="cm-body">
+        <div class="cm-kicker">Kick</div>
+        <h3>Live trading &amp; gaming</h3>
+        <p>Trade alongside the stream and join the chat.</p>
+      </div>
+      <div class="cm-foot"><span class="cm-count" data-follow="kick"></span><span class="cm-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div>
     </a>
   </div>
 </section>

@@ -160,121 +160,38 @@
   /* =========================================================
      HERO CHART — endlessly extending line, purely decorative
      ========================================================= */
-  function initPayoutChart() {
-    const host = $('#gChart'), tip = $('#gTip');
-    const list = [...(S.payouts || [])].sort((a, b) => a.date.localeCompare(b.date));
-    if (!list.length) { $('.growth').remove(); return; }
-    const NS = 'http://www.w3.org/2000/svg', DAY = 864e5, fmtD = d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    let run = 0;
-    const t0 = new Date(list[0].date + 'T00:00:00').getTime() - 24 * DAY;
-    const pts = [{ t: t0, v: 0, start: true }, ...list.map(p => ({ t: new Date(p.date + 'T00:00:00').getTime(), v: (run += p.amount), amount: p.amount, firm: p.firm }))];
-    const total = run, t1 = pts[pts.length - 1].t + 12 * DAY;
-    $('#gCount').textContent = `${list.length} payout${list.length > 1 ? 's' : ''}`;
-    $('#gRange').textContent = `${new Date(list[0].date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} to ${new Date(list.at(-1).date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
-    const money = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 });
-
-    let svg, progress = 0, played = false, geo = {}, raf;
-    const el = (n, a = {}, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); p && p.append(e); return e; };
-
-    // smooth, non-overshooting curve through the points (monotone cubic)
-    function curve(P) {
-      const n = P.length, d = [], m = [];
-      for (let i = 0; i < n - 1; i++) d[i] = (P[i + 1][1] - P[i][1]) / (P[i + 1][0] - P[i][0]);
-      m[0] = d[0]; m[n - 1] = d[n - 2];
-      for (let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
-      for (let i = 0; i < n - 1; i++) { if (d[i] === 0) { m[i] = m[i + 1] = 0; continue; } const a = m[i] / d[i], b = m[i + 1] / d[i], s = a * a + b * b; if (s > 9) { const t = 3 / Math.sqrt(s); m[i] = t * a * d[i]; m[i + 1] = t * b * d[i]; } }
-      let path = `M${P[0][0]} ${P[0][1]}`;
-      for (let i = 0; i < n - 1; i++) { const h = P[i + 1][0] - P[i][0]; path += ` C${P[i][0] + h / 3} ${P[i][1] + m[i] * h / 3} ${P[i + 1][0] - h / 3} ${P[i + 1][1] - m[i + 1] * h / 3} ${P[i + 1][0]} ${P[i + 1][1]}`; }
-      return path;
-    }
-
-    function build() {
-      cancelAnimationFrame(raf); host.querySelector('svg')?.remove();
-      const W = host.clientWidth, H = host.clientHeight, pad = { l: 56, r: 26, t: 22, b: 38 };
-      const ymax = Math.ceil(total * 1.12 / 2000) * 2000, step = ymax / 4;
-      const X = t => pad.l + (t - t0) / (t1 - t0) * (W - pad.l - pad.r), Y = v => pad.t + (1 - v / ymax) * (H - pad.t - pad.b);
-      svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `Cumulative payouts growing to ${money(total)}` });
-      host.prepend(svg);
-      const defs = el('defs', {}, svg);
-      const lg = el('linearGradient', { id: 'gLine', gradientUnits: 'userSpaceOnUse', x1: pad.l, x2: W - pad.r, y1: 0, y2: 0 }, defs);
-      el('stop', { offset: 0, 'stop-color': '#e10600' }, lg); el('stop', { offset: .6, 'stop-color': '#ff4a38' }, lg); el('stop', { offset: 1, 'stop-color': '#ff8a6a' }, lg);
-      const ag = el('linearGradient', { id: 'gArea', x1: 0, x2: 0, y1: 0, y2: 1 }, defs);
-      el('stop', { offset: 0, 'stop-color': '#ff3d2e', 'stop-opacity': .42 }, ag); el('stop', { offset: 1, 'stop-color': '#ff3d2e', 'stop-opacity': 0 }, ag);
-      const gf = el('filter', { id: 'gGlow', x: '-10%', y: '-30%', width: '120%', height: '160%' }, defs);
-      el('feGaussianBlur', { stdDeviation: 4, result: 'b' }, gf); const mg = el('feMerge', {}, gf); el('feMergeNode', { in: 'b' }, mg); el('feMergeNode', { in: 'SourceGraphic' }, mg);
-      const cp = el('clipPath', { id: 'gClip' }, defs); const clipRect = el('rect', { x: 0, y: 0, width: 0, height: H }, cp);
-
-      const grid = el('g', { class: 'g-grid' }, svg), axis = el('g', { class: 'g-axis' }, svg);
-      for (let v = 0; v <= ymax; v += step) {
-        if (v > 0) el('line', { x1: pad.l, x2: W - pad.r, y1: Y(v), y2: Y(v) }, grid);
-        const t = el('text', { x: pad.l - 12, y: Y(v) + 4, 'text-anchor': 'end' }, axis); t.textContent = v === 0 ? '$0' : '$' + (v / 1000) + 'k';
-      }
-      const base = el('line', { x1: pad.l, x2: W - pad.r, y1: Y(0), y2: Y(0), stroke: 'rgba(255,255,255,.25)' }, svg);
-      const seen = new Set();
-      pts.forEach(p => { if (p.start) return; const d = new Date(p.t), key = d.getFullYear() + '-' + d.getMonth(); if (seen.has(key)) return; seen.add(key);
-        const t = el('text', { x: X(p.t), y: H - 12, 'text-anchor': 'middle' }, axis); t.textContent = d.toLocaleDateString('en-US', { month: 'short' }); });
-
-      const P = pts.map(p => [X(p.t), Y(p.v)]), d = curve(P);
-      const area = el('path', { d: `${d} L${P.at(-1)[0]} ${Y(0)} L${P[0][0]} ${Y(0)} Z`, fill: 'url(#gArea)', 'clip-path': 'url(#gClip)' }, svg);
-      const line = el('path', { d, class: 'g-line' }, svg);
-      const L = line.getTotalLength(); line.style.strokeDasharray = L; line.style.strokeDashoffset = L;
-      const sheen = el('path', { d, class: 'g-sheen' }, svg);
-      const cross = el('line', { class: 'g-cross', y1: pad.t, y2: Y(0) }, svg);
-      const dots = pts.map((p, i) => { if (p.start) return null; const c = el('circle', { class: 'g-pt', cx: P[i][0], cy: P[i][1], r: 6, tabindex: 0, 'aria-label': `${fmtD(p.t)}: ${money(p.amount)} from ${p.firm}, total ${money(p.v)}` }, svg); return c; });
-      const last = P.at(-1), ping = el('circle', { class: 'g-ping', cx: last[0], cy: last[1], r: 9 }, svg), end = el('circle', { class: 'g-end', cx: last[0], cy: last[1], r: 4.5 }, svg);
-      geo = { W, H, P, L, line, clipRect, dots, end, ping, sheen, cross, X, Y, pad, line };
-
-      // tooltip: hover / tap / keyboard focus
-      const show = i => {
-        const p = pts[i]; dots.forEach((c, k) => c && c.classList.toggle('hot', k === i));
-        tip.hidden = false; tip.innerHTML = `<small>${fmtD(p.t)}</small><b>+${money(p.amount)}</b><em>${p.firm} · total ${money(p.v)}</em>`;
-        tip.style.left = Math.min(Math.max(P[i][0], 100), W - 100) + 'px'; tip.style.top = P[i][1] + 'px';
-        cross.setAttribute('x1', P[i][0]); cross.setAttribute('x2', P[i][0]); cross.style.opacity = 1;
-      };
-      const hide = () => { tip.hidden = true; cross.style.opacity = 0; dots.forEach(c => c && c.classList.remove('hot')); };
-      dots.forEach((c, i) => { if (!c) return; c.addEventListener('pointerenter', () => show(i)); c.addEventListener('focus', () => show(i)); c.addEventListener('blur', hide); c.addEventListener('click', () => show(i)); });
-      svg.addEventListener('pointerleave', hide);
-      svg.addEventListener('pointermove', e => { const r = svg.getBoundingClientRect(), x = e.clientX - r.left; let best = -1, bd = 1e9; P.forEach((q, i) => { if (i && Math.abs(q[0] - x) < bd) { bd = Math.abs(q[0] - x); best = i; } }); if (best > 0 && bd < 46) show(best); else hide(); });
-      draw(played ? 1 : progress);
-    }
-
-    function draw(p) {
-      const { P, L, line, clipRect, dots, end, ping, sheen } = geo; progress = p;
-      line.style.strokeDashoffset = L * (1 - p);
-      const head = line.getPointAtLength(L * p);
-      clipRect.setAttribute('width', head.x + 2);                       // the area fill is revealed exactly as far as the line has drawn
-      dots.forEach((c, i) => c && c.classList.toggle('on', p >= 1 || head.x >= P[i][0] - 2));
-      end.classList.toggle('on', p >= 1); ping.classList.toggle('on', p >= 1);
-      $('#gTotal').textContent = money(total * Math.min(1, p));
-    }
-    const ease = t => 1 - Math.pow(1 - t, 4);
-
-    function play() {
-      if (played) return; played = true;
-      if (reduceMotion) { draw(1); return; }
-      const T = 2600, t0 = performance.now();
-      (function tick(now) {
-        const t = Math.min(1, (now - t0) / T); draw(ease(t));
-        if (t < 1) raf = requestAnimationFrame(tick); else shimmer();
-      })(t0);
-    }
-    // a bright highlight travels along the finished line, now and then
-    function shimmer() {
-      if (reduceMotion || !geo.sheen) return;
-      const { sheen, L } = geo; sheen.style.opacity = 1; const t0 = performance.now(), T = 1800;
-      (function s(now) {
-        if (!sheen.isConnected) return;
-        const t = (now - t0) / T;
-        if (t >= 1) { sheen.style.opacity = 0; setTimeout(() => requestAnimationFrame(shimmer), 3500); return; }
-        sheen.style.strokeDashoffset = -L * ease(t); requestAnimationFrame(s);
-      })(t0);
-    }
-
-    build();
-    const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { io.disconnect(); play(); } }, { threshold: .45 });
-    io.observe(host);
-    let rt; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(build, 120); }).observe(host);
-    $('#gTotal').textContent = '$0';
+  function initFollowers() {
+    const card = $('.growth'); if (!card) return;
+    const rows = Object.entries(S.followers || {}).filter(([, v]) => +v > 0).sort((a, b) => b[1] - a[1]);
+    if (!rows.length) { card.remove(); return; }
+    const total = rows.reduce((s, [, v]) => s + +v, 0);
+    const meta = { instagram: ['Instagram', '#ff5a8a'], x: ['X', '#e9e3dd'], youtube: ['YouTube', '#ff3d2e'], kick: ['Kick', '#53fc18'], tiktok: ['TikTok', '#35d6e8'] };
+    const ico = { X: svgIcons.X, Instagram: svgIcons.Instagram, TikTok: svgIcons.TikTok, YouTube: svgIcons.YouTube, Kick: svgIcons.Kick };
+    const fmt = new Intl.NumberFormat('en-US');
+    const stack = $('#fStack'), list = $('#fList');
+    rows.forEach(([key, v], i) => {
+      const [name, color] = meta[key] || [key, '#ff3d2e'], pct = v / total * 100;
+      stack.append(h('i', { style: `flex:${Math.max(v, total * .004)};--c:${color};transition-delay:${i * .09}s` }));
+      const li = h('li', { class: 'f-row', style: `--i:${i};--c:${color};--w:${Math.max(pct, 0.8)}%` }, [
+        h('span', { class: 'f-ico' }), h('span', { class: 'f-name', text: name }),
+        h('span', { class: 'f-track' }, h('i', { class: 'f-fill' })),
+        h('span', { class: 'f-num', 'data-n': v, text: '0' }),
+        h('span', { class: 'f-pct', text: (pct < 1 ? '<1' : Math.round(pct)) + '%' })
+      ]);
+      li.firstChild.innerHTML = ico[name] || '';
+      list.append(li);
+    });
+    $('#gPlat').textContent = `${rows.length} platforms`;
+    $('#gTotal').textContent = '0';
+    const run = (el, to, T) => {
+      if (reduceMotion) { el.textContent = fmt.format(to); return; }
+      const t0 = performance.now();
+      (function tick(now) { const t = Math.min(1, (now - t0) / T), e = 1 - Math.pow(1 - t, 4); el.textContent = fmt.format(Math.round(to * e)); if (t < 1) requestAnimationFrame(tick); })(t0);
+    };
+    new IntersectionObserver((es, io) => { if (!es[0].isIntersecting) return; io.disconnect();
+      card.classList.add('play'); run($('#gTotal'), total, 2200);
+      list.querySelectorAll('.f-num').forEach((n, i) => setTimeout(() => run(n, +n.dataset.n, 1500), 350 + i * 90));
+    }, { threshold: .35 }).observe(card);
   }
 
   /* =========================================================
@@ -297,6 +214,8 @@
   const svgIcons = {
     X: '<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
     Instagram: '<svg class="outline" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle class="dot" cx="17.5" cy="6.5" r="1.2"/></svg>',
+    YouTube: '<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M21.6 7.2a2.5 2.5 0 0 0-1.76-1.77C18.3 5 12 5 12 5s-6.3 0-7.84.43A2.5 2.5 0 0 0 2.4 7.2C2 8.76 2 12 2 12s0 3.24.4 4.8a2.5 2.5 0 0 0 1.76 1.77C5.7 19 12 19 12 19s6.3 0 7.84-.43a2.5 2.5 0 0 0 1.76-1.77C22 15.24 22 12 22 12s0-3.24-.4-4.8zM10 15V9l5.2 3z"/></svg>',
+    Kick: '<svg viewBox="0 0 24 24"><path d="M3 3h5.2v6h2.2l3.6-6H20l-5.4 8L20.5 21h-6.2l-3.9-6.6H8.2V21H3z"/></svg>',
     TikTok: '<svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/></svg>'
   };
   function renderSocials() {
@@ -323,26 +242,44 @@
 
   function renderVideos() {
     const grid = $('#videoGrid'); $('#channelBtn').href = S.channelUrl;
-    const vids = S.videos.length ? S.videos : Array.from({ length: 3 }, (_, i) => ({ empty: true, title: i ? 'Video coming soon' : 'Your featured video goes here', tag: 'Upload via config.js' }));
+    const vids = S.videos.length ? S.videos : [{ pending: true, title: 'Your video goes here', tag: 'Video' }];
+    const medias = [];
+    function stopAll(except) { medias.forEach(m => { if (m !== except && m.classList.contains('playing')) { m.querySelector('iframe')?.remove(); m.classList.remove('playing'); [...m.children].forEach(c => c.hidden = false); } }); }
     grid.append(...vids.map((v, i) => {
-      const poster = h('div', { class: 'poster' }, [h('img', { src: 'assets/img/ezzarion-brain-mark.png', alt: '' }), h('span', { text: v.tag || 'Video' })]);
-      const thumb = h('div', { class: 'thumb' }, v.empty ? h('span', { text: 'VIDEO' }) : [poster, h('span', { class: 'play' })]);
-      if (!v.empty) {
+      const pending = !v.id;
+      const media = h('div', { class: 'vmedia' }, [h('div', { class: 'vposter' }, [h('img', { src: 'assets/img/ezzarion-brain-mark.png', alt: '' }), h('span', { text: v.tag || 'Video' })])]);
+      medias.push(media);
+      const label = 'Play ' + v.title;
+      // on the real website the video plays right here in the card; in sandboxed previews that block YouTube embeds it links out instead
+      const play = (S.noEmbed || pending)
+        ? h('a', { class: 'vplay', href: pending ? S.channelUrl : `https://www.youtube.com/watch?v=${encodeURIComponent(v.id)}`, target: '_blank', rel: 'noopener', 'aria-label': label })
+        : h('button', { class: 'vplay', type: 'button', 'aria-label': label });
+      if (!S.noEmbed && !pending) play.onclick = () => {
+        stopAll(media);
+        [...media.children].forEach(c => c.hidden = true);
+        media.classList.add('playing');
+        media.append(h('iframe', { src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}?autoplay=1&rel=0&modestbranding=1`, allow: 'autoplay; encrypted-media; picture-in-picture; fullscreen', allowfullscreen: '', title: v.title }));
+      };
+      media.append(play);
+      if (!pending) {
         const tryImg = srcs => {                       // first image that loads wins; the poster stays if none do
           const src = srcs.shift(); if (!src) return;
           const im = new Image();
-          im.onload = () => { if (im.naturalWidth > 200) { thumb.style.backgroundImage = `url("${src}")`; thumb.classList.add('has'); } else tryImg(srcs); };
+          im.onload = () => { if (im.naturalWidth > 200) { media.style.backgroundImage = `url("${src}")`; media.classList.add('has'); } else tryImg(srcs); };
           im.onerror = () => tryImg(srcs);
           im.src = src;
         };
         const yt = q => `https://i.ytimg.com/vi/${encodeURIComponent(v.id)}/${q}.jpg`;
-        tryImg([v.thumb, i ? null : yt('maxresdefault'), yt('hqdefault')].filter(Boolean));
+        tryImg([v.thumb, yt('maxresdefault'), yt('hqdefault')].filter(Boolean));
       }
-      const el = h(v.empty ? 'div' : 'button', { class: `video reveal${i ? '' : ' first'}${v.empty ? ' empty' : ''}`, type: v.empty ? false : 'button', style: `--d:${i * .08}s`, 'aria-label': v.empty ? false : 'Play ' + v.title }, [
-        thumb, h('div', { class: 'video-info' }, [h('div', { class: 'video-tag', text: v.tag || 'Video' }), h('div', { class: 'video-title', text: v.title })])
+      return h('article', { class: 'vcard reveal' + (pending ? ' pending' : ''), style: `--d:${i * .1}s` }, [
+        media,
+        h('div', { class: 'vinfo' }, [
+          h('div', { class: 'vkick', text: v.tag || 'Video' }),
+          h('h3', { class: 'vtitle' }, [document.createTextNode(v.title), v.badge && h('span', { class: 'vbadge', text: v.badge })]),
+          v.desc && h('p', { class: 'vdesc', text: v.desc })
+        ])
       ]);
-      if (!v.empty) el.onclick = () => openLightbox(h('iframe', { src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}?autoplay=1&rel=0`, allow: 'autoplay; encrypted-media; picture-in-picture; fullscreen', allowfullscreen: '', title: v.title }), v.title);
-      return el;
     }));
   }
 
@@ -453,7 +390,7 @@
 
     // card spotlight
     document.addEventListener('pointermove', e => {
-      const c = e.target.closest && e.target.closest('.card'); if (!c) return;
+      const c = e.target.closest && e.target.closest('.card, .cm-card'); if (!c) return;
       const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
     }, { passive: true });
   }
@@ -534,7 +471,7 @@
      it, and the introduction opens up behind it
      ========================================================= */
   function initPortal() {
-    const sec = $('#portal'), photo = $('#heroPhoto'), cut = $('#heroCut'), type = $('#pText'), word = $('#heroWord'), cue = $('#pStraps');
+    const sec = $('#portal'), photo = $('#heroPhoto'), cut = $('#heroCut'), type = $('#pText'), word = $('#heroWord');
     type.classList.add('enter');
 
     // safety net: if the real font runs wider than planned, shrink until it clears the screen
@@ -559,7 +496,6 @@
       const e = ease(clamp(p / .6));
       type.style.transform = live ? `translateY(${-46 * e}px) scale(${1 + .05 * e})` : '';        // type sits behind the person, lifts and fades
       type.style.opacity = live ? 1 - e : '';
-      cue.style.opacity = 1 - clamp(p / .25);
     }
     function loop() {
       cur += (target - cur) * .16;
@@ -613,12 +549,9 @@
 
   function boot() {
     $('#year').textContent = new Date().getFullYear();
-    const followers = Object.values(S.followers || {}).reduce((a, b) => a + (+b || 0), 0);
     $('#statFirms').dataset.target = S.partners.length;
-    $('#statFollowers').dataset.target = followers;
-    if (!followers) { const f = $('#statFollowers'); f.removeAttribute('data-count'); f.textContent = '—'; }
     renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
-    startBackground(); initPayoutChart(); initPortal(); initJourney(); initPillNav();
+    startBackground(); initFollowers(); initPortal(); initJourney(); initPillNav();
   }
 
   let seen = false;
