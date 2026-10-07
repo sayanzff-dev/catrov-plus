@@ -13,7 +13,8 @@ window.SITE = {
      tag   = small label (e.g. "Payout", "Education", "Live")
      The FIRST video is shown large as the featured one.            */
   videos: [
-    // { id: "VIDEO_ID", title: "How I passed the evaluation", tag: "Education" },
+    { id: "F4x_AjaT_ns", title: "Ezzarion — video 1 (send me the real title)", tag: "Video" },
+    { id: "79xtnqSylDQ", title: "Ezzarion — video 2 (send me the real title)", tag: "Video" },
   ],
 
   /* ---------- PAYOUT TIMELINE ----------
@@ -24,7 +25,21 @@ window.SITE = {
      note   = optional one-line caption
      Order doesn't matter, the site sorts by date.                  */
   payouts: [
-    // { date: "2026-03-14", firm: "E8 Markets", amount: 4200, image: "assets/payouts/2026-03-e8.jpg", note: "Second payout" },
+    { date: "2026-04-11", firm: "Funded Trader Markets", amount: 840,     image: "assets/payouts/2026-04-11-ftm.jpg", note: "Processed in 2h 18m" },
+    { date: "2026-06-04", firm: "Funded Trader Markets", amount: 1222.20, image: "assets/payouts/2026-06-04-ftm.jpg", note: "Processed in 1h 36m" },
+    { date: "2026-07-02", firm: "Funded Trader Markets", amount: 1411.20, image: "assets/payouts/2026-07-02-ftm.jpg", note: "Processed in 2h 20m" },
+    { date: "2026-08-06", firm: "Funded Trader Markets", amount: 1506.00, image: "assets/payouts/2026-08-06-ftm.jpg", note: "Processed in 42 min" },
+    { date: "2026-08-13", firm: "Funded Trader Markets", amount: 620.10,  image: "assets/payouts/2026-08-13-ftm.jpg", note: "Processed in 1h 09m" }
+  ],
+
+  /* ---------- CERTIFICATES (passed evaluations / funded) ----------
+     Not counted in the payout total.                               */
+  certificates: [
+    { firm: "Funded Trader Markets", title: "You Achieved Funding",          date: "",           image: "assets/certificates/ftm-funded.jpg" },
+    { firm: "E8 Markets",            title: "Certificate of Performance — SimFi Challenge", date: "2026-05-19", image: "assets/certificates/e8-simfi.jpg" },
+    { firm: "Alpha Futures",         title: "Certificate of Achievement",    date: "2026-07-27", image: "assets/certificates/alpha-futures.jpg" },
+    { firm: "Alpha Capital Group",   title: "Phase 1 — Certificate of Achievement", date: "2026-08-07", image: "assets/certificates/alpha-capital-phase1.jpg" },
+    { firm: "Forex Funds Flow",      title: "Funded Trader Recognition",     date: "2026-09-07", image: "assets/certificates/forexfundsflow.jpg" }
   ],
 
   /* ---------- PARTNERS ---------- */

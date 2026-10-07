@@ -17,7 +17,7 @@
     [].concat(kids).forEach(c => c && el.append(c));
     return el;
   }
-  const usd = n => '$' + Math.round(n).toLocaleString('en-US');
+  const usd = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
 
   function fitCanvas(c) {
     const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -284,6 +284,20 @@
     draw(null);
   }
 
+  function renderCerts() {
+    const fmt = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+    const grid = $('#certGrid');
+    grid.append(...(S.certificates || []).map((c, i) => {
+      const img = h('div', { class: 'cert-img' }); img.style.backgroundImage = `url("${c.image}")`;
+      const el = h('button', { class: 'cert reveal', type: 'button', style: `--d:${(i % 3) * .08}s`, 'aria-label': `${c.firm} — ${c.title}` }, [
+        img, h('div', { class: 'cert-info' }, [h('div', { class: 'cert-firm', text: c.firm }), h('div', { class: 'cert-title', text: c.title }), c.date && h('div', { class: 'cert-date', text: fmt(c.date) })])
+      ]);
+      el.onclick = () => openLightbox(h('img', { src: c.image, alt: `${c.firm} certificate` }), `${c.firm} — ${c.title}`);
+      return el;
+    }));
+    if (!grid.children.length) { grid.previousElementSibling.remove(); grid.remove(); }
+  }
+
   let tlObs;
   function observeTimeline() {
     tlObs && tlObs.disconnect();
@@ -301,11 +315,12 @@
      ========================================================= */
   function countUp(el) {
     const target = +(el.dataset.target ?? el.dataset.count) || 0, pre = el.dataset.prefix || '';
-    if (reduceMotion || !target) { el.textContent = pre + target.toLocaleString('en-US'); return; }
+    const dec = target % 1 ? 2 : 0, fmt = v => pre + v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    if (reduceMotion || !target) { el.textContent = fmt(target); return; }
     const t0 = performance.now(), D = 1600;
     (function tick(now) {
       const p = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - p, 4);
-      el.textContent = pre + Math.round(target * e).toLocaleString('en-US');
+      el.textContent = fmt(dec ? +(target * e).toFixed(2) : Math.round(target * e));
       if (p < 1) requestAnimationFrame(tick);
     })(t0);
   }
@@ -348,7 +363,7 @@
     $('#year').textContent = new Date().getFullYear();
     const lists = [['#statFirms', S.partners.length], ['#statVideos', S.videos.length]];
     lists.forEach(([s, n]) => { $(s).dataset.target = n; });
-    renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); initLightbox();
+    renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
     startBackground(); startHeroChart();
   }
 
