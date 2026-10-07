@@ -443,60 +443,43 @@
      it, and the introduction opens up behind it
      ========================================================= */
   function initPortal() {
-    const sec = $('#portal'), wm = $('#wordmark'), emb = $('#pEmblem'), disc = $('.disc', emb), txt = $('#pText'),
-          wl = $('.wm-left', wm), wr = $('.wm-right', wm),
-          rev = $('#pReveal'), logo = $('#pLogo'), content = $('#pContent'), bg = $('#pBg');
-    const parts = [wl, wr, emb, txt];
-    parts.forEach(n => n.classList.add('enter'));
+    const sec = $('#portal'), photo = $('#heroPhoto'), type = $('#pText'), word = $('#heroWord'), straps = $('#pStraps'),
+          rev = $('#pReveal'), hero = $('#pLogo'), content = $('#pContent'), bg = $('#pBg');
+    type.classList.add('enter');
 
-    // fit the wordmark to the screen width
+    // safety net: if the real font runs wider than planned, shrink until it clears the screen
     function fit() {
-      wm.style.fontSize = '100px';
-      const w = wm.scrollWidth || wm.getBoundingClientRect().width;
-      const target = innerWidth < 700 ? innerWidth * .9 : Math.min(innerWidth * .7, 1250);
-      wm.style.fontSize = (100 * target / w) + 'px';
+      word.style.fontSize = '';
+      const max = innerWidth * .94;
+      const w = word.scrollWidth;
+      if (w > max) word.style.fontSize = (parseFloat(getComputedStyle(word).fontSize) * max / w) + 'px';
     }
     fit();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { fit(); measure(); update(true); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
     if (reduceMotion) { document.body.classList.add('static'); return; }
 
-    let cx = 0, cy = 0, D = 1, S = 2, range = 1;
+    let range = 1, target = 0, cur = 0, running = false;
     const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
     const ease = t => t * t * (3 - 2 * t);
+    const measure = () => { range = Math.max(1, sec.offsetHeight - innerHeight); };
 
-    function measure() {
-      const keep = emb.style.transform; emb.style.transform = 'none';
-      const r = emb.getBoundingClientRect(); emb.style.transform = keep;
-      cx = r.left + r.width / 2; cy = r.top + r.height / 2; D = r.width;
-      const far = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
-      S = (2 * far / D) * 1.15;
-      range = Math.max(1, sec.offsetHeight - innerHeight);
-    }
-
-    let target = 0, cur = 0, running = false;
     function render(p) {
-      const t = clamp(p / .5), e = ease(t);
       const live = p > 0.001;
-      parts.forEach(n => n.classList.toggle('live', live));
+      type.classList.toggle('live', live);
+      photo.style.transform = `translate3d(0,${-3 * p}%,0) scale(${1.04 + .07 * p})`;       // slow push-in, drifting up
+      const e = ease(clamp(p / .5));
+      type.style.transform = live ? `translateY(${-46 * e}px)` : '';                        // type lifts 46px and fades
+      type.style.opacity = live ? 1 - e : '';
+      straps.style.opacity = 1 - clamp((p - .3) / .25);
 
-      emb.style.transform = live ? `scale(${Math.pow(S, e)})` : '';           // fly into the logo
-      disc.style.opacity = 1 - clamp((t - .6) / .4);
-      const spread = e * innerWidth * .6;                                       // the letters slide apart and fade
-      wl.style.transform = live ? `translateX(${-spread}px)` : '';
-      wr.style.transform = live ? `translateX(${spread}px)` : '';
-      wl.style.opacity = wr.style.opacity = live ? 1 - clamp(t / .45) : '';
-      txt.style.opacity = live ? 1 - clamp(t / .18) : '';
-      txt.style.transform = live ? `translateY(${t * 46}px)` : '';
-
-      const f = ease(clamp((t - .3) / .6));                                    // smooth fade into the introduction
+      const f = ease(clamp((p - .5) / .3));                                                  // plaster cross-fades into the introduction
       rev.style.visibility = f > 0 ? 'visible' : 'hidden';
       rev.style.opacity = f;
-      logo.style.visibility = t >= 1 ? 'hidden' : 'visible';
-      bg.style.transform = `scale(${1.3 - .3 * e})`;
-      const c = clamp((p - .36) / .16);
+      hero.style.visibility = f >= 1 ? 'hidden' : 'visible';
+      bg.style.transform = `scale(${1.3 - .3 * f})`;
+      const c = clamp((p - .68) / .17);
       content.style.opacity = c; content.style.transform = `translateY(${(1 - c) * 44}px) scale(${.96 + .04 * c})`;
     }
-    // scroll position is eased toward, so the motion stays smooth even with notchy mouse wheels
     function loop() {
       cur += (target - cur) * .16;
       if (Math.abs(target - cur) < .0004) cur = target;
@@ -508,13 +491,9 @@
       if (snap) { cur = target; render(cur); return; }
       if (!running) { running = true; requestAnimationFrame(loop); }
     }
-
-    let tick = false;
     addEventListener('scroll', () => update(), { passive: true });
-    const remeasure = () => { fit(); measure(); update(true); };
-    addEventListener('resize', remeasure); addEventListener('load', remeasure);
+    addEventListener('resize', () => { fit(); measure(); update(true); });
     measure(); update(true);
-    setTimeout(remeasure, 1300);
   }
 
   function boot() {
