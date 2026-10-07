@@ -83,6 +83,19 @@ h1{font-family:Anton,sans-serif;font-weight:400;font-size:clamp(54px,13vw,128px)
 .scroll-hint{position:absolute;bottom:22px;left:50%;width:22px;height:36px;margin-left:-11px;border:1.5px solid var(--muted-dim);border-radius:12px}
 .scroll-hint span{position:absolute;left:50%;top:7px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:var(--red-bright);animation:wheel 1.8s ease-in-out infinite}
 
+/* ---------- JOURNEY LINE ---------- */
+main{position:relative}
+.journey{position:absolute;left:0;top:0;z-index:0;pointer-events:none;overflow:visible}
+.hero,.wrap{position:relative;z-index:1}
+.j-track,.j-draw{fill:none;stroke-linecap:round}
+.j-track{stroke:rgba(255,61,46,.16);stroke-width:1.5;stroke-dasharray:3 10}
+.j-draw{stroke:url(#jg);stroke-width:3;filter:url(#jglow)}
+.j-node{fill:var(--bg);stroke:var(--muted-dim);stroke-width:2.5;transition:fill .5s var(--ease),stroke .5s,r .5s}
+.j-node.on{fill:var(--green);stroke:#b6ffe3;r:9;filter:drop-shadow(0 0 8px var(--green))}
+.j-head{transition:opacity .3s}
+.j-halo{fill:rgba(255,61,46,.35);animation:pulse 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@media (max-width:700px){.j-draw{stroke-width:2.5}.j-track{opacity:.6}}
+
 /* ---------- TAPE ---------- */
 .tape{overflow:hidden;border-block:1px solid var(--panel-border);background:rgba(9,4,4,.8);padding:12px 0}
 .tape-track{display:flex;width:max-content;animation:tape 40s linear infinite;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}

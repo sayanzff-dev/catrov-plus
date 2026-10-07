@@ -356,6 +356,73 @@
     }, { passive: true });
   }
 
+
+  /* =========================================================
+     JOURNEY LINE — an SVG path down the whole page that draws
+     itself as you scroll; a glowing head leads it and
+     section nodes light up when reached
+     ========================================================= */
+  function initJourney() {
+    const NS = 'http://www.w3.org/2000/svg', main = $('main');
+    const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'journey'); svg.setAttribute('aria-hidden', 'true');
+    svg.innerHTML = `<defs>
+      <linearGradient id="jg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff3d2e"/><stop offset=".55" stop-color="#e10600"/><stop offset="1" stop-color="#2ee6a0"/></linearGradient>
+      <filter id="jglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <path class="j-track"/><path class="j-draw"/><g class="j-nodes"></g>
+      <g class="j-head"><circle r="14" class="j-halo"/><circle r="5" fill="#fff"/></g>`;
+    main.prepend(svg);
+    const track = $('.j-track', svg), draw = $('.j-draw', svg), nodesG = $('.j-nodes', svg), head = $('.j-head', svg), grad = $('#jg', svg);
+    let L = 1, nodes = [], startY = 0, endY = 1;
+
+    const lengthAtY = y => {                      // path is monotone in y → binary search
+      let a = 0, b = L;
+      for (let i = 0; i < 14; i++) { const m = (a + b) / 2; draw.getPointAtLength(m).y < y ? a = m : b = m; }
+      return (a + b) / 2;
+    };
+
+    function build() {
+      const W = main.clientWidth, H = main.scrollHeight, mob = W < 700;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
+      const cx = W / 2, amp = mob ? W / 2 - 14 : Math.min(W / 2 - 22, 640);
+      const hero = $('.hero'); startY = hero.offsetHeight * .86; endY = H - 150;
+      const steps = Math.max(4, Math.round((endY - startY) / 560));
+      let d = `M${cx} ${startY}`, px = cx, py = startY;
+      for (let i = 1; i <= steps; i++) {
+        const y = startY + (endY - startY) * i / steps, x = i === steps ? cx : cx + (i % 2 ? -amp : amp), k = (y - py) * .55;
+        d += ` C${px} ${py + k} ${x} ${y - k} ${x} ${y}`; px = x; py = y;
+      }
+      track.setAttribute('d', d); draw.setAttribute('d', d);
+      L = draw.getTotalLength(); draw.style.strokeDasharray = L;
+      grad.setAttribute('y1', startY); grad.setAttribute('y2', endY);
+      nodesG.replaceChildren();
+      nodes = [...document.querySelectorAll('.section')].map(sec => {
+        const y = Math.min(endY, Math.max(startY, sec.getBoundingClientRect().top + scrollY - main.getBoundingClientRect().top - scrollY + 40));
+        const len = lengthAtY(y), pt = draw.getPointAtLength(len);
+        const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y); c.setAttribute('r', 7); c.setAttribute('class', 'j-node');
+        nodesG.append(c); return { c, len };
+      });
+      update();
+    }
+
+    function update() {
+      const top = main.getBoundingClientRect().top;              // main's offset in viewport
+      const y = Math.max(startY, Math.min(endY, innerHeight * .62 - top));
+      const len = y <= startY ? 0 : lengthAtY(y);
+      draw.style.strokeDashoffset = L - len;
+      const pt = draw.getPointAtLength(Math.max(len, 0.01));
+      head.setAttribute('transform', `translate(${pt.x} ${pt.y})`);
+      head.style.opacity = len > 1 ? 1 : 0;
+      nodes.forEach(n => n.c.classList.toggle('on', len >= n.len - 2));
+    }
+
+    let ticking = false;
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; update(); }); } }, { passive: true });
+    let rt; const rebuild = () => { clearTimeout(rt); rt = setTimeout(build, 150); };
+    addEventListener('resize', rebuild); addEventListener('load', rebuild);
+    if ('ResizeObserver' in window) new ResizeObserver(rebuild).observe(main);
+    build();
+  }
+
   /* =========================================================
      BOOT
      ========================================================= */
@@ -364,7 +431,7 @@
     const lists = [['#statFirms', S.partners.length], ['#statVideos', S.videos.length]];
     lists.forEach(([s, n]) => { $(s).dataset.target = n; });
     renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
-    startBackground(); startHeroChart();
+    startBackground(); startHeroChart(); initJourney();
   }
 
   let seen = false;
