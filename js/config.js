@@ -59,8 +59,8 @@ window.SITE = {
     firms: [
       { name: "Funded Trader Markets", plans: [
         { market: "CFD", plan: "1 Step Nitro",     base: 0, code: 75, sizes: [ { size: "$5K", price: 80, final: 20 }, { size: "$10K", price: 116, final: 29 }, { size: "$25K", price: 236, final: 59 }, { size: "$50K", price: 480, final: 120 }, { size: "$100K", price: 622, final: 225 }, { size: "$200K", price: 1096, final: 395, estimate: true }, { size: "$300K", price: 1622, final: 584, estimate: true } ] },
-        { market: "CFD", plan: "2 Step Plus",      base: 0, code: 75, sizes: [ { size: "$5K", price: 100, final: 25 }, { size: "$10K", price: 152, final: 38 }, { size: "$25K", price: 392, final: 98 }, { size: "$50K", price: 784, final: 196 }, { size: "$100K", price: 998, final: 360 } ] },
-        { market: "CFD", plan: "Instant Standard", base: 0, code: 50,  sizes: [ { size: "$5K", price: 36, estimate: true }, { size: "$10K", price: 72, estimate: true }, { size: "$25K", price: 181, estimate: true }, { size: "$50K", price: 362, estimate: true }, { size: "$100K", price: 723 } ] }
+        { market: "CFD", plan: "2 Step Plus",      base: 0, code: 75, sizes: [ { size: "$5K", price: 100, final: 25 }, { size: "$10K", price: 152, final: 38 }, { size: "$25K", price: 392, final: 98 }, { size: "$50K", price: 784, final: 196 }, { size: "$100K", price: 997.5, final: 360 }, { size: "$200K", price: 1872.5, final: 674, estimate: true } ] },
+        { market: "CFD", plan: "Instant Standard", base: 0, code: 50, sizes: [ { size: "$5K", price: 52, final: 27.55, estimate: true }, { size: "$10K", price: 70, final: 37.05, estimate: true }, { size: "$25K", price: 176, final: 92.15, estimate: true }, { size: "$100K", price: 723, final: 379 } ] }
       ] },
       { name: "FundedNext", plans: [
         { market: "CFD", plan: "Stellar 2-Step", base: 0, code: 41.67, sizes: [ { size: "$6K", price: 59.99, final: 34.99 }, { size: "$15K", price: 119.99, estimate: true }, { size: "$25K", price: 199.99, estimate: true }, { size: "$50K", price: 299.99, estimate: true }, { size: "$100K", price: 549.99, estimate: true }, { size: "$200K", price: 1099.99, estimate: true } ] },
