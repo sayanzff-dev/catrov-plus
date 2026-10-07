@@ -522,8 +522,8 @@
     }
     function update() {
       const f = firm(), pl = curPlans()[pi], z = pl.sizes[si], base = +pl.base || 0, extra = +pl.code || 0;
-      const sale = Math.round(z.price * (1 - base / 100));                       // price with the firm's own sale
-      const withCode = z.final != null ? z.final : Math.round(sale * (1 - extra / 100));
+      const sale = Math.round(z.price * (1 - base / 100) * 100) / 100;                       // price with the firm's own sale
+      const withCode = z.final != null ? z.final : Math.round(sale * (1 - extra / 100) * 100) / 100;
       const final = applied ? withCode : sale;
       $('#simFirmName').textContent = f.name; $('#simSizeName').textContent = `${pl.market} · ${pl.plan} · ${z.size}`;
       $('#simOld').textContent = final < z.price ? money(z.price) : '';

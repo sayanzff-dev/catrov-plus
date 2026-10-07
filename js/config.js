@@ -53,7 +53,7 @@ window.SITE = {
        sizes = [{ size, price, final }]  price = list price in USD,
                final = exact price at checkout with the code (optional).
      A firm with no plans is not shown. The whole section hides if no firm has data.
-     $100K prices come from Funded Trader Markets' checkout pages (MetaTrader 5). Sizes marked estimate: true are scaled from the $100K list price until the real list prices are added. Replace them and delete the flag. */
+     $100K prices come from Funded Trader Markets' checkout pages (MetaTrader 5). FundedNext Futures fees and EZZX totals are from its checkout (Tradovate/NinjaTrader). Sizes marked estimate: true are scaled from the $100K list price until the real list prices are added. Replace them and delete the flag. */
   simulator: {
     code: "EZZX",
     firms: [
@@ -61,6 +61,12 @@ window.SITE = {
         { market: "CFD", plan: "1 Step Nitro",     base: 60, code: 10, sizes: [ { size: "$5K", price: 31, estimate: true }, { size: "$10K", price: 62, estimate: true }, { size: "$25K", price: 156, estimate: true }, { size: "$50K", price: 311, estimate: true }, { size: "$100K", price: 622, final: 225 } ] },
         { market: "CFD", plan: "2 Step Plus",      base: 60, code: 10, sizes: [ { size: "$5K", price: 50, estimate: true }, { size: "$10K", price: 100, estimate: true }, { size: "$25K", price: 250, estimate: true }, { size: "$50K", price: 499, estimate: true }, { size: "$100K", price: 998, final: 360 } ] },
         { market: "CFD", plan: "Instant Standard", base: 45, code: 5,  sizes: [ { size: "$5K", price: 36, estimate: true }, { size: "$10K", price: 72, estimate: true }, { size: "$25K", price: 181, estimate: true }, { size: "$50K", price: 362, estimate: true }, { size: "$100K", price: 723, final: 379 } ] }
+      ] },
+      { name: "FundedNext", plans: [
+        { market: "Futures", plan: "Flex",        base: 0, code: 47.76, sizes: [ { size: "$50K", price: 133.99, final: 69.99 }, { size: "$100K", price: 264.99, estimate: true }, { size: "$150K", price: 483.99, estimate: true } ] },
+        { market: "Futures", plan: "Rapid Pro",   base: 0, code: 44.0, sizes: [ { size: "$25K", price: 159.98, estimate: true }, { size: "$50K", price: 299.98, estimate: true }, { size: "$100K", price: 499.98, final: 279.99 } ] },
+        { market: "Futures", plan: "Rapid Daily", base: 0, code: 44.0, sizes: [ { size: "$25K", price: 159.98, estimate: true }, { size: "$50K", price: 299.98, estimate: true }, { size: "$100K", price: 499.98, final: 279.99 } ] },
+        { market: "Futures", plan: "Direct",      base: 0, code: 40.14, sizes: [ { size: "$50K", price: 283.99, final: 169.99 } ] }
       ] }
     ]
   },
