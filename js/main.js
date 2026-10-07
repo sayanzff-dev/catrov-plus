@@ -351,13 +351,13 @@
     const cio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { countUp(e.target); cio.unobserve(e.target); } }), { threshold: .4 });
     document.querySelectorAll('#payoutTotal').forEach(n => cio.observe(n));
 
-    const prog = $('#scrollProgress'), links = [...document.querySelectorAll('.nav-links a')];
-    const secs = links.map(a => $(a.getAttribute('href')));
+    const prog = $('#scrollProgress'), links = [...document.querySelectorAll('.pn-list .pn-pill, .pn-mobile a[data-sec]')];
+    const secs = links.map(a => $('#' + a.dataset.sec));
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - innerHeight;
       prog.style.width = (max > 0 ? scrollY / max * 100 : 0) + '%';
       let cur = -1; secs.forEach((s, i) => { if (s && s.getBoundingClientRect().top < innerHeight * .4) cur = i; });
-      links.forEach((a, i) => a.classList.toggle('active', i === cur));
+      links.forEach((a, i) => a.classList.toggle('active', secs[i] === secs[cur]));
       updateTimelineFill();
     };
     addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); onScroll();
@@ -488,6 +488,40 @@
     measure(); update(true);
   }
 
+  /* =========================================================
+     PILL NAV — rising-circle hover (geometry ported from the PillNav component)
+     ========================================================= */
+  function initPillNav() {
+    const pills = [...document.querySelectorAll('.pn-pill')];
+    function layout() {
+      pills.forEach(pill => {
+        const circle = $('.pn-circle', pill); if (!circle || !pill.offsetWidth) return;
+        const { width: w, height: h } = pill.getBoundingClientRect();
+        const R = ((w * w) / 4 + h * h) / (2 * h);                    // circle that just covers the pill
+        const D = Math.ceil(2 * R) + 2;
+        const delta = Math.ceil(R - Math.sqrt(Math.max(0, R * R - (w * w) / 4))) + 1;
+        circle.style.width = circle.style.height = D + 'px';
+        circle.style.bottom = -delta + 'px';
+        circle.style.transformOrigin = `50% ${D - delta}px`;
+        pill.style.setProperty('--pn-ph', h + 'px');
+      });
+    }
+    layout(); addEventListener('resize', layout); addEventListener('load', layout);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+    pills.forEach(p => {
+      p.addEventListener('pointerenter', () => p.classList.add('hot'));
+      p.addEventListener('pointerleave', () => p.classList.remove('hot'));
+      p.addEventListener('focus', () => p.classList.add('hot'));
+      p.addEventListener('blur', () => p.classList.remove('hot'));
+    });
+    const burger = $('#pnBurger'), menu = $('#pnMobile');
+    const set = open => { burger.setAttribute('aria-expanded', open); menu.classList.toggle('open', open); };
+    burger.addEventListener('click', () => set(burger.getAttribute('aria-expanded') !== 'true'));
+    menu.addEventListener('click', e => { if (e.target.closest('a')) set(false); });
+    addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
+    addEventListener('scroll', () => set(false), { passive: true });
+  }
+
   function boot() {
     $('#year').textContent = new Date().getFullYear();
     const followers = Object.values(S.followers || {}).reduce((a, b) => a + (+b || 0), 0);
@@ -495,7 +529,7 @@
     $('#statFollowers').dataset.target = followers;
     if (!followers) { const f = $('#statFollowers'); f.removeAttribute('data-count'); f.textContent = '—'; }
     renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
-    startBackground(); startHeroChart(); initPortal(); initJourney();
+    startBackground(); startHeroChart(); initPortal(); initJourney(); initPillNav();
   }
 
   let seen = false;
