@@ -281,7 +281,7 @@
      CONTENT
      ========================================================= */
   function renderTape() {
-    const words = ['Discipline', 'Structure', 'Execution', 'Risk first', 'Plan the trade', 'Trade the plan', 'Protect capital', 'Process over outcome'];
+    const words = ['5+ years of trading experience', 'Nasdaq futures trader', 'Full-time & independent', 'Content creator', 'From Morocco', 'Started in Forex', 'Now trading stock index futures'];
     const row = words.map(t => h('span', { text: t })), row2 = words.map(t => h('span', { text: t }));
     $('#tapeTrack').append(...row, ...row2);
   }
