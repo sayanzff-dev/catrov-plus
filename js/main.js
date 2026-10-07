@@ -453,7 +453,7 @@
     function fit() {
       wm.style.fontSize = '100px';
       const w = wm.scrollWidth || wm.getBoundingClientRect().width;
-      const target = Math.min(innerWidth * .94, 1800);
+      const target = innerWidth < 700 ? innerWidth * .9 : Math.min(innerWidth * .7, 1250);
       wm.style.fontSize = (100 * target / w) + 'px';
     }
     fit();
