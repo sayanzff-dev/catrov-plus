@@ -121,10 +121,6 @@ body.ready .lockup-text.enter{opacity:1;transform:none}
 .pc-frame img{width:100%;height:100%;object-fit:cover;object-position:52% 50%;display:block;transform:scale(1.12);animation:kenburns 16s ease-in-out infinite alternate;transition:object-position .6s var(--ease)}
 .pc-frame::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(3,2,2,.7)),linear-gradient(90deg,rgba(225,6,0,.16),transparent 35%);pointer-events:none}
 .scan{position:absolute;left:0;right:0;height:90px;z-index:2;background:linear-gradient(180deg,transparent,rgba(255,61,46,.22),transparent);animation:scan 5.5s linear infinite;pointer-events:none}
-.p-chip{position:absolute;z-index:3;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding:7px 12px;border-radius:999px;border:1px solid rgba(255,61,46,.5);background:rgba(3,2,2,.7);backdrop-filter:blur(8px);color:var(--text);white-space:nowrap}
-.p-chip::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:8px;animation:blink 1.4s infinite}
-.p-chip.c1{left:-14px;top:16%;animation:float 6s ease-in-out infinite}
-.p-chip.c2{right:-10px;bottom:14%;animation:float 7s ease-in-out -2s infinite}
 .pc-text{min-width:0}
 .pc-text .eyebrow{margin-bottom:8px}
 .pc-text h2{font-family:Anton,sans-serif;font-weight:400;font-size:clamp(38px,7vw,76px);letter-spacing:.05em;line-height:1.02;margin:0 0 18px}
@@ -258,6 +254,8 @@ body.is-loading .reveal{animation:none}
 .social-icon{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(180deg,var(--panel-top),var(--panel-bot));border:1px solid var(--panel-border);transition:.3s var(--ease)}
 .social-icon:hover{transform:translateY(-4px) rotate(-4deg);border-color:var(--red-bright);box-shadow:0 10px 30px -8px rgba(225,6,0,.6)}
 .social-icon svg{width:22px;height:22px;fill:var(--text)}
+.social-icon svg.outline{fill:none;stroke:var(--text);stroke-width:2}
+.social-icon svg.outline circle.dot{fill:var(--text);stroke:none}
 .social-icon img{width:24px;height:24px;object-fit:contain}
 
 footer{text-align:center;color:var(--muted-dim);font-size:12px;padding:70px 20px 40px}
@@ -292,9 +290,7 @@ footer{text-align:center;color:var(--muted-dim);font-size:12px;padding:70px 20px
   .pc-text .eyebrow{justify-content:center}
   .pc-text p{margin-inline:auto}
   .pc-text .hero-cta,.facts{justify-content:center}
-  .p-chip{font-size:9.5px;padding:5px 9px}
-  .p-chip.c1{left:-22px}.p-chip.c2{right:-22px}
-  .pc-text .btn{padding:11px 20px;font-size:14px}
+      .pc-text .btn{padding:11px 20px;font-size:14px}
   .facts{margin-top:14px}
   .nav-links{display:none}
   .nav-cta{margin-left:auto}
