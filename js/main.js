@@ -528,7 +528,7 @@
       $('#simFirmName').textContent = f.name; $('#simSizeName').textContent = `${pl.market} · ${pl.plan} · ${z.size}`;
       $('#simOld').textContent = final < z.price ? money(z.price) : '';
       const save = $('#simSave'); const extraSaved = sale - withCode;
-      save.classList.toggle('on', applied && extraSaved > 0); save.textContent = applied && extraSaved > 0 ? `${code} saves you ${money(extraSaved)} more (${Math.round(extra * 10) / 10}% off)` : '';
+      save.classList.toggle('on', applied && extraSaved > 0); save.textContent = applied && extraSaved > 0 ? `${code} saves you ${money(extraSaved)} (${Math.round(extraSaved / (sale || 1) * 100)}% off)` : '';
       tween(final);
       $('#simEst').hidden = !(z.estimate || (pl.unconfirmed && applied));
       $('#simEst').textContent = pl.unconfirmed && applied ? 'The EZZX price for this plan is not confirmed here. The fee shown is before the code, and the checkout shows your final price.' : 'Estimated price, worked out from this plan\'s discount. Check the checkout for the exact amount.';
