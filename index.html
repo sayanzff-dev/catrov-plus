@@ -185,6 +185,36 @@
   <div class="partner-grid" id="partnerGrid"></div>
 </section>
 
+<!-- ============ ACCOUNT SIMULATOR ============ -->
+<section id="simulator" class="section" hidden>
+  <div class="eyebrow reveal">Account simulator</div>
+  <h2 class="reveal">See your price with code <span class="code">EZZX</span></h2>
+  <div class="sim reveal" id="sim">
+    <div class="sim-firms" id="simFirms" role="tablist" aria-label="Prop firm"></div>
+    <div class="sim-grid">
+      <div class="sim-pick">
+        <div class="sim-label">Account size</div>
+        <div class="sim-sizes" id="simSizes" role="radiogroup" aria-label="Account size"></div>
+        <div class="sim-label">Discount code</div>
+        <form class="sim-code" id="simForm" autocomplete="off">
+          <input id="simCode" type="text" inputmode="text" placeholder="Type the code" aria-label="Discount code" maxlength="20">
+          <button type="submit" id="simApply">Apply</button>
+        </form>
+        <div class="sim-msg" id="simMsg" role="status"></div>
+      </div>
+      <div class="sim-sum">
+        <div class="sim-firm" id="simFirmName"></div>
+        <div class="sim-size" id="simSizeName"></div>
+        <div class="sim-old" id="simOld"></div>
+        <div class="sim-new" id="simNew">$0</div>
+        <div class="sim-save" id="simSave"></div>
+        <a class="sim-cta" id="simCta" href="#" target="_blank" rel="noopener sponsored"><span>Get the account</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+        <div class="sim-fine" id="simFine"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ SOCIALS ============ -->
 <section class="section">
   <div class="eyebrow reveal">Socials</div>

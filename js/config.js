@@ -46,6 +46,18 @@ window.SITE = {
     { firm: "Forex Funds Flow",      title: "Funded Trader Recognition",     date: "2026-09-07", image: "assets/certificates/forexfundsflow.jpg" }
   ],
 
+  /* ---------- ACCOUNT SIMULATOR ----------
+     Leave `firms` empty and the section stays hidden.
+     For each firm:  name must match a partner, discount is a percent,
+     sizes is a list of { size: "$50K", price: 250 } (the normal price in USD).
+     Always check the firm's site for current prices and the real discount. */
+  simulator: {
+    code: "EZZX",
+    firms: [
+      // { name: "Funded Trader Markets", discount: 10, sizes: [ { size: "$25K", price: 150 }, { size: "$50K", price: 250 } ] },
+    ]
+  },
+
   /* ---------- PARTNERS ---------- */
   partners: [
     { name: "PropFirmMatch", logo: "assets/img/propfirmmatch-logo.png", badge: "MATCH", href: "https://www.propfirmmatch.com/?a_aid=EZZARIon",

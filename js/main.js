@@ -487,6 +487,47 @@
   }
 
   /* =========================================================
+     ACCOUNT SIMULATOR — price with and without the discount code
+     ========================================================= */
+  function initSimulator() {
+    const cfg = S.simulator || {}, firms = (cfg.firms || []).filter(f => f.sizes && f.sizes.length);
+    const sec = $('#simulator'); if (!firms.length) return;
+    sec.hidden = false;
+    const code = (cfg.code || 'EZZX').toUpperCase(), money = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 });
+    let fi = 0, si = 0, applied = false, shown = 0, raf;
+    const tabs = $('#simFirms'), sizes = $('#simSizes'), input = $('#simCode'), msg = $('#simMsg');
+    const partner = f => (S.partners || []).find(p => p.name === f.name) || {};
+
+    function build() {
+      tabs.replaceChildren(...firms.map((f, i) => { const p = partner(f), b = h('button', { class: 'sim-firm-btn', type: 'button', role: 'tab', 'aria-selected': i === fi }, [p.logo && h('img', { src: p.logo, alt: '' }), document.createTextNode(f.name)]); b.onclick = () => { fi = i; si = 0; build(); }; return b; }));
+      sizes.replaceChildren(...firms[fi].sizes.map((z, i) => { const b = h('button', { class: 'sim-size-btn', type: 'button', role: 'radio', 'aria-checked': i === si, text: z.size }); b.onclick = () => { si = i; build(); }; return b; }));
+      update();
+    }
+    function tween(to) {
+      cancelAnimationFrame(raf); const from = shown, t0 = performance.now(), el = $('#simNew');
+      if (reduceMotion) { shown = to; el.textContent = money(to); return; }
+      (function tick(now) { const t = Math.min(1, (now - t0) / 650), e = 1 - Math.pow(1 - t, 4); shown = from + (to - from) * e; el.textContent = money(Math.round(shown * 100) / 100); if (t < 1) raf = requestAnimationFrame(tick); })(t0);
+    }
+    function update() {
+      const f = firms[fi], z = f.sizes[si], disc = applied ? (+f.discount || 0) : 0, final = Math.round(z.price * (1 - disc / 100) * 100) / 100;
+      $('#simFirmName').textContent = f.name; $('#simSizeName').textContent = `${z.size} account`;
+      $('#simOld').textContent = disc ? money(z.price) : '';
+      const save = $('#simSave'); save.classList.toggle('on', !!disc); save.textContent = disc ? `You save ${money(z.price - final)} (${disc}% off)` : '';
+      tween(final);
+      $('#simCta').href = f.href || partner(f).href || '#';
+      $('#simFine').textContent = (cfg.example ? 'EXAMPLE NUMBERS, not real prices. ' : '') + `Estimate only. Check ${f.name}'s site for the current price and make sure the code ${code} is applied at checkout.`;
+    }
+    $('#simForm').addEventListener('submit', e => {
+      e.preventDefault(); const v = input.value.trim().toUpperCase();
+      if (v === code) { applied = true; msg.className = 'sim-msg ok'; msg.textContent = `Code ${code} applied.`; }
+      else { applied = false; msg.className = 'sim-msg bad'; msg.textContent = v ? 'That code is not valid. Try ' + code + '.' : 'Type the code first.'; }
+      update();
+    });
+    input.addEventListener('input', () => { if (applied && input.value.trim().toUpperCase() !== code) { applied = false; msg.textContent = ''; msg.className = 'sim-msg'; update(); } });
+    build();
+  }
+
+  /* =========================================================
      BOOT
      ========================================================= */
   /* =========================================================
@@ -574,7 +615,7 @@
     $('#year').textContent = new Date().getFullYear();
     $('#statFirms').dataset.target = S.partners.length;
     renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
-    startBackground(); initFollowers(); initPortal(); initJourney(); initPillNav();
+    startBackground(); initFollowers(); initPortal(); initJourney(); initPillNav(); initSimulator();
   }
 
   let seen = false;
