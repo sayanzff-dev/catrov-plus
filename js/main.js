@@ -396,7 +396,7 @@
       const W = main.clientWidth, H = main.scrollHeight, mob = W < 700;
       svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
       const cx = W / 2, amp = mob ? W / 2 - 14 : Math.min(W / 2 - 22, 640);
-      const hero = $('.hero'); startY = hero.offsetHeight * .86; endY = H - 150;
+      const tail = $('.hero-tail'); startY = tail.offsetTop + tail.offsetHeight; endY = H - 150;
       const steps = Math.max(4, Math.round((endY - startY) / 560));
       let d = `M${cx} ${startY}`, px = cx, py = startY;
       for (let i = 1; i <= steps; i++) {
@@ -438,14 +438,59 @@
   /* =========================================================
      BOOT
      ========================================================= */
-  function initPortrait() {
-    const p = $('#portrait'), img = $('.portrait-frame img', p);
-    if (reduceMotion) return;
-    addEventListener('pointermove', e => {
-      const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
-      p.style.transform = `perspective(1000px) rotateY(${x * 6}deg) rotateX(${-y * 5}deg)`;
-      img.style.objectPosition = `${52 + x * 6}% 50%`;
-    }, { passive: true });
+  /* =========================================================
+     PORTAL — the logo grows as you scroll until you fly through
+     it, and the introduction opens up behind it
+     ========================================================= */
+  function initPortal() {
+    const sec = $('#portal'), emb = $('#pEmblem'), disc = $('.disc', emb), rings = $('.rings', emb), txt = $('#pText'),
+          rev = $('#pReveal'), logo = $('#pLogo'), content = $('#pContent'), bg = $('#pBg');
+    emb.classList.add('enter'); txt.classList.add('enter');
+    if (reduceMotion) { document.body.classList.add('static'); return; }
+
+    let cx = 0, cy = 0, D = 1, S = 2, range = 1;
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const ease = t => t * t * (3 - 2 * t);
+
+    function measure() {
+      const keep = emb.style.transform; emb.style.transform = 'none';
+      const r = disc.getBoundingClientRect(); emb.style.transform = keep;
+      cx = r.left + r.width / 2; cy = r.top + r.height / 2; D = r.width;
+      const far = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
+      S = (2 * far / D) * 1.04;
+      range = Math.max(1, sec.offsetHeight - innerHeight);
+    }
+
+    function update() {
+      const p = clamp(-sec.getBoundingClientRect().top / range);
+      const t = clamp(p / .58), e = ease(t);
+      const live = p > 0.001;
+      emb.classList.toggle('live', live); txt.classList.toggle('live', live);
+
+      const scale = Math.pow(S, e);                          // exponential: constant-speed "fly-in" feel
+      emb.style.transform = live ? `scale(${scale})` : '';
+      rings.style.opacity = 1 - clamp(t / .3);
+      disc.style.opacity = 1 - clamp((t - .4) / .5);
+      txt.style.opacity = live ? 1 - clamp(t / .22) : '';
+      txt.style.transform = live ? `translateY(${t * 46}px)` : '';
+
+      if (t < .005) { rev.style.visibility = 'hidden'; }
+      else {
+        rev.style.visibility = 'visible';
+        rev.style.clipPath = t >= 1 ? 'none' : `circle(${(D / 2) * scale * .985}px at ${cx}px ${cy}px)`;
+      }
+      logo.style.visibility = t >= 1 ? 'hidden' : 'visible';
+      bg.style.transform = `scale(${1.35 - .35 * e})`;
+      const c = clamp((p - .4) / .2);
+      content.style.opacity = c; content.style.transform = `translateY(${(1 - c) * 44}px) scale(${.96 + .04 * c})`;
+    }
+
+    let tick = false;
+    addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(() => { tick = false; update(); }); } }, { passive: true });
+    const remeasure = () => { measure(); update(); };
+    addEventListener('resize', remeasure); addEventListener('load', remeasure);
+    measure(); update();
+    setTimeout(remeasure, 1300);                              // after the entrance animation settles
   }
 
   function boot() {
@@ -453,7 +498,7 @@
     const lists = [['#statFirms', S.partners.length], ['#statVideos', S.videos.length]];
     lists.forEach(([s, n]) => { $(s).dataset.target = n; });
     renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
-    startBackground(); startHeroChart(); initPortrait(); initJourney();
+    startBackground(); startHeroChart(); initPortal(); initJourney();
   }
 
   let seen = false;

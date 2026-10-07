@@ -49,40 +49,73 @@
 
 <main id="top">
 
-<!-- ============ HERO ============ -->
-<section class="hero">
-  <div class="hero-grid">
-    <div class="hero-text">
-      <div class="mark-wrap reveal">
-        <div class="mark-glow"></div><div class="mark-ring"></div><div class="mark-ring r2"></div>
-        <img class="mark-img" src="assets/img/ezzarion-brain-mark.png" alt="Ezzarion brain mark">
-      </div>
-      <h1 class="reveal" style="--d:.1s">EZZARION</h1>
-      <p class="tagline reveal" style="--d:.2s">Discipline <i>·</i> Structure <i>·</i> Execution</p>
-      <div class="hero-cta reveal" style="--d:.3s">
-        <a class="btn primary" href="https://discord.gg/AdADHMWBEH" target="_blank" rel="noopener">Join the Academy</a>
-        <a class="btn ghost" href="#payouts">See the payouts</a>
+<!-- ============ PORTAL: logo -> scroll to enter -> intro ============ -->
+<section class="portal" id="portal">
+  <div class="portal-stage">
+
+    <div class="portal-reveal" id="pReveal">
+      <img class="pr-bg" id="pBg" src="assets/photos/ezzarion.jpg" alt="">
+      <div class="pr-shade"></div>
+      <div class="pr-content" id="pContent">
+        <figure class="pc-photo">
+          <div class="pc-glow"></div>
+          <div class="pc-frame">
+            <img src="assets/photos/ezzarion.jpg" alt="Ezzarion in a dark marble hotel lobby, holding a phone and a travel bag">
+            <span class="scan"></span>
+          </div>
+          <span class="corner tl"></span><span class="corner br"></span>
+          <figcaption class="p-chip c1">Nasdaq Futures</figcaption>
+          <figcaption class="p-chip c2">Morocco</figcaption>
+        </figure>
+        <div class="pc-text">
+          <div class="eyebrow">Introduction</div>
+          <h2>Meet Ezzarion</h2>
+          <p class="lead">Ezzarion is an independent, full-time Nasdaq Futures trader and content creator from Morocco.</p>
+          <p>With over 5 years of trading experience, he originally started out in the Forex markets before transitioning fully to trading stock index futures.</p>
+          <ul class="facts">
+            <li><b>5+</b><span>years trading</span></li>
+            <li><b>NQ</b><span>Nasdaq futures</span></li>
+            <li><b>MA</b><span>Morocco</span></li>
+          </ul>
+          <div class="hero-cta">
+            <a class="btn primary" href="https://discord.gg/AdADHMWBEH" target="_blank" rel="noopener">Join the Academy</a>
+            <a class="btn ghost" href="#payouts">See the payouts</a>
+          </div>
+        </div>
       </div>
     </div>
-    <figure class="portrait reveal" id="portrait" style="--d:.2s">
-      <div class="portrait-glow"></div>
-      <div class="portrait-frame">
-        <img src="assets/photos/ezzarion.jpg" alt="Ezzarion in a dark marble hotel lobby, holding a phone and a travel bag">
-        <span class="scan"></span>
+
+    <div class="portal-logo" id="pLogo">
+      <div class="lockup">
+        <div class="emblem" id="pEmblem">
+          <svg class="rings" viewBox="0 0 400 400" aria-hidden="true">
+            <defs><radialGradient id="eg"><stop offset="55%" stop-color="#ff3d2e" stop-opacity="0"/><stop offset="100%" stop-color="#ff3d2e" stop-opacity=".28"/></radialGradient></defs>
+            <circle cx="200" cy="200" r="196" fill="url(#eg)"/>
+            <g class="spin-a"><circle cx="200" cy="200" r="190" fill="none" stroke="#ff3d2e" stroke-opacity=".55" stroke-width="1.5" stroke-dasharray="1 18.9"/><circle cx="390" cy="200" r="5" fill="#ff3d2e"/></g>
+            <g class="spin-b"><circle cx="200" cy="200" r="168" fill="none" stroke="#ff3d2e" stroke-opacity=".7" stroke-width="1.2" stroke-dasharray="4 9"/></g>
+            <circle cx="200" cy="200" r="146" fill="none" stroke="#ff3d2e" stroke-opacity=".3" stroke-width="1"/>
+          </svg>
+          <img class="disc" src="assets/img/ezzarion-brain-mark.png" alt="Ezzarion brain mark">
+        </div>
+        <div class="lockup-text" id="pText">
+          <h1>EZZARION</h1>
+          <p class="tagline">Discipline <i>·</i> Structure <i>·</i> Execution</p>
+          <div class="enter-cue"><span class="mouse"><i></i></span>Scroll to enter</div>
+        </div>
       </div>
-      <span class="corner tl"></span><span class="corner br"></span>
-      <figcaption class="p-chip c1">Structure</figcaption>
-      <figcaption class="p-chip c2">Execution</figcaption>
-    </figure>
+    </div>
+
   </div>
-  <canvas id="heroChart" class="hero-chart reveal" style="--d:.4s" aria-hidden="true"></canvas>
-  <div class="stats reveal" style="--d:.5s">
+</section>
+
+<section class="hero-tail">
+  <canvas id="heroChart" class="hero-chart reveal" aria-hidden="true"></canvas>
+  <div class="stats reveal" style="--d:.1s">
     <div class="stat"><b data-count id="statPayout" data-prefix="$">0</b><span>Total paid out</span></div>
     <div class="stat"><b data-count id="statCount">0</b><span>Payouts shown</span></div>
     <div class="stat"><b data-count id="statFirms">0</b><span>Partner firms</span></div>
     <div class="stat"><b data-count id="statVideos">0</b><span>Videos</span></div>
   </div>
-  <a class="scroll-hint" href="#community" aria-label="Scroll down"><span></span></a>
 </section>
 
 <div class="tape" aria-hidden="true">
