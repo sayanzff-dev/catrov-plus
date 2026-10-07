@@ -445,7 +445,7 @@
      it, and the introduction opens up behind it
      ========================================================= */
   function initPortal() {
-    const sec = $('#portal'), photo = $('#heroPhoto'), type = $('#pText'), word = $('#heroWord'), cue = $('#pStraps');
+    const sec = $('#portal'), photo = $('#heroPhoto'), cut = $('#heroCut'), type = $('#pText'), word = $('#heroWord'), cue = $('#pStraps');
     type.classList.add('enter');
 
     // safety net: if the real font runs wider than planned, shrink until it clears the screen
@@ -466,9 +466,9 @@
     function render(p) {
       const live = p > 0.001;
       type.classList.toggle('live', live);
-      photo.style.transform = `translate3d(0,${-3 * p}%,0) scale(${1.04 + .07 * p})`;       // slow push-in, drifting up
+      photo.style.transform = cut.style.transform = `translate3d(0,${-3 * p}%,0) scale(${1.04 + .07 * p})`;   // photo and cut-out move as one: push-in, drifting up
       const e = ease(clamp(p / .6));
-      type.style.transform = live ? `translateY(${-46 * e}px)` : '';                        // type lifts 46px and fades
+      type.style.transform = live ? `translateY(${-46 * e}px) scale(${1 + .05 * e})` : '';        // type sits behind the person, lifts and fades
       type.style.opacity = live ? 1 - e : '';
       cue.style.opacity = 1 - clamp(p / .25);
     }
