@@ -155,14 +155,18 @@
 <!-- ============ PAYOUTS ============ -->
 <section id="payouts" class="section">
   <div class="eyebrow reveal">Proof, not promises</div>
-  <h2 class="reveal">Payout timeline</h2>
-  <div class="payout-total reveal">
-    <span>Total withdrawn</span>
-    <b id="payoutTotal">$0</b>
+  <h2 class="reveal">Payout wall</h2>
+  <div class="pw-top reveal">
+    <div class="pw-total"><span>Total withdrawn</span><b id="payoutTotal">$0</b></div>
+    <div class="pw-metrics" id="pwMetrics"></div>
   </div>
   <div class="chips reveal" id="firmChips"></div>
-  <div class="timeline" id="timeline">
-    <div class="tl-line"><div class="tl-fill" id="tlFill"></div></div>
+  <div class="pw-rail reveal" id="pwRail">
+    <div class="pw-track" id="timeline"></div>
+  </div>
+  <div class="pw-ctrl reveal">
+    <div class="pw-prog"><i id="pwProg"></i></div>
+    <div class="pw-btns"><button type="button" id="pwPrev" aria-label="Previous payouts">‹</button><button type="button" id="pwNext" aria-label="Next payouts">›</button></div>
   </div>
 
   <div class="eyebrow sub reveal">Certificates</div>

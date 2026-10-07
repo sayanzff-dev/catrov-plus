@@ -285,30 +285,49 @@
 
   /* ---------- payouts timeline ---------- */
   function renderPayouts() {
-    const tl = $('#timeline'), chips = $('#firmChips');
+    const track = $('#timeline'), chips = $('#firmChips'), rail = $('#pwRail'), prog = $('#pwProg');
     const list = [...S.payouts].sort((a, b) => b.date.localeCompare(a.date));
     const total = list.reduce((s, p) => s + p.amount, 0);
+    const max = Math.max(...list.map(p => p.amount), 1), best = list.length ? list.reduce((a, b) => b.amount > a.amount ? b : a) : null;
     const fmtDate = d => new Date(d + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
+    // headline numbers, computed from the list
+    const met = [[list.length, 'Payouts'], [best ? usd(best.amount) : '—', 'Biggest'], [list.length ? usd(total / list.length) : '—', 'Average']];
+    $('#pwMetrics').append(...met.map(([v, l]) => h('div', { class: 'pw-m' }, [h('b', { text: String(v) }), h('span', { text: l })])));
+
+    let io;
     function draw(filter) {
-      tl.querySelectorAll('.tl-item').forEach(n => n.remove());
-      const rows = list.length ? list.filter(p => !filter || p.firm === filter)
-        : [1, 2, 3].map(() => ({ empty: true }));
-      tl.append(...rows.map(p => {
-        const img = h('div', { class: 'tl-img' }, p.empty ? h('span', { text: 'PROOF' }) : false);
-        if (!p.empty) { img.style.backgroundImage = `url("${p.image}")`; img.onclick = () => openLightbox(h('img', { src: p.image, alt: `${p.firm} payout proof` }), `${p.firm} — ${usd(p.amount)} — ${fmtDate(p.date)}`); }
-        const amount = h('div', { class: 'tl-amount', text: p.empty ? '$0,000' : usd(p.amount) });
-        return h('div', { class: `tl-item${p.empty ? ' empty' : ''}` }, h('div', { class: 'tl-card' }, [
+      track.replaceChildren();
+      const rows = list.length ? list.filter(p => !filter || p.firm === filter) : [1, 2, 3].map(() => ({ empty: true }));
+      track.append(...rows.map((p, i) => {
+        const img = h('div', { class: 'pw-img' }, p.empty ? h('span', { text: 'PROOF' }) : false);
+        if (!p.empty) { img.style.backgroundImage = `url("${p.image}")`; img.onclick = () => { if (!rail.dataset.moved) openLightbox(h('img', { src: p.image, alt: `${p.firm} payout proof` }), `${p.firm} · ${usd(p.amount)} · ${fmtDate(p.date)}`); }; }
+        return h('article', { class: 'pw-card' + (p.empty ? ' empty' : '') + (!p.empty && p === best ? ' best' : ''), style: `--d:${i * .08}s;--w:${p.empty ? 0 : Math.round(p.amount / max * 100)}%` }, [
           img,
-          h('div', {}, [
-            h('div', { class: 'tl-date', text: p.empty ? 'YYYY · MM · DD' : fmtDate(p.date) }),
-            h('div', { class: 'tl-firm', text: p.empty ? 'Prop firm name' : p.firm }),
-            amount, p.note && h('div', { class: 'tl-note', text: p.note })
+          h('div', { class: 'pw-body' }, [
+            h('div', { class: 'pw-date' }, [h('span', { text: p.empty ? 'YYYY · MM · DD' : fmtDate(p.date) }), h('span', { text: p.empty ? '' : 'Paid' })]),
+            h('div', { class: 'pw-firm', text: p.empty ? 'Prop firm name' : p.firm }),
+            h('div', { class: 'pw-amt', text: p.empty ? '$0,000' : usd(p.amount) }),
+            p.note && h('div', { class: 'pw-note', text: p.note }),
+            h('div', { class: 'pw-bar' }, h('i'))
           ])
-        ]));
+        ]);
       }));
-      observeTimeline();
+      io && io.disconnect();
+      io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { root: null, threshold: .2 });
+      track.querySelectorAll('.pw-card').forEach(c => io.observe(c));
+      rail.scrollLeft = 0; progress();
     }
+    function progress() { const max = rail.scrollWidth - rail.clientWidth; const vis = rail.clientWidth / rail.scrollWidth; prog.style.width = Math.max(vis, .08) * 100 + '%'; prog.style.marginLeft = (max > 0 ? rail.scrollLeft / max * (1 - Math.max(vis, .08)) * 100 : 0) + '%'; }
+    rail.addEventListener('scroll', progress, { passive: true }); addEventListener('resize', progress);
+    const step = () => (track.firstElementChild?.getBoundingClientRect().width || 300) + 22;
+    $('#pwPrev').onclick = () => rail.scrollBy({ left: -step(), behavior: 'smooth' });
+    $('#pwNext').onclick = () => rail.scrollBy({ left: step(), behavior: 'smooth' });
+    // drag to scroll with a mouse
+    let x0 = null, s0 = 0;
+    rail.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; x0 = e.clientX; s0 = rail.scrollLeft; delete rail.dataset.moved; });
+    addEventListener('pointermove', e => { if (x0 == null) return; const dx = e.clientX - x0; if (Math.abs(dx) > 5) { rail.classList.add('drag'); rail.dataset.moved = 1; } rail.scrollLeft = s0 - dx; });
+    addEventListener('pointerup', () => { if (x0 == null) return; x0 = null; rail.classList.remove('drag'); setTimeout(() => delete rail.dataset.moved, 0); });
 
     const firms = [...new Set(list.map(p => p.firm))];
     if (firms.length > 1) {
@@ -333,18 +352,6 @@
       return el;
     }));
     if (!grid.children.length) { grid.previousElementSibling.remove(); grid.remove(); }
-  }
-
-  let tlObs;
-  function observeTimeline() {
-    tlObs && tlObs.disconnect();
-    tlObs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); } }), { rootMargin: '0px 0px -35% 0px' });
-    document.querySelectorAll('.tl-item').forEach(n => tlObs.observe(n));
-  }
-  function updateTimelineFill() {
-    const tl = $('#timeline'), r = tl.getBoundingClientRect();
-    const f = Math.max(0, Math.min(1, (innerHeight * .6 - r.top) / r.height));
-    $('#tlFill').style.height = (f * 100) + '%';
   }
 
   /* =========================================================
@@ -384,7 +391,6 @@
       prog.style.width = (max > 0 ? scrollY / max * 100 : 0) + '%';
       let cur = -1; secs.forEach((s, i) => { if (s && s.getBoundingClientRect().top < innerHeight * .4) cur = i; });
       links.forEach((a, i) => a.classList.toggle('active', secs[i] === secs[cur]));
-      updateTimelineFill();
     };
     addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); onScroll();
 
