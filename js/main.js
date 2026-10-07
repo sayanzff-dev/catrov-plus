@@ -326,7 +326,9 @@
      ========================================================= */
   function countUp(el) {
     const target = +(el.dataset.target ?? el.dataset.count) || 0, pre = el.dataset.prefix || '';
-    const dec = target % 1 ? 2 : 0, fmt = v => pre + v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    const dec = target % 1 ? 2 : 0, compact = el.hasAttribute('data-compact');
+    const fmt = v => compact ? pre + new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(v)
+                             : pre + v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
     if (reduceMotion || !target) { el.textContent = fmt(target); return; }
     const t0 = performance.now(), D = 1600;
     (function tick(now) {
@@ -488,8 +490,10 @@
 
   function boot() {
     $('#year').textContent = new Date().getFullYear();
-    const lists = [['#statFirms', S.partners.length], ['#statVideos', S.videos.length]];
-    lists.forEach(([s, n]) => { $(s).dataset.target = n; });
+    const followers = Object.values(S.followers || {}).reduce((a, b) => a + (+b || 0), 0);
+    $('#statFirms').dataset.target = S.partners.length;
+    $('#statFollowers').dataset.target = followers;
+    if (!followers) { const f = $('#statFollowers'); f.removeAttribute('data-count'); f.textContent = '—'; }
     renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
     startBackground(); startHeroChart(); initPortal(); initJourney();
   }

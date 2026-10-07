@@ -55,6 +55,11 @@ window.SITE = {
       desc: "Web application for traders — sync and manage your accounts in one place." }
   ],
 
+  /* ---------- FOLLOWERS (adds up to the "Total followers" tile) ----------
+     Type the current number for each platform. Leave 0 for any you don't
+     want counted. If every number is 0 the tile shows "—".            */
+  followers: { youtube: 0, kick: 0, tiktok: 0, instagram: 0, x: 0 },
+
   socials: [
     { name: "X", href: "https://x.com/ezzarion" },
     { name: "Instagram", href: "https://www.instagram.com/ezzarion" },
