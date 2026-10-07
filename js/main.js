@@ -505,6 +505,7 @@
     reset();
 
     function build() {
+      const col = firm().color || '#ff3d2e'; $('#sim').style.setProperty('--acc', col);
       tabs.replaceChildren(...firms.map((f, i) => { const p = partner(f), b = h('button', { class: 'sim-firm-btn', type: 'button', role: 'tab', 'aria-selected': i === fi }, [p.logo && h('img', { src: p.logo, alt: '' }), document.createTextNode(f.name)]); b.onclick = () => { fi = i; reset(); build(); }; return b; }));
       const ms = mkts();
       markets.hidden = ms.length < 2; markets.previousElementSibling.hidden = ms.length < 2;
