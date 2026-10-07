@@ -18,8 +18,7 @@ window.SITE = {
   videos: [
     { id: "F4x_AjaT_ns", title: "5 Years of Trading | What I’ve Learned About Psychology, ICT, Prop Firms & Payouts", tag: "Start here", desc: "Psychology, ICT, prop firms and payouts, from five years of trading." },
     { id: "79xtnqSylDQ", title: "I GOT PAID $1506 FROM FUNDED TRADER MARKET | LIVE PAYOUT", tag: "Payout", desc: "A live withdrawal from Funded Trader Markets, on camera." },
-    // TODO: paste the YouTube link for this one and it will play on the site
-    { id: "", title: "2nd Payout LIVE From the Same Account | Funded Trader Markets", tag: "Payout", desc: "The second live payout from the same account." },
+    { id: "qvC63bOOOu4", title: "2nd Payout LIVE From the Same Account | Funded Trader Markets", tag: "Payout", desc: "The second live payout from the same account." },
   ],
 
   /* ---------- PAYOUT TIMELINE ----------
