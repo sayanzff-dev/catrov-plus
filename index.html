@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EZZARION — Discipline · Structure · Execution</title>
+<meta name="description" content="Official Ezzarion hub — Discord academy, live trading, videos, payout timeline and prop firm partners.">
+<meta name="theme-color" content="#030202">
+<link rel="icon" href="assets/img/ezzarion-brain-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-loading">
+
+<!-- ============ INTRO ============ -->
+<div id="intro" aria-hidden="true">
+  <canvas id="introCanvas"></canvas>
+  <div class="intro-hud">
+    <div class="intro-pair">EZZ/USD <span id="introPrice">0.00</span></div>
+    <div class="intro-trade" id="introTrade"><b>BUY</b> <span>ENTRY</span></div>
+    <div class="intro-trade tp" id="introTP"><b>TP HIT</b> <span id="introR">+3.2R</span></div>
+  </div>
+  <div class="intro-brand" id="introBrand">
+    <img src="assets/img/ezzarion-brain-mark.png" alt="">
+    <h2>EZZARION</h2>
+    <p>Discipline · Structure · Execution</p>
+  </div>
+  <button id="introSkip" type="button">Skip ›</button>
+</div>
+
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <a class="nav-brand" href="#top"><img src="assets/img/ezzarion-brain-mark.png" alt="" width="28" height="28"><span>EZZARION</span></a>
+  <div class="nav-links">
+    <a href="#community">Community</a>
+    <a href="#videos">Videos</a>
+    <a href="#payouts">Payouts</a>
+    <a href="#partners">Partners</a>
+  </div>
+  <a class="nav-cta" href="https://discord.gg/AdADHMWBEH" target="_blank" rel="noopener">Join Discord</a>
+  <div class="scroll-progress" id="scrollProgress"></div>
+</nav>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="mark-wrap reveal">
+    <div class="mark-glow"></div><div class="mark-ring"></div><div class="mark-ring r2"></div>
+    <img class="mark-img" src="assets/img/ezzarion-brain-mark.png" alt="Ezzarion brain mark">
+  </div>
+  <h1 class="reveal" style="--d:.1s">EZZARION</h1>
+  <p class="tagline reveal" style="--d:.2s">Discipline <i>·</i> Structure <i>·</i> Execution</p>
+  <div class="hero-cta reveal" style="--d:.3s">
+    <a class="btn primary" href="https://discord.gg/AdADHMWBEH" target="_blank" rel="noopener">Join the Academy</a>
+    <a class="btn ghost" href="#payouts">See the payouts</a>
+  </div>
+  <canvas id="heroChart" class="hero-chart reveal" style="--d:.4s" aria-hidden="true"></canvas>
+  <div class="stats reveal" style="--d:.5s">
+    <div class="stat"><b data-count id="statPayout" data-prefix="$">0</b><span>Total paid out</span></div>
+    <div class="stat"><b data-count id="statCount">0</b><span>Payouts shown</span></div>
+    <div class="stat"><b data-count id="statFirms">0</b><span>Partner firms</span></div>
+    <div class="stat"><b data-count id="statVideos">0</b><span>Videos</span></div>
+  </div>
+  <a class="scroll-hint" href="#community" aria-label="Scroll down"><span></span></a>
+</section>
+
+<div class="tape" aria-hidden="true">
+  <div class="tape-track" id="tapeTrack"></div>
+</div>
+
+<div class="wrap">
+
+<!-- ============ COMMUNITY ============ -->
+<section id="community" class="section">
+  <div class="eyebrow reveal">Community</div>
+  <h2 class="reveal">Built for serious traders only</h2>
+  <a class="card feature reveal" href="https://discord.gg/AdADHMWBEH" target="_blank" rel="noopener">
+    <span class="corner tl"></span><span class="corner br"></span>
+    <div class="icon-badge">
+      <svg viewBox="0 0 32 32"><path d="M11 6.5 L21 6.5 L21 9 L23.5 9 L26 13 L26 22.5 Q26 25.5 23 25.5 L21.5 25.5 L20.3 22.3 Q16 23.4 11.7 22.3 L10.5 25.5 L9 25.5 Q6 25.5 6 22.5 L6 13 L8.5 9 L11 9 Z" fill="var(--red-bright)"/><ellipse cx="12.6" cy="16.4" rx="2.3" ry="2.6" fill="#0a0505"/><ellipse cx="19.4" cy="16.4" rx="2.3" ry="2.6" fill="#0a0505"/><path d="M12.2 20.2 Q16 23 19.8 20.2" stroke="#0a0505" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+    </div>
+    <div class="card-body">
+      <div class="card-title">Ezzarion Academy — Discord</div>
+      <div class="card-sub">Market structure, risk management &amp; trader psychology, built for serious traders only.</div>
+    </div>
+    <span class="badge">FREE</span>
+  </a>
+
+  <div class="grid-2">
+    <a class="card reveal" href="https://youtube.com/@ezzarion?si=gjLdXVoK1gLFBX7Q" target="_blank" rel="noopener">
+      <div class="icon-badge"><img src="assets/img/youtube.png" alt="YouTube" width="28" height="28"></div>
+      <div class="card-body"><div class="card-title">YouTube</div><div class="card-sub">Live Trading • Education • Market Analysis</div></div>
+      <span class="badge live">LIVE</span>
+    </a>
+    <a class="card reveal" style="--d:.1s" href="https://kick.com/ezzarion" target="_blank" rel="noopener">
+      <div class="icon-badge"><img src="assets/img/kick.png" alt="Kick" width="26" height="26"></div>
+      <div class="card-body"><div class="card-title">Kick</div><div class="card-sub">Live Trading • Gaming • Community</div></div>
+      <span class="badge live">LIVE</span>
+    </a>
+  </div>
+</section>
+
+<!-- ============ VIDEOS ============ -->
+<section id="videos" class="section">
+  <div class="eyebrow reveal">YouTube</div>
+  <h2 class="reveal">Watch &amp; learn</h2>
+  <div id="videoGrid" class="video-grid"></div>
+  <div class="center reveal"><a class="btn ghost" id="channelBtn" target="_blank" rel="noopener">Open the channel ↗</a></div>
+</section>
+
+<!-- ============ PAYOUTS ============ -->
+<section id="payouts" class="section">
+  <div class="eyebrow reveal">Proof, not promises</div>
+  <h2 class="reveal">Payout timeline</h2>
+  <div class="payout-total reveal">
+    <span>Total withdrawn</span>
+    <b id="payoutTotal">$0</b>
+  </div>
+  <div class="chips reveal" id="firmChips"></div>
+  <div class="timeline" id="timeline">
+    <div class="tl-line"><div class="tl-fill" id="tlFill"></div></div>
+  </div>
+</section>
+
+<!-- ============ PARTNERS ============ -->
+<section id="partners" class="section">
+  <div class="eyebrow reveal">Prop Firm Partners</div>
+  <h2 class="reveal">Trade with an edge — use code <span class="code">EZZX</span></h2>
+  <div class="partner-grid" id="partnerGrid"></div>
+</section>
+
+<!-- ============ SOCIALS ============ -->
+<section class="section">
+  <div class="eyebrow reveal">Socials</div>
+  <div class="social-row reveal" id="socialRow"></div>
+</section>
+
+</div>
+</main>
+
+<footer>© <span id="year"></span> Ezzarion — Trading involves risk. Past results do not guarantee future performance. Not financial advice.</footer>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close" type="button" aria-label="Close">×</button>
+  <div class="lb-body" id="lbBody"></div>
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
