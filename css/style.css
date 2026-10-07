@@ -98,11 +98,7 @@ main{position:relative}
 .emblem{--logo:clamp(210px,min(58vw,44vh),400px);position:relative;width:var(--logo);height:var(--logo);flex:none;will-change:transform;opacity:0;transform:scale(.85);transition:opacity 1s var(--ease),transform 1.2s var(--ease)}
 body.ready .emblem.enter{opacity:1;transform:none}
 .emblem.live{transition:none}
-.rings{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.rings g{transform-origin:200px 200px;transform-box:view-box}
-.spin-a{animation:spin 40s linear infinite}
-.spin-b{animation:spin 26s linear infinite reverse}
-.disc{position:absolute;left:19%;top:19%;width:62%;height:62%;border-radius:50%;box-shadow:0 0 0 1px rgba(255,61,46,.35),0 0 60px rgba(255,61,46,.55),inset 0 0 30px rgba(0,0,0,.8);animation:breathe 4.6s ease-in-out infinite}
+.disc{position:absolute;left:12%;top:12%;width:76%;height:76%;object-fit:contain;filter:drop-shadow(0 0 14px rgba(255,61,46,.75)) drop-shadow(0 0 40px rgba(225,6,0,.5));animation:breathe 4.6s ease-in-out infinite}
 .lockup-text{display:flex;flex-direction:column;align-items:center;will-change:transform,opacity;opacity:0;transform:translateY(16px);transition:opacity 1s var(--ease) .35s,transform 1s var(--ease) .35s}
 body.ready .lockup-text.enter{opacity:1;transform:none}
 .lockup-text.live{transition:none}
@@ -111,7 +107,7 @@ body.ready .lockup-text.enter{opacity:1;transform:none}
 .mouse{width:20px;height:32px;border:1.5px solid var(--muted-dim);border-radius:11px;position:relative}
 .mouse i{position:absolute;left:50%;top:6px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:var(--red-bright);animation:wheel 1.8s ease-in-out infinite}
 
-.portal-reveal{position:absolute;inset:0;z-index:2;visibility:hidden;clip-path:circle(0 at 50% 50%);background:var(--bg)}
+.portal-reveal{position:absolute;inset:0;z-index:2;visibility:hidden;opacity:0;background:var(--bg)}
 .pr-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 40%;opacity:.4;filter:saturate(.75) blur(2px);will-change:transform}
 .pr-shade{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(3,2,2,.55),rgba(3,2,2,.92) 70%),linear-gradient(180deg,rgba(3,2,2,.6),transparent 25%,transparent 75%,rgba(3,2,2,.8))}
 .pr-content{position:relative;z-index:1;height:100%;width:min(1120px,100% - 40px);margin:0 auto;display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(28px,6vw,84px);align-items:center;padding-block:80px 40px;will-change:transform,opacity}

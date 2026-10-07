@@ -443,7 +443,7 @@
      it, and the introduction opens up behind it
      ========================================================= */
   function initPortal() {
-    const sec = $('#portal'), emb = $('#pEmblem'), disc = $('.disc', emb), rings = $('.rings', emb), txt = $('#pText'),
+    const sec = $('#portal'), emb = $('#pEmblem'), disc = $('.disc', emb), txt = $('#pText'),
           rev = $('#pReveal'), logo = $('#pLogo'), content = $('#pContent'), bg = $('#pBg');
     emb.classList.add('enter'); txt.classList.add('enter');
     if (reduceMotion) { document.body.classList.add('static'); return; }
@@ -469,16 +469,13 @@
 
       const scale = Math.pow(S, e);                          // exponential: constant-speed "fly-in" feel
       emb.style.transform = live ? `scale(${scale})` : '';
-      rings.style.opacity = 1 - clamp(t / .3);
-      disc.style.opacity = 1 - clamp((t - .4) / .5);
+      disc.style.opacity = 1 - clamp((t - .35) / .5);
       txt.style.opacity = live ? 1 - clamp(t / .22) : '';
       txt.style.transform = live ? `translateY(${t * 46}px)` : '';
 
-      if (t < .005) { rev.style.visibility = 'hidden'; }
-      else {
-        rev.style.visibility = 'visible';
-        rev.style.clipPath = t >= 1 ? 'none' : `circle(${(D / 2) * scale * .985}px at ${cx}px ${cy}px)`;
-      }
+      const f = ease(clamp((t - .4) / .6));                    // smooth cross-fade into the introduction
+      rev.style.visibility = f > 0 ? 'visible' : 'hidden';
+      rev.style.opacity = f;
       logo.style.visibility = t >= 1 ? 'hidden' : 'visible';
       bg.style.transform = `scale(${1.35 - .35 * e})`;
       const c = clamp((p - .4) / .2);
