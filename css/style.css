@@ -91,7 +91,7 @@ main{position:relative}
 
 /* ---------- PORTAL ---------- */
 .portal,.hero-tail,.wrap{position:relative;z-index:1}
-.portal{height:340svh}
+.portal{height:230svh}
 .portal-stage{position:sticky;top:0;height:100svh;overflow:hidden}
 .portal-logo{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:3}
 .lockup{width:100%;display:flex;flex-direction:column;align-items:center;gap:clamp(20px,4vh,40px);text-align:center;padding:72px 0 40px}
@@ -129,16 +129,16 @@ body.static .portal-reveal{position:relative;visibility:visible;clip-path:none;m
 
 /* wordmark: EZZARION with the logo as the O */
 .wordmark{margin:0;display:flex;align-items:center;justify-content:center;white-space:nowrap;font-family:Archivo,'Arial Black',sans-serif;font-weight:900;font-stretch:125%;font-variation-settings:'wdth' 125;
-  font-size:11vw;line-height:1;letter-spacing:-.005em;color:#f6efe9;text-transform:uppercase;text-shadow:0 0 70px rgba(225,6,0,.35);background:none;-webkit-background-clip:border-box;filter:none}
+  font-size:11vw;line-height:1;letter-spacing:-.005em;text-transform:uppercase;filter:drop-shadow(0 0 34px rgba(225,6,0,.5))}
+.wm-left,.wm-right{color:transparent;background:linear-gradient(180deg,#fff 18%,#ffd2c9 52%,var(--red-bright) 100%);-webkit-background-clip:text;background-clip:text;padding-bottom:.04em}
 .wm-left,.wm-right,.wm-o{display:block;will-change:transform,opacity;opacity:0;transition:opacity 1s var(--ease),transform 1.2s var(--ease)}
 .wm-left{transform:translateX(-5%)}
 .wm-right{transform:translateX(5%);transition-delay:.12s}
 .wm-o{position:relative;width:.8em;height:.98em;margin:0 .03em;transform:scale(.6);transition-delay:.2s;flex:none}
 body.ready .wm-left.enter,body.ready .wm-right.enter,body.ready .wm-o.enter{opacity:1;transform:none}
 .wm-left.live,.wm-right.live,.wm-o.live{transition:none}
-.disc{position:absolute;left:-16%;top:-6%;width:132%;height:112%;object-fit:contain;transform-style:preserve-3d;animation:spinY 6s linear infinite;filter:drop-shadow(0 0 .08em rgba(255,61,46,.8)) drop-shadow(0 0 .3em rgba(225,6,0,.5))}
-@keyframes spinY{to{transform:rotateY(360deg)}}
-.wm-o{perspective:900px}
+.disc{position:absolute;left:-16%;top:-6%;width:132%;height:112%;object-fit:contain;animation:orbit 3.4s linear infinite;filter:drop-shadow(0 0 .08em rgba(255,61,46,.8)) drop-shadow(0 0 .3em rgba(225,6,0,.5))}
+@keyframes orbit{from{transform:rotate(0deg) translateX(.07em) rotate(0deg)}to{transform:rotate(360deg) translateX(.07em) rotate(-360deg)}}
 
 /* ---------- TAPE ---------- */
 .tape{overflow:hidden;border-block:1px solid var(--panel-border);background:rgba(9,4,4,.8);padding:12px 0}

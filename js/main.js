@@ -457,7 +457,7 @@
       wm.style.fontSize = (100 * target / w) + 'px';
     }
     fit();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { fit(); measure(); update(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { fit(); measure(); update(true); });
     if (reduceMotion) { document.body.classList.add('static'); return; }
 
     let cx = 0, cy = 0, D = 1, S = 2, range = 1;
@@ -473,19 +473,19 @@
       range = Math.max(1, sec.offsetHeight - innerHeight);
     }
 
-    function update() {
-      const p = clamp(-sec.getBoundingClientRect().top / range);
-      const t = clamp(p / .6), e = ease(t);
+    let target = 0, cur = 0, running = false;
+    function render(p) {
+      const t = clamp(p / .5), e = ease(t);
       const live = p > 0.001;
       parts.forEach(n => n.classList.toggle('live', live));
 
       emb.style.transform = live ? `scale(${Math.pow(S, e)})` : '';           // fly into the logo
-      disc.style.opacity = 1 - clamp((t - .62) / .38);
-      const spread = e * innerWidth * .55;                                      // the letters slide apart and fade
+      disc.style.opacity = 1 - clamp((t - .6) / .4);
+      const spread = e * innerWidth * .6;                                       // the letters slide apart and fade
       wl.style.transform = live ? `translateX(${-spread}px)` : '';
       wr.style.transform = live ? `translateX(${spread}px)` : '';
-      wl.style.opacity = wr.style.opacity = live ? 1 - clamp(t / .5) : '';
-      txt.style.opacity = live ? 1 - clamp(t / .2) : '';
+      wl.style.opacity = wr.style.opacity = live ? 1 - clamp(t / .45) : '';
+      txt.style.opacity = live ? 1 - clamp(t / .18) : '';
       txt.style.transform = live ? `translateY(${t * 46}px)` : '';
 
       const f = ease(clamp((t - .3) / .6));                                    // smooth fade into the introduction
@@ -493,15 +493,27 @@
       rev.style.opacity = f;
       logo.style.visibility = t >= 1 ? 'hidden' : 'visible';
       bg.style.transform = `scale(${1.3 - .3 * e})`;
-      const c = clamp((p - .45) / .18);
+      const c = clamp((p - .36) / .16);
       content.style.opacity = c; content.style.transform = `translateY(${(1 - c) * 44}px) scale(${.96 + .04 * c})`;
+    }
+    // scroll position is eased toward, so the motion stays smooth even with notchy mouse wheels
+    function loop() {
+      cur += (target - cur) * .16;
+      if (Math.abs(target - cur) < .0004) cur = target;
+      render(cur);
+      if (cur !== target) requestAnimationFrame(loop); else running = false;
+    }
+    function update(snap) {
+      target = clamp(-sec.getBoundingClientRect().top / range);
+      if (snap) { cur = target; render(cur); return; }
+      if (!running) { running = true; requestAnimationFrame(loop); }
     }
 
     let tick = false;
-    addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(() => { tick = false; update(); }); } }, { passive: true });
-    const remeasure = () => { fit(); measure(); update(); };
+    addEventListener('scroll', () => update(), { passive: true });
+    const remeasure = () => { fit(); measure(); update(true); };
     addEventListener('resize', remeasure); addEventListener('load', remeasure);
-    measure(); update();
+    measure(); update(true);
     setTimeout(remeasure, 1300);
   }
 
