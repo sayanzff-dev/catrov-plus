@@ -528,7 +528,7 @@
       $('#simFirmName').textContent = f.name; $('#simSizeName').textContent = `${pl.market} · ${pl.plan} · ${z.size}`;
       $('#simOld').textContent = final < z.price ? money(z.price) : '';
       const save = $('#simSave'); const extraSaved = sale - withCode;
-      save.classList.toggle('on', applied && extraSaved > 0); save.textContent = applied && extraSaved > 0 ? `${code} saves you ${money(extraSaved)} more (${extra}% off)` : '';
+      save.classList.toggle('on', applied && extraSaved > 0); save.textContent = applied && extraSaved > 0 ? `${code} saves you ${money(extraSaved)} more (${Math.round(extra * 10) / 10}% off)` : '';
       tween(final);
       $('#simEst').hidden = !z.estimate;
       $('#simCta').href = f.href || partner(f).href || '#';
