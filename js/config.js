@@ -47,18 +47,21 @@ window.SITE = {
   ],
 
   /* ---------- ACCOUNT SIMULATOR ----------
-     Leave `firms` empty and the section stays hidden.
-     Each firm has plans. A plan has a market ("Futures" or "CFD"), a name,
-     and the account sizes with their normal price in USD.
-     discount is the percent EZZX takes off at that firm.
-     Copy the numbers from each firm's own pricing page.            */
+     firms[].plans[]: market ("Futures" | "CFD"), plan (name),
+       base  = the firm's own sale in percent (always applied),
+       code  = extra percent the EZZX code takes off on top,
+       sizes = [{ size, price, final }]  price = list price in USD,
+               final = exact price at checkout with the code (optional).
+     A firm with no plans is not shown. The whole section hides if no firm has data.
+     Numbers below come from Funded Trader Markets' checkout pages (account size $100K, MetaTrader 5). */
   simulator: {
     code: "EZZX",
     firms: [
-      // { name: "FundedNext", discount: 10, plans: [
-      //     { market: "CFD",     plan: "Stellar 2-Step", sizes: [ { size: "$25K", price: 0 }, { size: "$100K", price: 0 } ] },
-      //     { market: "Futures", plan: "Rapid",          sizes: [ { size: "$50K", price: 0 } ] }
-      // ] },
+      { name: "Funded Trader Markets", plans: [
+        { market: "CFD", plan: "1 Step Nitro",     base: 60, code: 10, sizes: [ { size: "$100K", price: 622, final: 225 } ] },
+        { market: "CFD", plan: "2 Step Plus",      base: 60, code: 10, sizes: [ { size: "$100K", price: 998, final: 360 } ] },
+        { market: "CFD", plan: "Instant Standard", base: 45, code: 5,  sizes: [ { size: "$100K", price: 723, final: 379 } ] }
+      ] }
     ]
   },
 

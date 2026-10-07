@@ -521,13 +521,17 @@
       (function tick(now) { const t = Math.min(1, (now - t0) / 650), e = 1 - Math.pow(1 - t, 4); shown = from + (to - from) * e; el.textContent = money(Math.round(shown * 100) / 100); if (t < 1) raf = requestAnimationFrame(tick); })(t0);
     }
     function update() {
-      const f = firm(), pl = curPlans()[pi], z = pl.sizes[si], disc = applied ? (+f.discount || 0) : 0, final = Math.round(z.price * (1 - disc / 100) * 100) / 100;
+      const f = firm(), pl = curPlans()[pi], z = pl.sizes[si], base = +pl.base || 0, extra = +pl.code || 0;
+      const sale = Math.round(z.price * (1 - base / 100));                       // price with the firm's own sale
+      const withCode = z.final != null ? z.final : Math.round(sale * (1 - extra / 100));
+      const final = applied ? withCode : sale;
       $('#simFirmName').textContent = f.name; $('#simSizeName').textContent = `${pl.market} · ${pl.plan} · ${z.size}`;
-      $('#simOld').textContent = disc ? money(z.price) : '';
-      const save = $('#simSave'); save.classList.toggle('on', !!disc); save.textContent = disc ? `You save ${money(z.price - final)} (${disc}% off)` : '';
+      $('#simOld').textContent = final < z.price ? money(z.price) : '';
+      const save = $('#simSave'); const extraSaved = sale - withCode;
+      save.classList.toggle('on', applied && extraSaved > 0); save.textContent = applied && extraSaved > 0 ? `${code} saves you ${money(extraSaved)} more (${extra}% off)` : '';
       tween(final);
       $('#simCta').href = f.href || partner(f).href || '#';
-      $('#simFine').textContent = (cfg.example ? 'EXAMPLE NUMBERS, not real prices. ' : '') + `Estimate only. Check ${f.name}'s site for the current price and make sure the code ${code} is applied at checkout.`;
+      $('#simFine').textContent = (base ? `Includes the firm's current ${base}% sale. ` : '') + `Estimate only. Check ${f.name}'s checkout and make sure the code ${code} is applied.`;
     }
     $('#simForm').addEventListener('submit', e => {
       e.preventDefault(); const v = input.value.trim().toUpperCase();
