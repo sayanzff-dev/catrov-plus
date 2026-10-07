@@ -443,20 +443,18 @@
      it, and the introduction opens up behind it
      ========================================================= */
   function initPortal() {
-    const sec = $('#portal'), photo = $('#heroPhoto'), type = $('#pText'), word = $('#heroWord'), straps = $('#pStraps'),
-          rev = $('#pReveal'), hero = $('#pLogo'), content = $('#pContent'), bg = $('#pBg');
+    const sec = $('#portal'), photo = $('#heroPhoto'), type = $('#pText'), word = $('#heroWord'), cue = $('#pStraps');
     type.classList.add('enter');
 
     // safety net: if the real font runs wider than planned, shrink until it clears the screen
     function fit() {
       word.style.fontSize = '';
-      const max = innerWidth * .94;
-      const w = word.scrollWidth;
+      const max = innerWidth * .94, w = word.scrollWidth;
       if (w > max) word.style.fontSize = (parseFloat(getComputedStyle(word).fontSize) * max / w) + 'px';
     }
     fit();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-    if (reduceMotion) { document.body.classList.add('static'); return; }
+    if (reduceMotion) return;
 
     let range = 1, target = 0, cur = 0, running = false;
     const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -467,18 +465,10 @@
       const live = p > 0.001;
       type.classList.toggle('live', live);
       photo.style.transform = `translate3d(0,${-3 * p}%,0) scale(${1.04 + .07 * p})`;       // slow push-in, drifting up
-      const e = ease(clamp(p / .5));
+      const e = ease(clamp(p / .6));
       type.style.transform = live ? `translateY(${-46 * e}px)` : '';                        // type lifts 46px and fades
       type.style.opacity = live ? 1 - e : '';
-      straps.style.opacity = 1 - clamp((p - .3) / .25);
-
-      const f = ease(clamp((p - .5) / .3));                                                  // plaster cross-fades into the introduction
-      rev.style.visibility = f > 0 ? 'visible' : 'hidden';
-      rev.style.opacity = f;
-      hero.style.visibility = f >= 1 ? 'hidden' : 'visible';
-      bg.style.transform = `scale(${1.3 - .3 * f})`;
-      const c = clamp((p - .68) / .17);
-      content.style.opacity = c; content.style.transform = `translateY(${(1 - c) * 44}px) scale(${.96 + .04 * c})`;
+      cue.style.opacity = 1 - clamp(p / .25);
     }
     function loop() {
       cur += (target - cur) * .16;
