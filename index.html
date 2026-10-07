@@ -23,6 +23,7 @@
     <div class="intro-trade tp" id="introTP"><b>TP HIT</b> <span id="introR">+3.2R</span></div>
   </div>
   <div class="intro-brand" id="introBrand">
+    <img class="intro-photo" src="assets/photos/ezzarion.jpg" alt="">
     <img src="assets/img/ezzarion-brain-mark.png" alt="">
     <h2>EZZARION</h2>
     <p>Discipline · Structure · Execution</p>
@@ -50,15 +51,29 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <div class="mark-wrap reveal">
-    <div class="mark-glow"></div><div class="mark-ring"></div><div class="mark-ring r2"></div>
-    <img class="mark-img" src="assets/img/ezzarion-brain-mark.png" alt="Ezzarion brain mark">
-  </div>
-  <h1 class="reveal" style="--d:.1s">EZZARION</h1>
-  <p class="tagline reveal" style="--d:.2s">Discipline <i>·</i> Structure <i>·</i> Execution</p>
-  <div class="hero-cta reveal" style="--d:.3s">
-    <a class="btn primary" href="https://discord.gg/AdADHMWBEH" target="_blank" rel="noopener">Join the Academy</a>
-    <a class="btn ghost" href="#payouts">See the payouts</a>
+  <div class="hero-grid">
+    <div class="hero-text">
+      <div class="mark-wrap reveal">
+        <div class="mark-glow"></div><div class="mark-ring"></div><div class="mark-ring r2"></div>
+        <img class="mark-img" src="assets/img/ezzarion-brain-mark.png" alt="Ezzarion brain mark">
+      </div>
+      <h1 class="reveal" style="--d:.1s">EZZARION</h1>
+      <p class="tagline reveal" style="--d:.2s">Discipline <i>·</i> Structure <i>·</i> Execution</p>
+      <div class="hero-cta reveal" style="--d:.3s">
+        <a class="btn primary" href="https://discord.gg/AdADHMWBEH" target="_blank" rel="noopener">Join the Academy</a>
+        <a class="btn ghost" href="#payouts">See the payouts</a>
+      </div>
+    </div>
+    <figure class="portrait reveal" id="portrait" style="--d:.2s">
+      <div class="portrait-glow"></div>
+      <div class="portrait-frame">
+        <img src="assets/photos/ezzarion.jpg" alt="Ezzarion in a dark marble hotel lobby, holding a phone and a travel bag">
+        <span class="scan"></span>
+      </div>
+      <span class="corner tl"></span><span class="corner br"></span>
+      <figcaption class="p-chip c1">Structure</figcaption>
+      <figcaption class="p-chip c2">Execution</figcaption>
+    </figure>
   </div>
   <canvas id="heroChart" class="hero-chart reveal" style="--d:.4s" aria-hidden="true"></canvas>
   <div class="stats reveal" style="--d:.5s">
@@ -75,20 +90,6 @@
 </div>
 
 <div class="wrap">
-
-<!-- ============ GALLERY ============ -->
-<section id="gallery" class="section">
-  <div class="eyebrow reveal">The trader</div>
-  <h2 class="reveal">Behind the screen</h2>
-  <div class="slider reveal" id="slider" aria-roledescription="carousel" aria-label="Photos">
-    <div class="slides" id="slides"></div>
-    <button class="s-arrow prev" type="button" aria-label="Previous photo">‹</button>
-    <button class="s-arrow next" type="button" aria-label="Next photo">›</button>
-    <div class="s-cap" id="sCap"></div>
-    <div class="s-bars" id="sBars"></div>
-    <span class="corner tl"></span><span class="corner br"></span>
-  </div>
-</section>
 
 <!-- ============ COMMUNITY ============ -->
 <section id="community" class="section">
