@@ -357,6 +357,51 @@
   }
 
 
+
+  /* =========================================================
+     PHOTO SLIDER — smooth sliding, parallax settle, swipe
+     ========================================================= */
+  function initSlider() {
+    const root = $('#slider'), track = $('#slides'), bars = $('#sBars'), cap = $('#sCap'), DUR = 5000;
+    const photos = S.photos && S.photos.length ? S.photos : Array.from({ length: 3 }, () => ({ ph: true, caption: 'Your photo goes here' }));
+    const slides = photos.map(p => {
+      const img = h('div', { class: 'slide-img', text: p.ph ? 'PHOTO' : false });
+      if (!p.ph) img.style.backgroundImage = `url("${p.image}")`;
+      return h('div', { class: 'slide' + (p.ph ? ' ph' : ''), role: 'group', 'aria-roledescription': 'slide' }, img);
+    });
+    track.append(...slides);
+    const bs = photos.map((_, i) => { const b = h('button', { class: 's-bar', type: 'button', 'aria-label': 'Photo ' + (i + 1) }, h('i')); b.onclick = () => go(i, true); return b; });
+    bars.append(...bs);
+    let cur = -1, timer = null, visible = true, hovering = false;
+    root.style.setProperty('--dur', DUR + 'ms');
+    if (photos.length < 2) { bars.hidden = true; root.querySelectorAll('.s-arrow').forEach(a => a.hidden = true); }
+
+    function go(i, manual) {
+      i = (i + photos.length) % photos.length;
+      track.style.transform = `translateX(${-i * 100}%)`;
+      slides.forEach((s, k) => s.classList.toggle('on', k === i));
+      bs.forEach((b, k) => { b.classList.remove('on'); b.classList.toggle('done', k < i); });
+      void bs[i].offsetWidth; bs[i].classList.add('on');            // restart bar animation
+      if (cur !== i) { cap.classList.add('swap'); setTimeout(() => { cap.textContent = photos[i].caption || ''; cap.classList.remove('swap'); }, 350); }
+      cur = i; arm();
+    }
+    function arm() { clearTimeout(timer); if (photos.length > 1 && visible && !hovering && !reduceMotion) timer = setTimeout(() => go(cur + 1), DUR); }
+    root.querySelector('.prev').onclick = () => go(cur - 1, true);
+    root.querySelector('.next').onclick = () => go(cur + 1, true);
+    root.addEventListener('pointerenter', () => { hovering = true; root.classList.add('paused'); clearTimeout(timer); });
+    root.addEventListener('pointerleave', () => { hovering = false; root.classList.remove('paused'); go(cur); });
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; visible ? go(Math.max(cur, 0)) : clearTimeout(timer); }, { threshold: .3 }).observe(root);
+    addEventListener('keydown', e => { if (!visible) return; if (e.key === 'ArrowLeft') go(cur - 1, true); if (e.key === 'ArrowRight') go(cur + 1, true); });
+
+    // drag / swipe — the track follows the finger, then eases to the nearest slide
+    let x0 = null, dx = 0;
+    root.addEventListener('pointerdown', e => { if (e.target.closest('button')) return; x0 = e.clientX; dx = 0; track.classList.add('drag'); root.setPointerCapture(e.pointerId); clearTimeout(timer); });
+    root.addEventListener('pointermove', e => { if (x0 == null) return; dx = e.clientX - x0; track.style.transform = `translateX(calc(${-cur * 100}% + ${dx}px))`; });
+    const end = () => { if (x0 == null) return; track.classList.remove('drag'); const t = root.clientWidth * .15; x0 = null; go(dx < -t ? cur + 1 : dx > t ? cur - 1 : cur, true); };
+    root.addEventListener('pointerup', end); root.addEventListener('pointercancel', end);
+    go(0);
+  }
+
   /* =========================================================
      JOURNEY LINE — an SVG path down the whole page that draws
      itself as you scroll; a glowing head leads it and
@@ -430,7 +475,7 @@
     $('#year').textContent = new Date().getFullYear();
     const lists = [['#statFirms', S.partners.length], ['#statVideos', S.videos.length]];
     lists.forEach(([s, n]) => { $(s).dataset.target = n; });
-    renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
+    renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox(); initSlider();
     startBackground(); startHeroChart(); initJourney();
   }
 

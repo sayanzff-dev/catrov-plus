@@ -42,6 +42,13 @@ window.SITE = {
     { firm: "Forex Funds Flow",      title: "Funded Trader Recognition",     date: "2026-09-07", image: "assets/certificates/forexfundsflow.jpg" }
   ],
 
+  /* ---------- PHOTOS (slider under the hero) ----------
+     image   = file saved in assets/photos/
+     caption = optional short line shown on the photo          */
+  photos: [
+    // { image: "assets/photos/01.jpg", caption: "Live session" },
+  ],
+
   /* ---------- PARTNERS ---------- */
   partners: [
     { name: "PropFirmMatch", logo: "assets/img/propfirmmatch-logo.png", badge: "MATCH", href: "https://www.propfirmmatch.com/?a_aid=EZZARIon",
