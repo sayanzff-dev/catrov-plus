@@ -208,14 +208,13 @@
   const svgIcons = {
     X: '<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
     Instagram: '<svg class="outline" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle class="dot" cx="17.5" cy="6.5" r="1.2"/></svg>',
-    TikTok: '<svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/></svg>',
-    YouTube: '<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M21.6 7.2a2.5 2.5 0 0 0-1.76-1.77C18.3 5 12 5 12 5s-6.3 0-7.84.43A2.5 2.5 0 0 0 2.4 7.2C2 8.76 2 12 2 12s0 3.24.4 4.8a2.5 2.5 0 0 0 1.76 1.77C5.7 19 12 19 12 19s6.3 0 7.84-.43a2.5 2.5 0 0 0 1.76-1.77C22 15.24 22 12 22 12s0-3.24-.4-4.8zM10 15V9l5.2 3z"/></svg>',
-    Kick: '<svg viewBox="0 0 24 24"><path d="M3 3h5.2v6h2.2l3.6-6H20l-5.4 8L20.5 21h-6.2l-3.9-6.6H8.2V21H3z"/></svg>'
+    TikTok: '<svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/></svg>'
   };
   function renderSocials() {
     $('#socialRow').append(...S.socials.map(s => {
       const a = h('a', { class: 'social-icon', href: s.href, target: '_blank', rel: 'noopener', 'aria-label': s.name });
       if (svgIcons[s.name]) a.innerHTML = svgIcons[s.name];
+      else a.append(h('img', { src: `assets/img/${s.name.toLowerCase()}.png`, alt: s.name }));
       return a;
     }));
   }
@@ -440,233 +439,58 @@
      BOOT
      ========================================================= */
   /* =========================================================
-     WEBGL — realistic space background and the planet
-     ========================================================= */
-  const GLSL_NOISE = `
-    float hash3(vec3 p){ p=fract(p*0.3183099+.1); p*=17.0; return fract(p.x*p.y*p.z*(p.x+p.y+p.z)); }
-    float noise3(vec3 x){ vec3 i=floor(x), f=fract(x); f=f*f*(3.0-2.0*f);
-      return mix(mix(mix(hash3(i),hash3(i+vec3(1,0,0)),f.x),mix(hash3(i+vec3(0,1,0)),hash3(i+vec3(1,1,0)),f.x),f.y),
-                 mix(mix(hash3(i+vec3(0,0,1)),hash3(i+vec3(1,0,1)),f.x),mix(hash3(i+vec3(0,1,1)),hash3(i+vec3(1,1,1)),f.x),f.y),f.z); }
-  `;
-  const VERT = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
-  const HEAD = '#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n';
-
-  function makeGL(canvas, frag, opts) {
-    const gl = canvas.getContext('webgl', Object.assign({ antialias: false, alpha: true, premultipliedAlpha: true, powerPreference: 'high-performance' }, opts || {}));
-    if (!gl) return null;
-    const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.warn(gl.getShaderInfoLog(s)); return null; } return s; };
-    const vs = sh(gl.VERTEX_SHADER, VERT), fs = sh(gl.FRAGMENT_SHADER, HEAD + frag);
-    if (!vs || !fs) return null;
-    const pr = gl.createProgram(); gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
-    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return null;
-    gl.useProgram(pr);
-    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    const U = {}; const u = n => U[n] || (U[n] = gl.getUniformLocation(pr, n));
-    return { gl, u, draw() { gl.drawArrays(gl.TRIANGLES, 0, 3); } };
-  }
-
-  const SPACE_FRAG = `
-    uniform vec2 uRes; uniform float uTime; uniform float uScroll; uniform vec2 uMouse;
-    float h21(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
-    float n2(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f);
-      return mix(mix(h21(i),h21(i+vec2(1,0)),f.x),mix(h21(i+vec2(0,1)),h21(i+vec2(1,1)),f.x),f.y); }
-    float fbm2(vec2 p){ float a=.5,s=0.; for(int i=0;i<5;i++){ s+=a*n2(p); p=p*2.03+vec2(7.1,3.7); a*=.5; } return s; }
-
-    vec3 starLayer(vec2 uv, float scale, float seed, float dens, float bright){
-      vec2 g=uv*scale, id=floor(g), f=fract(g)-.5;
-      float pr=h21(id+seed);
-      if(pr<dens) return vec3(0.);
-      vec2 off=(vec2(h21(id+seed+1.3),h21(id+seed+2.7))-.5)*.72;
-      float d=length(f-off);
-      float inten=pow(h21(id+seed+5.1),5.0)*bright+.08*bright;
-      float size=.012+.03*h21(id+seed+3.3);
-      float core=smoothstep(size,0.,d);
-      float halo=.00055/(d*d+.0007);
-      float tw=.75+.25*sin(uTime*(1.2+3.*h21(id+seed+9.))+h21(id+seed)*6.28);
-      vec3 tint=mix(vec3(1.,.72,.55),vec3(.65,.78,1.),h21(id+seed+4.2));
-      tint=mix(tint,vec3(1.),.45);
-      float spike=0.;
-      if(inten>.55){ vec2 q=f-off; spike=(smoothstep(.012,0.,abs(q.x))*smoothstep(.2,0.,abs(q.y))+smoothstep(.012,0.,abs(q.y))*smoothstep(.2,0.,abs(q.x)))*.5; }
-      return tint*(core*1.3+halo*.6+spike)*inten*tw;
-    }
-
-    void main(){
-      vec2 uv=gl_FragCoord.xy/uRes.xy; float asp=uRes.x/uRes.y;
-      vec2 p=(uv-.5)*vec2(asp,1.);
-      vec2 par=vec2(uMouse.x,uMouse.y-uScroll*.00012);
-      vec2 q=p+par*.05;
-      float ca=cos(.55), sa=sin(.55);
-      vec2 r=vec2(q.x*ca-q.y*sa, q.x*sa+q.y*ca);
-      float band=exp(-pow(r.y/.42,2.0));
-      float drift=uTime*.004;
-      float f1=fbm2(q*2.3+vec2(4.,2.)+drift);
-      float f2=fbm2(q*5.5-vec2(1.,7.)-drift*1.5);
-      float lane=smoothstep(.42,.72,fbm2(q*3.8+vec2(9.,1.)));
-      vec3 neb=mix(vec3(.55,.05,.08),vec3(.22,.06,.38),smoothstep(.3,.75,f1));
-      neb=mix(neb,vec3(.95,.38,.2),smoothstep(.55,.9,f2)*.45);
-      float dens=band*(.25+1.1*f2)*(1.-.72*lane);
-      vec3 col=neb*dens*.34;
-      float b2=exp(-pow(length(q-vec2(.55,-.28))/.55,2.0));
-      col+=vec3(.5,.07,.1)*b2*fbm2(q*4.+vec2(2.,5.)+drift)*.22;
-      float b3=exp(-pow(length(q-vec2(-.6,.32))/.6,2.0));
-      col+=vec3(.08,.12,.32)*b3*fbm2(q*3.+vec2(8.,3.))*.22;
-      float dust=band*(.4+f2)*.9;
-      vec2 s1=uv*vec2(asp,1.);
-      col+=starLayer(s1+par*.01+vec2(0.,uScroll*0.000015),46.,1.,.80,1.15)*(.6+dust);
-      col+=starLayer(s1+par*.02+vec2(0.,uScroll*0.00003),24.,11.,.86,1.2);
-      col+=starLayer(s1+par*.035+vec2(0.,uScroll*0.00006),11.,23.,.90,1.35);
-      col+=starLayer(s1+par*.06+vec2(0.,uScroll*0.0001),5.5,37.,.94,1.5);
-      float st=uTime/9.5; float sid=floor(st); float ft=fract(st);
-      if(ft<.1){ float tt=ft/.1;
-        vec2 s0=vec2(.15+.8*h21(vec2(sid,1.)),.55+.4*h21(vec2(sid,2.)))*vec2(asp,1.);
-        vec2 dir=normalize(vec2(-1.,-.5)); vec2 head=s0+dir*tt*.55; vec2 tail=head-dir*.16;
-        vec2 pa=s1-tail, ba=head-tail; float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);
-        float d=length(pa-ba*h); col+=vec3(1.,.9,.85)*smoothstep(.0025,0.,d)*h*(1.-tt)*1.4; }
-      col+=vec3(.006,.004,.011);
-      col=1.-exp(-col*1.25);
-      gl_FragColor=vec4(col,1.);
-    }`;
-
-  function startSpaceGL() {
-    const cv = $('#bg'); const ctx = makeGL(cv, SPACE_FRAG, { alpha: false, premultipliedAlpha: false });
-    if (!ctx) return false;
-    const { gl, u } = ctx; let mx = 0, my = 0, sy = 0, smx = 0, smy = 0, last = 0;
-    function size() { const k = Math.min(devicePixelRatio || 1, 1.25); cv.width = Math.round(innerWidth * k); cv.height = Math.round(innerHeight * k); gl.viewport(0, 0, cv.width, cv.height); }
-    size(); addEventListener('resize', size);
-    addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; }, { passive: true });
-    addEventListener('scroll', () => { sy = scrollY; }, { passive: true });
-    function frame(t) {
-      if (reduceMotion) t = 4000;
-      if (t - last > 30 || reduceMotion) {
-        last = t; smx += (mx - smx) * .06; smy += (my - smy) * .06;
-        gl.uniform2f(u('uRes'), cv.width, cv.height); gl.uniform1f(u('uTime'), t / 1000);
-        gl.uniform1f(u('uScroll'), sy); gl.uniform2f(u('uMouse'), smx, -smy); ctx.draw();
-      }
-      if (!reduceMotion) requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-    return true;
-  }
-
-  const PLANET_FRAG = GLSL_NOISE + `
-    uniform vec2 uC; uniform float uR; uniform float uSpin; uniform float uEnter; uniform float uOct; uniform float uTime;
-    float fbm3(vec3 p){ float a=.5,s=0.; for(int i=0;i<10;i++){ if(float(i)>=uOct) break; s+=a*noise3(p); p=p*2.03+vec3(1.7,9.2,3.1); a*=.5; } return s; }
-    void main(){
-      vec2 p=(gl_FragCoord.xy-uC)/uR; float r=length(p);
-      vec3 L=normalize(vec3(-.55,.5,.7));
-      vec3 col=vec3(0.); float alpha=0.;
-      if(r<1.03){
-        float z=sqrt(max(0.,1.-r*r)); vec3 n=vec3(p,z);
-        float a=uSpin; mat3 ry=mat3(cos(a),0.,-sin(a), 0.,1.,0., sin(a),0.,cos(a));
-        float tl=.38; mat3 rx=mat3(1.,0.,0., 0.,cos(tl),sin(tl), 0.,-sin(tl),cos(tl));
-        vec3 sp=rx*(ry*n);
-        float h=fbm3(sp*2.3+3.1);
-        float ridge=1.-abs(2.*noise3(sp*6.5+h*2.2)-1.);
-        float zone=smoothstep(.38,.62,fbm3(sp*2.8+9.));
-        float crack=smoothstep(.88,.985,ridge)*zone;
-        float grain=.7+.6*noise3(sp*(18.+uOct*4.));
-        vec3 rock=mix(vec3(.045,.017,.017),vec3(.36,.14,.09),smoothstep(.28,.78,h))*grain;
-        float ndl=dot(n,L); float wrap=smoothstep(-.12,.62,ndl);
-        vec3 lit=rock*(.035+1.35*wrap);
-        float pulse=1.6+.5*sin(uTime*.9+h*22.);
-        vec3 lava=vec3(1.,.27,.05)*crack*pulse*(1.-.5*wrap);
-        lava+=vec3(1.,.5,.2)*smoothstep(.97,1.,ridge)*zone*.8;
-        col=lit+lava;
-        float cl=smoothstep(.5,.78,fbm3(sp*3.3+vec3(uTime*.012,0.,0.)+17.));
-        vec3 cloud=vec3(.66,.3,.24)*(.05+wrap*1.1);
-        col=mix(col,cloud,cl*.5);
-        float fres=pow(1.-z,3.0);
-        col+=vec3(1.,.3,.12)*fres*(.2+wrap*1.2)*(1.+uEnter*1.5);
-        col+=vec3(.9,.25,.1)*uEnter*uEnter*.35;
-        float px=2.2/uR; float edge=1.-smoothstep(1.-px,1.,r);
-        col*=edge; alpha=edge;
-      }
-      float d=max(r-1.,0.);
-      vec2 dirp=p/(r+1e-5);
-      float side=dot(dirp,normalize(L.xy))*.5+.5;
-      float glow=exp(-d*8.5)*(.16+.95*side)*(1.+uEnter*2.2);
-      vec3 gcol=vec3(1.,.26,.09)*glow;
-      float ga=min(1.,glow*.75);
-      col=col+gcol*(1.-alpha);
-      alpha=alpha+(1.-alpha)*ga;
-      gl_FragColor=vec4(col,alpha);
-    }`;
-
-  /* =========================================================
      PORTAL — the logo grows as you scroll until you fly through
      it, and the introduction opens up behind it
      ========================================================= */
   function initPortal() {
-    const sec = $('#portal'), emb = $('#pEmblem'), disc = $('.disc', emb), txt = $('#pText'),
-          rev = $('#pReveal'), logo = $('#pLogo'), content = $('#pContent'), bg = $('#pBg'), pc = $('#planet');
+    const sec = $('#portal'), emb = $('#pEmblem'), disc = $('.disc', emb), rings = $('.rings', emb), txt = $('#pText'),
+          rev = $('#pReveal'), logo = $('#pLogo'), content = $('#pContent'), bg = $('#pBg');
     emb.classList.add('enter'); txt.classList.add('enter');
     if (reduceMotion) { document.body.classList.add('static'); return; }
 
-    const P = makeGL(pc, PLANET_FRAG);
-    if (P) { emb.classList.add('gl'); disc.src = 'assets/img/ezzarion-brain-glow.png'; } else pc.remove();
-
-    let cx = 0, cy = 0, R0 = 1, S = 2, range = 1, k = 1, visible = true, p = 0, t = 0, e = 0, scale = 1;
+    let cx = 0, cy = 0, D = 1, S = 2, range = 1;
     const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-    const ease = x => x * x * (3 - 2 * x);
+    const ease = t => t * t * (3 - 2 * t);
 
     function measure() {
       const keep = emb.style.transform; emb.style.transform = 'none';
-      const r = emb.getBoundingClientRect(); emb.style.transform = keep;
-      cx = r.left + r.width / 2; cy = r.top + r.height / 2; R0 = r.width * (P ? .39 : .31);
+      const r = disc.getBoundingClientRect(); emb.style.transform = keep;
+      cx = r.left + r.width / 2; cy = r.top + r.height / 2; D = r.width;
       const far = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
-      S = (far / R0) * 1.08;
+      S = (2 * far / D) * 1.04;
       range = Math.max(1, sec.offsetHeight - innerHeight);
-      if (P) {
-        k = Math.min(devicePixelRatio || 1, 1.5) * (innerWidth < 700 ? .85 : .9);
-        pc.width = Math.round(innerWidth * k); pc.height = Math.round(innerHeight * k); P.gl.viewport(0, 0, pc.width, pc.height);
-      }
     }
 
     function update() {
-      p = clamp(-sec.getBoundingClientRect().top / range);
-      t = clamp(p / .6); e = ease(t);
+      const p = clamp(-sec.getBoundingClientRect().top / range);
+      const t = clamp(p / .58), e = ease(t);
       const live = p > 0.001;
       emb.classList.toggle('live', live); txt.classList.toggle('live', live);
-      scale = Math.pow(S, e);
+
+      const scale = Math.pow(S, e);                          // exponential: constant-speed "fly-in" feel
       emb.style.transform = live ? `scale(${scale})` : '';
-      disc.style.opacity = 1 - clamp((t - .15) / .5);
-      txt.style.opacity = live ? 1 - clamp(t / .2) : '';
+      rings.style.opacity = 1 - clamp(t / .3);
+      disc.style.opacity = 1 - clamp((t - .4) / .5);
+      txt.style.opacity = live ? 1 - clamp(t / .22) : '';
       txt.style.transform = live ? `translateY(${t * 46}px)` : '';
-      pc.style.opacity = 1 - ease(clamp((t - .55) / .45));
 
-      const f = ease(clamp((t - .5) / .5));                    // smooth cross-fade: planet -> introduction
-      rev.style.visibility = f > 0 ? 'visible' : 'hidden';
-      rev.style.opacity = f; rev.style.clipPath = 'none';
-      logo.style.visibility = t >= 1 ? 'hidden' : 'visible';
-      bg.style.transform = `scale(${1.3 - .3 * e})`;
-      const c = clamp((p - .45) / .18);
-      content.style.opacity = c; content.style.transform = `translateY(${(1 - c) * 44}px) scale(${.96 + .04 * c})`;
-    }
-
-    function draw(now) {
-      if (P && visible && t < 1 && !document.hidden) {
-        const { gl, u } = P;
-        gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.uniform2f(u('uC'), cx * k, (innerHeight - cy) * k);
-        gl.uniform1f(u('uR'), R0 * scale * k);
-        gl.uniform1f(u('uSpin'), now / 1000 * .06 + e * 1.4);
-        gl.uniform1f(u('uEnter'), e);
-        gl.uniform1f(u('uOct'), Math.min(10, 5 + Math.max(0, Math.log2(scale)) * .75));
-        gl.uniform1f(u('uTime'), now / 1000);
-        P.draw();
+      if (t < .005) { rev.style.visibility = 'hidden'; }
+      else {
+        rev.style.visibility = 'visible';
+        rev.style.clipPath = t >= 1 ? 'none' : `circle(${(D / 2) * scale * .985}px at ${cx}px ${cy}px)`;
       }
-      requestAnimationFrame(draw);
+      logo.style.visibility = t >= 1 ? 'hidden' : 'visible';
+      bg.style.transform = `scale(${1.35 - .35 * e})`;
+      const c = clamp((p - .4) / .2);
+      content.style.opacity = c; content.style.transform = `translateY(${(1 - c) * 44}px) scale(${.96 + .04 * c})`;
     }
 
     let tick = false;
     addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(() => { tick = false; update(); }); } }, { passive: true });
     const remeasure = () => { measure(); update(); };
     addEventListener('resize', remeasure); addEventListener('load', remeasure);
-    new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0 }).observe(sec);
-    measure(); update(); requestAnimationFrame(draw);
-    setTimeout(remeasure, 1300);
+    measure(); update();
+    setTimeout(remeasure, 1300);                              // after the entrance animation settles
   }
 
   function boot() {
@@ -674,7 +498,7 @@
     const lists = [['#statFirms', S.partners.length], ['#statVideos', S.videos.length]];
     lists.forEach(([s, n]) => { $(s).dataset.target = n; });
     renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
-    (startSpaceGL() || startBackground()); startHeroChart(); initPortal(); initJourney();
+    startBackground(); startHeroChart(); initPortal(); initJourney();
   }
 
   let seen = false;

@@ -95,7 +95,7 @@ main{position:relative}
 .portal-stage{position:sticky;top:0;height:100svh;overflow:hidden}
 .portal-logo{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:3}
 .lockup{display:flex;flex-direction:column;align-items:center;gap:clamp(18px,3.4vh,34px);text-align:center;padding:72px 20px 40px}
-.emblem{--logo:clamp(230px,min(66vw,50vh),470px);position:relative;width:var(--logo);height:var(--logo);flex:none;will-change:transform;opacity:0;transform:scale(.85);transition:opacity 1s var(--ease),transform 1.2s var(--ease)}
+.emblem{--logo:clamp(210px,min(58vw,44vh),400px);position:relative;width:var(--logo);height:var(--logo);flex:none;will-change:transform;opacity:0;transform:scale(.85);transition:opacity 1s var(--ease),transform 1.2s var(--ease)}
 body.ready .emblem.enter{opacity:1;transform:none}
 .emblem.live{transition:none}
 .rings{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
@@ -135,17 +135,6 @@ body.static .portal{height:auto}
 body.static .portal-stage{position:relative;height:auto;min-height:100svh}
 body.static .portal-logo{display:none}
 body.static .portal-reveal{position:relative;visibility:visible;clip-path:none;min-height:100svh}
-
-/* planet */
-.planet{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0}
-body.ready .planet{animation:fadein 1.6s var(--ease) .1s both}
-.emblem.gl .rings{display:none}
-.emblem.gl .disc{left:31%;top:31%;width:38%;height:38%;border-radius:0;box-shadow:none;filter:brightness(2.1) saturate(.75) drop-shadow(0 0 8px rgba(255,120,80,.95)) drop-shadow(0 0 26px rgba(255,61,46,.8));animation:breathe 4.6s ease-in-out infinite}
-.social-icon{color:var(--text)}
-.social-icon:hover svg{fill:var(--red-bright)}
-.social-icon:hover svg.outline{fill:none;stroke:var(--red-bright)}
-.social-icon:hover svg.outline circle.dot{fill:var(--red-bright)}
-.social-icon svg{transition:fill .25s,stroke .25s}
 
 /* ---------- TAPE ---------- */
 .tape{overflow:hidden;border-block:1px solid var(--panel-border);background:rgba(9,4,4,.8);padding:12px 0}
@@ -284,7 +273,6 @@ footer{text-align:center;color:var(--muted-dim);font-size:12px;padding:70px 20px
 @keyframes kenburns{to{transform:scale(1.04) translateX(-2%)}}
 @keyframes scan{from{top:-90px}to{top:100%}}
 @keyframes breathe{50%{transform:scale(1.03)}}
-@keyframes fadein{from{opacity:0}to{opacity:1}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes float{50%{transform:translateY(-8px)}}
 @keyframes pulse{50%{opacity:.45;transform:scale(1.12)}}
