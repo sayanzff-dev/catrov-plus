@@ -561,13 +561,33 @@
   }
 
   function initAbout() {
-    const sec = $('#about'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), seam = $('#abSeam'), cue = $('#abCue');
+    const sec = $('#about'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), cue = $('#abCue');
     if (!sec) return;
     if (reduceMotion) { document.body.classList.add('static'); return; }
     const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
     const ease = t => t * t * (3 - 2 * t), easeOut = t => 1 - Math.pow(1 - t, 3);
     let range = 1, target = 0, cur = 0, running = false;
     const measure = () => { range = Math.max(1, sec.offsetHeight - innerHeight); };
+
+    // living background: liquid red light that follows the pointer, seen through frosted glass
+    const stage = $('#abStage'), fluid = $('#abFluid'), orbs = [...fluid.querySelectorAll('i')];
+    const depth = [.9, -.6, .45, -1.2];                                // each orb follows the pointer differently
+    let mx = .5, my = .5, sx = .5, sy = .5, vis = true;
+    addEventListener('pointermove', e => { mx = e.clientX / innerWidth; my = e.clientY / innerHeight; }, { passive: true });
+    new IntersectionObserver(es => { vis = es[0].isIntersecting; if (vis) tick(performance.now()); }, { threshold: 0 }).observe(stage);
+    function tick(now) {
+      if (!vis) return;
+      sx += (mx - sx) * .045; sy += (my - sy) * .045;                   // spring-smoothed pointer
+      const t = now / 1000;
+      orbs.forEach((o, i) => {
+        const dx = (sx - .5) * 38 * depth[i], dy = (sy - .5) * 30 * depth[i];
+        const ax = Math.sin(t * (.21 + i * .07) + i * 2) * 5, ay = Math.cos(t * (.17 + i * .05) + i) * 5;
+        o.style.transform = `translate3d(${dx + ax}vw,${dy + ay}vh,0)`;
+      });
+      fluid.style.setProperty('--mx', (sx * 100).toFixed(1) + '%'); fluid.style.setProperty('--my', (sy * 100).toFixed(1) + '%');
+      requestAnimationFrame(tick);
+    }
+    tick(performance.now());
     function render(p) {
       const name = 1;                              // 1. the name appears
       L.style.setProperty('--na', name); R.style.setProperty('--na', name);
@@ -575,8 +595,8 @@
       L.style.transform = `translateX(${-101 * open}%)`;
       R.style.transform = `translateX(${101 * open}%)`;
       cue.style.opacity = 1 - clamp(p / .08);
+      L.classList.toggle('moving', open > 0.001); R.classList.toggle('moving', open > 0.001);
       L.style.visibility = R.style.visibility = open >= 1 ? 'hidden' : 'visible';
-      seam.style.opacity = open > 0 && open < 1 ? Math.sin(open * Math.PI) : 0;
       const c = ease(clamp((p - .38) / .4));                             // 3. the portrait and info arrive
       content.style.opacity = .15 + .85 * c;
       content.style.transform = `scale(${1.12 - .12 * c})`;
