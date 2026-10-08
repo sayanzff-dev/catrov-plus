@@ -539,7 +539,26 @@
       src.connect(flt); flt.connect(master); master.connect(ac.destination); src.start();
       const o = ac.createOscillator(), og = ac.createGain(); o.type = 'sawtooth'; o.frequency.value = 58; og.gain.value = .012; o.connect(og); og.connect(flt); o.start();
     }
-    sbtn.addEventListener('click', () => { on = !on; if (on) { audio(); ac.resume(); } sbtn.setAttribute('aria-pressed', on); sbtn.classList.toggle('on', on); });
+    // airport-style welcome: chime, then a spoken line; the hum runs until the second section. Browsers only allow sound after a tap or key press.
+    function chime() {
+      [[880, 0], [1108.7, .34], [1318.5, .68]].forEach(([f, t]) => [[1, .22], [2.01, .07]].forEach(([m, v]) => {
+        const o = ac.createOscillator(), g = ac.createGain(), s = ac.currentTime + .05 + t; o.type = 'sine'; o.frequency.value = f * m;
+        g.gain.setValueAtTime(0, s); g.gain.linearRampToValueAtTime(v, s + .015); g.gain.exponentialRampToValueAtTime(.0008, s + 1.5); o.connect(g); g.connect(ac.destination); o.start(s); o.stop(s + 1.6);
+      }));
+    }
+    function speak() {
+      if (!('speechSynthesis' in window) || active !== 0) return;
+      const u = new SpeechSynthesisUtterance('Ladies and gentlemen, welcome to Ezzarion\u2019s world. Sit back, enjoy the flight, and get ready for the journey.');
+      const vs = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang)), v = vs.find(x => /female|samantha|zira|aria|jenny|google uk english female|serena|susan/i.test(x.name)) || vs[0];
+      if (v) u.voice = v; u.lang = (v && v.lang) || 'en-US'; u.rate = .9; u.pitch = 1.08; u.volume = 1;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    }
+    function begin() {
+      if (on) return; on = true; document.body.classList.add('snd-on');
+      removeEventListener('pointerdown', begin); removeEventListener('keydown', begin); removeEventListener('touchend', begin);
+      try { audio(); ac.resume(); chime(); setTimeout(speak, 2300); } catch (e) {}
+    }
+    addEventListener('pointerdown', begin, { passive: true }); addEventListener('keydown', begin); addEventListener('touchend', begin, { passive: true });
     // far-off lightning in the clouds and the odd shooting star
     function bolts() { setTimeout(() => { if (active === 0 && cur < .6 && !document.hidden) { bolt.style.left = (10 + Math.random() * 80) + '%'; bolt.animate([{ opacity: 0 }, { opacity: .55 }, { opacity: .1 }, { opacity: .4 }, { opacity: 0 }], { duration: 700 }); } bolts(); }, 6000 + Math.random() * 8000); }
     function stars2() { setTimeout(() => { if (active === 0 && !document.hidden) { shoot.style.left = (25 + Math.random() * 55) + '%'; shoot.style.top = (6 + Math.random() * 24) + '%'; shoot.animate([{ opacity: 0, transform: 'translate(0,0) rotate(-24deg) scaleX(.3)' }, { opacity: 1, offset: .15 }, { opacity: 0, transform: 'translate(-260px,118px) rotate(-24deg) scaleX(1)' }], { duration: 900, easing: 'ease-out' }); } stars2(); }, 4000 + Math.random() * 5000); }
@@ -617,11 +636,10 @@
     }
     function loop(now) {
       tick = null;
-      if (active < 0) { world.style.visibility = 'hidden'; sbtn.classList.remove('show'); if (ac && master) master.gain.setTargetAtTime(0, ac.currentTime, .1); return; }
+      if (active < 0) { world.style.visibility = 'hidden'; if ('speechSynthesis' in window) speechSynthesis.cancel(); if (ac && master) master.gain.setTargetAtTime(0, ac.currentTime, .4); return; }
       world.style.visibility = 'visible'; world.style.opacity = alpha.toFixed(3);
       cx += (tx - cx) * .06; cy += (ty - cy) * .06; world.style.setProperty('--cx', cx.toFixed(3)); world.style.setProperty('--cy', cy.toFixed(3));
-      sbtn.classList.toggle('show', active === 0 && alpha > .5);
-      if (ac && master) { const t = ac.currentTime; master.gain.setTargetAtTime(on ? .16 * alpha * (.45 + .55 * cur) : 0, t, .15); flt.frequency.setTargetAtTime(220 + cur * 900, t, .2); }
+      if (ac && master) { const t = ac.currentTime; master.gain.setTargetAtTime(on ? .09 * alpha * (.45 + .55 * cur) : 0, t, .15); flt.frequency.setTargetAtTime(220 + cur * 900, t, .2); }
       const dt = lastNow ? Math.min(.1, (now - lastNow) / 1000) : .016; lastNow = now;
       if (active !== lastLeg) cur = target;                                  // a new leg starts from its own beginning
       cur += (target - cur) * (1 - Math.exp(-dt * 7)); vel += (Math.abs(cur - prev) / dt - vel) * .1; prev = cur;

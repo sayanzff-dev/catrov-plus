@@ -995,3 +995,10 @@ body.static #world,body.static .leg{display:none}
 .fl-flash{background:radial-gradient(ellipse 80% 70% at 50% 58%,#e4eaf8 0%,#aab6d6 34%,#4a587e 72%,#1a2038 100%)}
 .about{min-height:0!important;padding:clamp(96px,14vh,150px) 0 clamp(70px,10vh,120px)}
 .leg0{height:215svh}
+
+/* welcome announcement: no sound controls; a hint until the first tap starts it */
+.fl-sound{display:none!important}
+.fl-hint{margin-top:18px!important;font:500 11px Montserrat,sans-serif!important;letter-spacing:.26em;text-transform:uppercase;color:rgba(255,185,173,.75)!important;animation:hintPulse 2.4s ease-in-out infinite}
+body.snd-on .fl-hint{display:none}
+@keyframes hintPulse{0%,100%{opacity:.45}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.fl-hint{display:none}}
