@@ -553,10 +553,26 @@
       if (v) u.voice = v; u.lang = (v && v.lang) || 'en-US'; u.rate = .9; u.pitch = 1.08; u.volume = 1;
       speechSynthesis.cancel(); speechSynthesis.speak(u);
     }
+    // jet fly-by played once when the visitor arrives at the second section (the announcement and hum stop)
+    let landed = false;
+    function flyby() {
+      if (landed || !ac) return; landed = true;
+      const t = ac.currentTime + .05, D = 6, len = ac.sampleRate * 2, buf = ac.createBuffer(1, len, ac.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const n = ac.createBufferSource(); n.buffer = buf; n.loop = true;
+      const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 1.1;
+      bp.frequency.setValueAtTime(380, t); bp.frequency.exponentialRampToValueAtTime(1900, t + D * .38); bp.frequency.exponentialRampToValueAtTime(420, t + D);
+      const ro = ac.createOscillator(), rg = ac.createGain(), rl = ac.createBiquadFilter(); ro.type = 'sawtooth'; ro.frequency.setValueAtTime(130, t); ro.frequency.exponentialRampToValueAtTime(70, t + D); rl.type = 'lowpass'; rl.frequency.value = 420; rg.gain.value = .35;
+      const g = ac.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.55, t + D * .38); g.gain.exponentialRampToValueAtTime(.001, t + D);
+      const out = ac.createGain(); out.gain.value = .5; let tail = out;
+      if (ac.createStereoPanner) { const p = ac.createStereoPanner(); p.pan.setValueAtTime(-1, t); p.pan.linearRampToValueAtTime(1, t + D); out.connect(p); tail = p; }
+      n.connect(bp); bp.connect(g); ro.connect(rl); rl.connect(rg); rg.connect(g); g.connect(out); tail.connect(ac.destination);
+      n.start(t); ro.start(t); n.stop(t + D + .2); ro.stop(t + D + .2);
+    }
     function begin() {
       if (on) return; on = true; document.body.classList.add('snd-on');
       removeEventListener('pointerdown', begin); removeEventListener('keydown', begin); removeEventListener('touchend', begin);
-      try { audio(); ac.resume(); chime(); setTimeout(speak, 2300); } catch (e) {}
+      try { audio(); ac.resume(); if (active === 0) { chime(); setTimeout(speak, 2300); } else flyby(); } catch (e) {}
     }
     addEventListener('pointerdown', begin, { passive: true }); addEventListener('keydown', begin); addEventListener('touchend', begin, { passive: true });
     // far-off lightning in the clouds and the odd shooting star
@@ -636,7 +652,7 @@
     }
     function loop(now) {
       tick = null;
-      if (active < 0) { world.style.visibility = 'hidden'; if ('speechSynthesis' in window) speechSynthesis.cancel(); if (ac && master) master.gain.setTargetAtTime(0, ac.currentTime, .4); return; }
+      if (active < 0) { world.style.visibility = 'hidden'; if ('speechSynthesis' in window) speechSynthesis.cancel(); if (ac && master) master.gain.setTargetAtTime(0, ac.currentTime, .4); flyby(); return; }
       world.style.visibility = 'visible'; world.style.opacity = alpha.toFixed(3);
       cx += (tx - cx) * .06; cy += (ty - cy) * .06; world.style.setProperty('--cx', cx.toFixed(3)); world.style.setProperty('--cy', cy.toFixed(3));
       if (ac && master) { const t = ac.currentTime; master.gain.setTargetAtTime(on ? .09 * alpha * (.45 + .55 * cur) : 0, t, .15); flt.frequency.setTargetAtTime(220 + cur * 900, t, .2); }
