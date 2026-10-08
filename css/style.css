@@ -896,3 +896,27 @@ body.static #world,body.static .leg{display:none}
 .fl-bob::before{content:"";position:absolute;left:8%;right:2%;top:-30%;bottom:-40%;background:radial-gradient(ellipse 50% 46% at 52% 52%,rgba(150,175,255,.2),rgba(150,175,255,.07) 55%,transparent 75%);pointer-events:none}
 .fl-svg{filter:drop-shadow(0 0 1px rgba(190,205,255,.55)) drop-shadow(0 18px 30px rgba(0,0,0,.6)) brightness(1.08) contrast(1.04)}
 .fl-welcome{top:clamp(70px,10vh,110px)}
+
+/* ---------- payout wall: lighter, one accent (the site's red), calmer motion ---------- */
+.pw-total b{font-size:clamp(44px,8vw,86px);background:linear-gradient(180deg,#fff 20%,#e9dcd6 100%);-webkit-background-clip:text;background-clip:text;filter:none}
+.pw-total span{color:var(--muted)}
+.pw-m{padding:10px 16px;min-width:104px;border-radius:16px;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);box-shadow:none}
+.pw-m b{font-size:22px}
+.pw-track{gap:16px}
+.pw-card{width:clamp(250px,26vw,300px);border-radius:22px;background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.1);box-shadow:none}
+.pw-card:hover{transform:translateY(-6px);border-color:rgba(255,70,55,.5);box-shadow:0 24px 50px -30px rgba(0,0,0,.9)}
+.pw-card.best::before{background:var(--red);color:#fff;box-shadow:none}
+.pw-img{aspect-ratio:16/11;clip-path:inset(0 0 100% 0);transition:clip-path 1s var(--ease) calc(var(--d,0s) + .15s)}
+.pw-card.in .pw-img{clip-path:inset(0)}
+.pw-img::before{transform:scale(1.18);transition:transform 1.6s var(--ease) calc(var(--d,0s) + .15s)}
+.pw-card.in .pw-img::before{transform:scale(1)}
+.pw-card.in:hover .pw-img::before{transform:scale(1.05);transition-duration:.8s;transition-delay:0s}
+.pw-body{padding:18px 18px 18px;border-top:1px dashed rgba(255,255,255,.14)}
+.pw-amt{font-size:clamp(34px,4vw,44px);color:#f4efe8;text-shadow:none}
+.pw-note{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:#bdb4ae}
+.pw-note::before{background:var(--red-bright);box-shadow:none}
+.pw-bar{height:3px;background:rgba(255,255,255,.07)}
+.pw-bar i{background:linear-gradient(90deg,#8f0a05,var(--red-bright));transition-duration:1.4s}
+.pw-prog i{background:linear-gradient(90deg,#8f0a05,var(--red-bright))}
+.pw-btns button{box-shadow:none;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18)}
+.pw-card{translate:0 36px;transition:opacity .9s var(--ease) var(--d,0s),translate .9s var(--ease) var(--d,0s),transform .5s var(--ease),border-color .3s}

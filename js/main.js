@@ -239,7 +239,7 @@
       track.append(...rows.map((p, i) => {
         const img = h('div', { class: 'pw-img' }, p.empty ? h('span', { text: 'PROOF' }) : false);
         if (!p.empty) { img.style.backgroundImage = `url("${p.image}")`; img.onclick = () => { if (!rail.dataset.moved) openLightbox(h('img', { src: p.image, alt: `${p.firm} payout proof` }), `${p.firm} · ${usd(p.amount)} · ${fmtDate(p.date)}`); }; }
-        return h('article', { class: 'pw-card' + (p.empty ? ' empty' : '') + (!p.empty && p === best ? ' best' : ''), style: `--d:${i * .08}s;--w:${p.empty ? 0 : Math.round(p.amount / max * 100)}%` }, [
+        return h('article', { class: 'pw-card' + (p.empty ? ' empty' : '') + (!p.empty && p === best ? ' best' : ''), 'data-amt': p.empty ? 0 : p.amount, style: `--d:${i * .1}s;--w:${p.empty ? 0 : Math.round(p.amount / max * 100)}%` }, [
           img,
           h('div', { class: 'pw-body' }, [
             h('div', { class: 'pw-date' }, [h('span', { text: p.empty ? 'YYYY · MM · DD' : fmtDate(p.date) }), h('span', { text: p.empty ? '' : 'Paid' })]),
@@ -251,7 +251,13 @@
         ]);
       }));
       io && io.disconnect();
-      io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { root: null, threshold: .2 });
+      io = new IntersectionObserver(es => es.forEach(e => {
+        if (!e.isIntersecting) return;
+        const c = e.target, a = c.querySelector('.pw-amt'), v = +c.dataset.amt;
+        c.classList.add('in'); io.unobserve(c);
+        if (a && v && !reduceMotion) { const t0 = performance.now() + (parseFloat(c.style.getPropertyValue('--d')) || 0) * 1000 + 250, D = 1300;
+          const f = n => { const k = Math.min(1, Math.max(0, (n - t0) / D)); a.textContent = k >= 1 ? usd(v) : usd(v * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
+      }), { root: null, threshold: .2 });
       track.querySelectorAll('.pw-card').forEach(c => io.observe(c));
       rail.scrollLeft = 0; progress();
     }
