@@ -25,27 +25,34 @@ img{max-width:100%}
 main,footer,.tape{position:relative;z-index:1}
 
 /* ---------- INTRO ---------- */
-#intro{position:fixed;inset:0;z-index:100;background:#020101;transition:opacity .9s var(--ease),visibility .9s}
-#intro.done{opacity:0;visibility:hidden}
-#introCanvas{position:absolute;inset:0;width:100%;height:100%}
-.intro-hud{position:absolute;top:max(24px,env(safe-area-inset-top));left:24px;right:24px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.08em}
-.intro-pair{color:var(--muted);padding:6px 12px;border:1px solid var(--panel-border);border-radius:6px;background:rgba(0,0,0,.5)}
-.intro-pair span{color:var(--text);margin-left:8px}
-.intro-trade{opacity:0;transform:translateY(-8px);transition:.4s var(--ease);padding:6px 12px;border-radius:6px;border:1px solid var(--green);color:var(--green);background:rgba(46,230,160,.08)}
-.intro-trade b{margin-right:6px}
-.intro-trade.tp{border-color:var(--green)}
-.intro-trade.show{opacity:1;transform:none}
-.intro-brand{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;pointer-events:none;background:radial-gradient(circle at center,rgba(3,2,2,.88) 20%,rgba(3,2,2,.35) 75%)}
-.intro-brand.show{opacity:1;transition:opacity .7s var(--ease)}
-.intro-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.32;filter:saturate(.8);transform:scale(1.15);animation:kenburns 8s ease-out forwards}
-.intro-brand .intro-photo~*{position:relative}
-.intro-brand img:not(.intro-photo){width:clamp(96px,22vw,150px);border-radius:50%;filter:drop-shadow(0 0 30px rgba(255,61,46,.7));transform:scale(.6);transition:transform 1s var(--ease)}
-.intro-brand.show img:not(.intro-photo){transform:scale(1)}
-.intro-brand h2{font-family:Anton,sans-serif;font-weight:400;font-size:clamp(44px,12vw,96px);letter-spacing:.14em;margin:18px 0 6px;text-shadow:0 0 40px rgba(225,6,0,.6);transform:translateY(14px);transition:transform .9s var(--ease) .15s}
-.intro-brand.show h2{transform:none}
-.intro-brand p{margin:0;color:var(--muted);letter-spacing:.3em;text-transform:uppercase;font-size:clamp(11px,2.8vw,14px)}
-#introSkip{position:absolute;right:24px;bottom:max(24px,env(safe-area-inset-bottom));background:none;border:1px solid var(--panel-border);color:var(--muted);padding:8px 16px;border-radius:999px;font:inherit;font-size:13px;cursor:pointer;transition:.2s}
+
+/* ---------- INTRO: counter, then two panels slide apart ---------- */
+#intro{position:fixed;inset:0;z-index:100;overflow:hidden;pointer-events:auto}
+#intro.gone{display:none}
+.ip{position:absolute;left:0;right:0;height:50.2%;background:#030202;z-index:1;transition:transform 1.25s cubic-bezier(.76,0,.18,1)}
+.ip::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 90% at 50% 100%,rgba(225,6,0,.22),transparent 70%)}
+.ip-top{top:0}.ip-bot{bottom:0}.ip-bot::before{background:radial-gradient(ellipse 60% 90% at 50% 0%,rgba(225,6,0,.22),transparent 70%)}
+#intro.open .ip-top{transform:translateY(-101%)}
+#intro.open .ip-bot{transform:translateY(101%)}
+.ip-seam{position:absolute;left:50%;top:50%;height:2px;width:0;transform:translate(-50%,-50%);z-index:3;background:linear-gradient(90deg,transparent,#ff3d2e,#fff,#ff3d2e,transparent);box-shadow:0 0 24px #ff3d2e,0 0 60px rgba(255,61,46,.6);opacity:0}
+#intro.split .ip-seam{animation:seam .9s var(--ease) forwards}
+@keyframes seam{0%{width:0;opacity:1}55%{width:100%;opacity:1}100%{width:100%;opacity:0}}
+.intro-core{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,26px);padding:0 24px;transition:opacity .45s,transform .9s var(--ease)}
+#intro.split .intro-core{opacity:0;transform:scale(1.08)}
+.ic-logo{width:clamp(86px,16vw,128px);opacity:0;transform:scale(.7);animation:icin 1s var(--ease) .1s forwards}
+.ic-logo img{width:100%;display:block;filter:drop-shadow(0 0 22px rgba(255,61,46,.75)) drop-shadow(0 0 60px rgba(225,6,0,.5));animation:breathe 3s ease-in-out infinite}
+.ic-word{display:flex;gap:.04em;font-family:Anton,sans-serif;font-size:clamp(40px,10.5vw,104px);letter-spacing:.14em;line-height:1;color:#f6efe9}
+.ic-word{perspective:600px}
+.ic-word span{display:inline-block;opacity:0;transform:translateY(60%) rotateX(70deg);filter:blur(8px);animation:icletter .9s var(--ease) forwards;animation-delay:calc(.35s + var(--i) * .06s)}
+@keyframes icletter{to{opacity:1;transform:none;filter:none}}
+@keyframes icin{to{opacity:1;transform:none}}
+.ic-meter{width:min(340px,70vw);height:2px;background:rgba(255,255,255,.14);overflow:hidden;opacity:0;animation:icin .6s ease .8s forwards}
+.ic-meter i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--red-deep),#ff3d2e,#fff);transform:scaleX(0);transform-origin:left;box-shadow:0 0 12px #ff3d2e}
+.ic-row{width:min(340px,70vw);display:flex;justify-content:space-between;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);opacity:0;animation:icin .6s ease .8s forwards}
+.ic-pct b{color:#fff;font-weight:500;font-variant-numeric:tabular-nums}
+#introSkip{position:absolute;right:24px;bottom:max(24px,env(safe-area-inset-bottom));z-index:4;background:none;border:1px solid rgba(255,255,255,.18);color:var(--muted);padding:8px 16px;border-radius:999px;font:inherit;font-size:13px;cursor:pointer;transition:.2s}
 #introSkip:hover{color:var(--text);border-color:var(--red)}
+#intro.split #introSkip,#intro.open #introSkip{opacity:0;pointer-events:none}
 
 /* ---------- NAV ---------- */
 

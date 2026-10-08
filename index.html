@@ -14,20 +14,17 @@
 </head>
 <body class="is-loading">
 
-<!-- ============ INTRO ============ -->
+<!-- ============ INTRO: counter, then the screen slides open ============ -->
 <div id="intro" aria-hidden="true">
-  <canvas id="introCanvas"></canvas>
-  <div class="intro-hud">
-    <div class="intro-pair">EZZ/USD <span id="introPrice">0.00</span></div>
-    <div class="intro-trade" id="introTrade"><b>BUY</b> <span>ENTRY</span></div>
-    <div class="intro-trade tp" id="introTP"><b>TP HIT</b> <span id="introR">+3.2R</span></div>
+  <div class="ip ip-top"></div>
+  <div class="ip ip-bot"></div>
+  <div class="intro-core" id="introCore">
+    <div class="ic-logo"><img src="assets/img/ezzarion-brain-logo.png" alt=""></div>
+    <div class="ic-word" id="icWord"><span>E</span><span>Z</span><span>Z</span><span>A</span><span>R</span><span>I</span><span>O</span><span>N</span></div>
+    <div class="ic-meter"><i id="icBar"></i></div>
+    <div class="ic-row"><span class="ic-tag">Opening</span><span class="ic-pct"><b id="icNum">0</b>%</span></div>
   </div>
-  <div class="intro-brand" id="introBrand">
-    <img class="intro-photo" src="assets/photos/ezzarion.jpg" alt="">
-    <img src="assets/img/ezzarion-brain-mark.png" alt="">
-    <h2>EZZARION</h2>
-    <p>Discipline · Structure · Execution</p>
-  </div>
+  <div class="ip-seam" id="ipSeam"></div>
   <button id="introSkip" type="button">Skip ›</button>
 </div>
 

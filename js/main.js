@@ -31,104 +31,33 @@
   /* =========================================================
      INTRO — a trade plays out: entry, price runs, take-profit
      ========================================================= */
-  function buildTrade() {
-    const N = 46, ENTRY = 11;
-    for (let seed = 7; ; seed++) {
-      const r = rng(seed), c = [];
-      let p = 100;
-      for (let i = 0; i < N; i++) {
-        const o = p, drift = i < ENTRY ? -0.03 : 0.22;
-        p = o + (r() - 0.5) * 2.4 + drift;
-        c.push({ o, c: p, h: Math.max(o, p) + r() * 1.1, l: Math.min(o, p) - r() * 1.1 });
-      }
-      const e = c[ENTRY].c, risk = e * 0.012, tp = e + risk * 3.2, sl = e - risk;
-      const hit = c.findIndex((k, i) => i > ENTRY && k.h >= tp);
-      const stopped = c.slice(ENTRY + 1, hit).some(k => k.l <= sl);
-      if (hit > 0 && hit < N - 4 && !stopped) return { c, ENTRY, e, tp, sl, hit, end: hit + 3 };
-    }
-  }
-
   function runIntro(done) {
-    const intro = $('#intro'), cv = $('#introCanvas');
-    const T = buildTrade();
-    let { g, w, h: H } = fitCanvas(cv);
-    addEventListener('resize', () => ({ g, w, h: H } = fitCanvas(cv)));
-    const all = T.c.slice(0, T.end + 1);
-    const lo = Math.min(...all.map(k => k.l), T.sl) - 1, hi = Math.max(...all.map(k => k.h), T.tp) + 1;
-    const Y = p => H * 0.16 + (1 - (p - lo) / (hi - lo)) * H * 0.62;
-    const DUR = 4300;
-    let t0 = performance.now(), finished = false, shownEntry = false, shownTP = false, brandAt = 0;
+    const intro = $('#intro'), bar = $('#icBar'), num = $('#icNum');
+    $('#icWord').querySelectorAll('span').forEach((s, i) => s.style.setProperty('--i', i));
+    let finished = false, DUR = 2600, t0 = performance.now();
+    const ease = t => 1 - Math.pow(1 - t, 3);
 
     function finish() {
       if (finished) return; finished = true;
-      intro.classList.add('done');
-      document.body.classList.remove('is-loading');
-      document.body.classList.add('ready');
       try { sessionStorage.setItem('ezz-intro', '1'); } catch (_) {}
-      setTimeout(() => intro.remove(), 1000);
-      done();
+      intro.classList.add('split');                              // the seam of light draws across
+      setTimeout(() => {
+        intro.classList.add('open');                             // the two halves slide apart
+        document.body.classList.remove('is-loading'); document.body.classList.add('ready');
+        done();
+      }, 420);
+      setTimeout(() => intro.classList.add('gone'), 2000);
     }
     $('#introSkip').onclick = finish;
     addEventListener('keydown', e => { if (e.key === 'Escape' || e.key === 'Enter') finish(); });
 
-    function frame(now) {
+    (function frame(now) {
       if (finished) return;
-      const el = now - t0, prog = Math.min(1, el / DUR);
-      const pos = prog * (T.end + 1);                 // candles revealed (fractional)
-      g.clearRect(0, 0, w, H);
-
-      // grid
-      g.strokeStyle = 'rgba(255,61,46,.07)'; g.lineWidth = 1;
-      for (let i = 1; i < 8; i++) { const y = H * i / 8; g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); }
-      for (let i = 1; i < 14; i++) { const x = w * i / 14; g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
-
-      const pad = Math.min(40, w * 0.05), cw = (w - pad * 2) / (T.end + 2), body = Math.max(3, cw * 0.55);
-      const X = i => pad + cw * (i + 0.5);
-
-      // entry / SL / TP levels
-      if (pos > T.ENTRY + 1) {
-        const lvl = (p, col, label, dash) => {
-          g.save(); g.strokeStyle = col; g.fillStyle = col; g.setLineDash(dash); g.lineWidth = 1.2; g.globalAlpha = .85;
-          g.beginPath(); g.moveTo(X(T.ENTRY), Y(p)); g.lineTo(w - pad, Y(p)); g.stroke();
-          g.setLineDash([]); g.font = '600 11px "IBM Plex Mono",monospace'; g.fillText(label, w - pad - g.measureText(label).width, Y(p) - 6); g.restore();
-        };
-        lvl(T.e, '#f6efe9', 'ENTRY', [4, 5]); lvl(T.sl, RED, 'SL', [2, 5]); lvl(T.tp, GREEN, 'TP', [2, 5]);
-        // risk/reward zones
-        g.fillStyle = 'rgba(46,230,160,.06)'; g.fillRect(X(T.ENTRY), Y(T.tp), w - pad - X(T.ENTRY), Y(T.e) - Y(T.tp));
-        g.fillStyle = 'rgba(255,61,46,.07)'; g.fillRect(X(T.ENTRY), Y(T.e), w - pad - X(T.ENTRY), Y(T.sl) - Y(T.e));
-        if (!shownEntry) { shownEntry = true; $('#introTrade').classList.add('show'); }
-      }
-
-      // candles
-      let last = T.c[0].o;
-      for (let i = 0; i < Math.ceil(pos) && i <= T.end; i++) {
-        const k = T.c[i], f = Math.min(1, pos - i);
-        const close = k.o + (k.c - k.o) * f, up = close >= k.o, col = up ? GREEN : RED;
-        const hi2 = Math.max(k.o, close) + (k.h - Math.max(k.o, k.c)) * f, lo2 = Math.min(k.o, close) - (Math.min(k.o, k.c) - k.l) * f;
-        g.strokeStyle = col; g.fillStyle = col; g.lineWidth = 1.4;
-        g.beginPath(); g.moveTo(X(i), Y(hi2)); g.lineTo(X(i), Y(lo2)); g.stroke();
-        g.fillRect(X(i) - body / 2, Math.min(Y(k.o), Y(close)), body, Math.max(1.5, Math.abs(Y(k.o) - Y(close))));
-        last = close;
-      }
-      // live price dot + readout
-      const li = Math.min(T.end, Math.ceil(pos) - 1);
-      if (li >= 0) {
-        g.save(); g.shadowColor = '#fff'; g.shadowBlur = 16; g.fillStyle = '#fff';
-        g.beginPath(); g.arc(X(li), Y(last), 3.2, 0, 6.3); g.fill(); g.restore();
-        $('#introPrice').textContent = (last * 12.5).toFixed(2);
-      }
-
-      // take profit
-      if (!shownTP && pos > T.hit + 1) {
-        shownTP = true; brandAt = el;
-        $('#introTP').classList.add('show');
-        intro.animate([{ boxShadow: 'inset 0 0 0 0 rgba(46,230,160,0)' }, { boxShadow: 'inset 0 0 160px 20px rgba(46,230,160,.28)' }, { boxShadow: 'inset 0 0 0 0 rgba(46,230,160,0)' }], { duration: 1100 });
-      }
-      if (shownTP && el - brandAt > 800) $('#introBrand').classList.add('show');
-      if (shownTP && el - brandAt > 3300) return finish();
+      const p = Math.min(1, (now - t0) / DUR), v = ease(p);
+      bar.style.transform = `scaleX(${v})`; num.textContent = Math.round(v * 100);
+      if (p >= 1) { setTimeout(finish, 250); return; }
       requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
+    })(t0);
   }
 
   /* =========================================================
