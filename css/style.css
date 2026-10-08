@@ -237,9 +237,6 @@ body.ready .hero-type.enter{opacity:1;transform:none}
 /* ---------- LAYOUT ---------- */
 .wrap{width:min(1080px,100% - 40px);margin:0 auto}
 .section{padding:90px 0 20px}
-.eyebrow{color:var(--red-bright);text-transform:uppercase;letter-spacing:.3em;font-size:12px;display:flex;align-items:center;gap:14px;margin-bottom:10px}
-.eyebrow::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--line),transparent)}
-.section h2{font-family:Anton,sans-serif;font-weight:400;font-size:clamp(30px,6vw,52px);letter-spacing:.04em;margin:0 0 28px;line-height:1.1}
 .code{color:var(--red-bright);border-bottom:2px solid var(--red-bright)}
 .center{text-align:center;margin-top:28px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
@@ -248,6 +245,22 @@ body.ready .hero-type.enter{opacity:1;transform:none}
 .reveal{opacity:0;transform:translateY(26px) scale(.985);filter:blur(6px);transition:opacity .8s var(--ease) var(--d,0s),transform .8s var(--ease) var(--d,0s),filter .8s var(--ease) var(--d,0s)}
 .reveal.in{opacity:1;transform:none;filter:none}
 body.is-loading .reveal{animation:none}
+
+/* ---------- SECTION TITLES: glass tag + big heading ---------- */
+.eyebrow{display:flex;align-items:center;gap:14px;margin-bottom:16px;font-family:Montserrat,sans-serif}
+.eb-ico,.eb-txt{display:inline-flex;align-items:center}
+.eyebrow{position:relative}
+.eb-txt{order:1;padding:8px 16px 8px 14px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:#fff;
+  background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04));-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);
+  border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 24px rgba(0,0,0,.35)}
+.eb-ico{order:0;justify-content:center;width:34px;height:34px;border-radius:50%;margin-right:-6px;z-index:1;background:linear-gradient(135deg,#ff5a46,#c20800);border:1px solid rgba(255,255,255,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 20px rgba(225,6,0,.5)}
+.eb-ico svg{width:17px;height:17px;fill:none;stroke:#fff;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.eyebrow::after{content:"";order:2;flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.35),rgba(255,61,46,.35) 35%,transparent)}
+.eyebrow::before{content:"";order:3;position:absolute;right:0;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--red-bright);box-shadow:0 0 12px var(--red-bright);display:none}
+.section h2{font-family:Anton,sans-serif;font-weight:400;font-size:clamp(34px,6.4vw,64px);letter-spacing:.03em;line-height:1.04;margin:0 0 30px;
+  background:linear-gradient(180deg,#ffffff 25%,#d9cfc9 75%,#a99d97);-webkit-background-clip:text;background-clip:text;color:transparent;text-wrap:balance;filter:drop-shadow(0 6px 24px rgba(0,0,0,.5))}
+.section h2 .code{background:linear-gradient(180deg,#ff8a7a,var(--red-bright) 55%,var(--red));-webkit-background-clip:text;background-clip:text;color:transparent;border-bottom:3px solid var(--red-bright)}
+.cw-title{background:linear-gradient(180deg,#fff 25%,#d9cfc9 75%,#a99d97);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* ---------- CARDS ---------- */
 .card{position:relative;display:flex;align-items:center;gap:16px;padding:18px;border-radius:16px;border:1px solid var(--panel-border);
@@ -311,7 +324,7 @@ body.is-loading .reveal{animation:none}
 .chip:hover{color:var(--text);border-color:var(--red)}
 .chip.on{background:var(--red);border-color:var(--red-bright);color:#fff}
 
-.eyebrow.sub{margin-top:60px}
+.eyebrow.sub{margin-top:64px}
 
 /* ---------- COMMUNITY: bento of glass cards ---------- */
 .cm-lead{color:var(--muted);font-size:clamp(15px,1.8vw,18px);margin:-12px 0 30px;max-width:56ch}
