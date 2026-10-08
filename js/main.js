@@ -34,34 +34,6 @@
   /* =========================================================
      INTRO — a trade plays out: entry, price runs, take-profit
      ========================================================= */
-  function runIntro(done) {
-    const intro = $('#intro'), bar = $('#icBar'), num = $('#icNum');
-    $('#icWord').querySelectorAll('span').forEach((s, i) => s.style.setProperty('--i', i));
-    let finished = false, DUR = 2600, t0 = performance.now();
-    const ease = t => 1 - Math.pow(1 - t, 3);
-
-    function finish() {
-      if (finished) return; finished = true;
-      try { sessionStorage.setItem('ezz-intro', '1'); } catch (_) {}
-      intro.classList.add('split');                              // the seam of light draws across
-      setTimeout(() => {
-        intro.classList.add('open');                             // the two halves slide apart
-        document.body.classList.remove('is-loading'); document.body.classList.add('ready');
-        done();
-      }, 420);
-      setTimeout(() => intro.classList.add('gone'), 2000);
-    }
-    $('#introSkip').onclick = finish;
-    addEventListener('keydown', e => { if (e.key === 'Escape' || e.key === 'Enter') finish(); });
-
-    (function frame(now) {
-      if (finished) return;
-      const p = Math.min(1, (now - t0) / DUR), v = ease(p);
-      bar.style.transform = `scaleX(${v})`; num.textContent = Math.round(v * 100);
-      if (p >= 1) { setTimeout(finish, 250); return; }
-      requestAnimationFrame(frame);
-    })(t0);
-  }
 
   /* =========================================================
      BACKGROUND — drifting stars with mouse parallax
@@ -481,13 +453,7 @@
     startBackground(); initFollowers(); initPillNav(); initSimulator();
   }
 
-  let seen = false;
-  try { seen = sessionStorage.getItem('ezz-intro') === '1'; } catch (_) {}
   boot();
-  if (reduceMotion || seen) {
-    $('#intro').remove(); document.body.classList.remove('is-loading'); document.body.classList.add('ready');
-    initScrollFx();
-  } else {
-    runIntro(initScrollFx);
-  }
+  document.body.classList.add('ready');
+  initScrollFx();
 })();
