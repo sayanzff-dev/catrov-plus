@@ -1,0 +1,105 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Ezzarion — Instagram stories</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@500;600;700&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{background:#111}
+.story{position:relative;width:1080px;height:1920px;overflow:hidden;background:#030307;color:#f4efe8;font-family:Montserrat,sans-serif;margin-bottom:20px}
+.sky{position:absolute;inset:0;background:
+ radial-gradient(ellipse 120% 40% at 50% 104%,rgba(255,96,52,.55),rgba(170,30,22,.35) 40%,transparent 75%),
+ radial-gradient(ellipse 80% 40% at 80% 12%,rgba(70,98,170,.28),transparent 70%),
+ linear-gradient(180deg,#01030a 0%,#050b1f 32%,#0d1636 56%,#27122f 76%,#5a1a22 92%,#8a2a1c 100%)}
+.stars{position:absolute;inset:0;background-image:
+ radial-gradient(1.6px 1.6px at 12% 8%,#fff,transparent),radial-gradient(1.2px 1.2px at 28% 17%,#cfd8ff,transparent),radial-gradient(2px 2px at 44% 6%,#fff,transparent),radial-gradient(1.2px 1.2px at 63% 14%,#fff,transparent),radial-gradient(1.6px 1.6px at 79% 7%,#dfe6ff,transparent),radial-gradient(1.2px 1.2px at 91% 19%,#fff,transparent),radial-gradient(1.2px 1.2px at 7% 27%,#fff,transparent),radial-gradient(1.6px 1.6px at 36% 31%,#cfd8ff,transparent),radial-gradient(1.2px 1.2px at 57% 26%,#fff,transparent),radial-gradient(1.6px 1.6px at 84% 33%,#fff,transparent),radial-gradient(1.2px 1.2px at 19% 41%,#fff,transparent),radial-gradient(1.2px 1.2px at 72% 44%,#dfe6ff,transparent),radial-gradient(1.6px 1.6px at 95% 49%,#fff,transparent),radial-gradient(1.2px 1.2px at 5% 55%,#fff,transparent);opacity:.9}
+.moon{position:absolute;right:92px;top:240px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 36% 34%,#fffdf6,#eae6d8 44%,#b9b6aa 78%,#8d8b84);box-shadow:0 0 60px 14px rgba(190,205,255,.35),0 0 220px 70px rgba(120,150,255,.16)}
+.milky{position:absolute;left:-20%;right:-20%;top:60px;height:700px;transform:rotate(-24deg);opacity:.5;background:radial-gradient(ellipse 50% 14% at 50% 50%,rgba(190,205,255,.28),transparent 70%)}
+.top{position:absolute;left:0;right:0;top:92px;display:flex;justify-content:center;align-items:center;gap:20px;z-index:5}
+.top img{width:84px;height:84px;object-fit:contain;filter:drop-shadow(0 0 18px rgba(255,60,40,.5))}
+.top span{font:600 28px Montserrat;letter-spacing:.5em;text-transform:uppercase;color:#ffb9ad}
+.serif{font-family:'Instrument Serif',serif;font-weight:400}
+.red{color:#ff4a38}
+.pill{display:inline-flex;align-items:center;gap:16px;padding:22px 40px;border-radius:999px;font:700 30px Montserrat;letter-spacing:.28em;text-transform:uppercase;color:#fff;background:linear-gradient(180deg,#ff3a2b,#a00a05);box-shadow:0 20px 50px -10px rgba(225,6,0,.65),inset 0 2px 0 rgba(255,255,255,.35)}
+.glass{background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:2px solid rgba(255,255,255,.16);box-shadow:inset 0 2px 0 rgba(255,255,255,.22),0 40px 80px -40px #000;border-radius:44px}
+.prog{position:absolute;top:44px;left:44px;right:44px;display:flex;gap:10px;z-index:9}.prog i{flex:1;height:6px;border-radius:9px;background:rgba(255,255,255,.28)}.prog i.on{background:#fff}
+
+/* S1 */
+.s1 .frame{position:absolute;left:110px;right:110px;top:960px;height:800px;border-radius:60px 60px 0 0;overflow:hidden;z-index:2;border:2px solid rgba(255,255,255,.2);border-bottom:0;box-shadow:0 0 120px rgba(225,6,0,.35)}.s1 .frame img{width:100%;height:100%;object-fit:cover;object-position:46% 28%;transform:scale(1.25);transform-origin:46% 40%}
+.s1 .photo{position:absolute;left:50%;bottom:-20px;width:1100px;margin-left:-550px;z-index:2;filter:drop-shadow(0 0 80px rgba(225,6,0,.35))}
+.s1 .glow{position:absolute;left:50%;bottom:-100px;width:1100px;height:1100px;margin-left:-550px;border-radius:50%;background:radial-gradient(closest-side,rgba(225,6,0,.55),transparent 70%)}
+.s1 h1{position:absolute;left:0;right:0;top:300px;text-align:center;z-index:4;font:400 190px/.92 'Instrument Serif',serif;text-shadow:0 8px 60px rgba(0,0,0,.6)}
+.s1 h1 small{display:block;font:italic 400 230px/.95 'Instrument Serif',serif;color:#ff4a38}
+.s1 .sub{position:absolute;left:0;right:0;top:820px;text-align:center;z-index:4;font:600 30px Montserrat;letter-spacing:.34em;text-transform:uppercase;color:#d9d1cc}
+.s1 .foot{position:absolute;left:0;right:0;bottom:90px;text-align:center;z-index:6}
+.s1 .fade{position:absolute;left:0;right:0;bottom:0;height:420px;background:linear-gradient(0deg,#050308 18%,transparent);z-index:3}
+
+/* S2 */
+.s2{background:#030204}
+.s2 .sky{background:radial-gradient(ellipse 90% 45% at 50% 0%,rgba(225,6,0,.35),transparent 70%),radial-gradient(ellipse 100% 40% at 50% 105%,rgba(225,6,0,.3),transparent 70%),#030204}
+.s2 .eb{position:absolute;top:230px;left:0;right:0;text-align:center;font:700 30px Montserrat;letter-spacing:.42em;text-transform:uppercase;color:#ffb9ad}
+.s2 h2{position:absolute;top:290px;left:0;right:0;text-align:center;font:400 150px/1 'Instrument Serif',serif}
+.s2 h2 em{color:#ff4a38}
+.s2 .tot{position:absolute;top:560px;left:0;right:0;text-align:center}
+.s2 .tot span{display:block;font:600 28px Montserrat;letter-spacing:.4em;text-transform:uppercase;color:#a79c96}
+.s2 .tot b{display:block;margin-top:14px;font:400 250px/1 Anton;letter-spacing:.01em;background:linear-gradient(180deg,#fff 20%,#e9dcd6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.s2 .fan{position:absolute;left:0;right:0;top:930px;height:640px}
+.s2 .fan div{position:absolute;top:0;width:660px;height:495px;border-radius:30px;overflow:hidden;border:2px solid rgba(255,255,255,.2);box-shadow:0 50px 90px -30px #000;background:#0b0606}
+.s2 .fan img{width:100%;height:100%;object-fit:cover}
+.s2 .f1{left:20px;transform:rotate(-8deg) translateY(10px)}.s2 .f3{left:400px;transform:rotate(8deg) translateY(10px)}.s2 .f2{left:150px;top:90px;width:780px;height:585px;z-index:2;border-color:rgba(255,90,70,.7)!important}
+.s2 .chips{position:absolute;left:0;right:0;bottom:190px;display:flex;justify-content:center;gap:22px}
+.s2 .chips div{padding:22px 34px;text-align:center;border-radius:28px;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.14)}
+.s2 .chips b{display:block;font:400 56px Anton;letter-spacing:.03em}.s2 .chips span{font:600 20px Montserrat;letter-spacing:.2em;text-transform:uppercase;color:#a79c96}
+.s2 .foot{position:absolute;left:0;right:0;bottom:80px;text-align:center;font:600 26px Montserrat;letter-spacing:.3em;text-transform:uppercase;color:#cfc6c0}
+
+/* S3 */
+.s3 h2{position:absolute;top:290px;left:0;right:0;text-align:center;font:400 168px/.95 'Instrument Serif',serif}
+.s3 h2 em{color:#ff4a38}
+.s3 .lead{position:absolute;top:640px;left:140px;right:140px;text-align:center;font:500 33px/1.45 Montserrat;color:#d9d1cc}
+.s3 .partners{position:absolute;top:860px;left:60px;right:60px;display:flex;flex-wrap:nowrap;gap:18px;justify-content:center}
+.s3 .partners div{width:172px;height:172px;border-radius:34px;overflow:hidden;border:2px solid rgba(255,255,255,.22);box-shadow:0 30px 60px -30px #000}
+.s3 .partners img{width:100%;height:100%;object-fit:cover;display:block}
+.s3 .code{position:absolute;top:1160px;left:90px;right:90px;padding:36px 40px;text-align:center}
+.s3 .code span{display:block;font:600 26px Montserrat;letter-spacing:.4em;text-transform:uppercase;color:#a79c96}
+.s3 .code b{display:block;margin-top:10px;font:400 160px/1 Anton;letter-spacing:.12em;background:linear-gradient(180deg,#fff,#ff8a7a 70%,#e10600);-webkit-background-clip:text;background-clip:text;color:transparent}
+.s3 .code p{margin-top:8px;font:500 28px Montserrat;color:#d9d1cc}
+.s3 .cta{position:absolute;left:0;right:0;bottom:150px;text-align:center}
+.s3 .cta .pill{font-size:36px;padding:30px 60px}
+.s3 .cta p{margin-top:30px;font:600 24px Montserrat;letter-spacing:.3em;text-transform:uppercase;color:#a79c96}
+</style></head><body>
+
+<div class="story s1" id="s1">
+  <div class="sky"></div><div class="milky"></div><div class="stars"></div><div class="moon"></div>
+  <div class="prog"><i class="on"></i><i></i><i></i></div>
+  <div class="top"><img src="../assets/img/ezzarion-brain-bold.png" alt=""><span>Now boarding</span></div>
+  <h1>Welcome to<small>Ezzarion</small></h1>
+  <div class="sub">Nasdaq futures · Content creator</div>
+  <div class="glow"></div>
+  <div class="frame"><img src="../assets/photos/ezzarion.jpg" alt=""></div>
+  <div class="fade"></div>
+  <div class="foot"><span class="pill">Scroll to take off ›</span></div>
+</div>
+
+<div class="story s2" id="s2">
+  <div class="sky"></div><div class="stars" style="opacity:.35"></div>
+  <div class="prog"><i class="on"></i><i class="on"></i><i></i></div>
+  <div class="top"><img src="../assets/img/ezzarion-brain-bold.png" alt=""></div>
+  <div class="eb">Proof, not promises</div>
+  <h2>The <em>payout</em> wall</h2>
+  <div class="tot"><span>Total withdrawn</span><b>$5,599.50</b></div>
+  <div class="fan"><div class="f1"><img src="../assets/payouts/2026-07-02-ftm.jpg" alt=""></div><div class="f3"><img src="../assets/payouts/2026-08-13-ftm.jpg" alt=""></div><div class="f2"><img src="../assets/payouts/2026-08-06-ftm.jpg" alt=""></div></div>
+  <div class="chips"><div><b>5</b><span>Payouts</span></div><div><b>$1,506</b><span>Biggest</span></div><div><b>5+</b><span>Years trading</span></div></div>
+  <div class="foot">Real payouts · Every one on the site</div>
+</div>
+
+<div class="story s3" id="s3">
+  <div class="sky"></div><div class="milky"></div><div class="stars"></div>
+  <div class="prog"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+  <div class="top"><img src="../assets/img/ezzarion-brain-bold.png" alt=""></div>
+  <h2>Join the<br><em>journey</em></h2>
+  <div class="lead">Payouts, certificates, free videos and a simulator to price your next funded account.</div>
+  <div class="partners">
+    <div><img src="../assets/img/funded-trader-markets-logo.png" alt=""></div><div><img src="../assets/img/fundednext-logo.png" alt=""></div><div><img src="../assets/img/e8-markets-logo.png" alt=""></div>
+    <div><img src="../assets/img/propfirmmatch-logo.png" alt=""></div><div><img src="../assets/img/tradesyncer-logo.png" alt=""></div>
+  </div>
+  <div class="code glass"><span>Discount code</span><b>EZZX</b><p>Use it at checkout with my partner firms</p></div>
+  <div class="cta"><span class="pill">Link in bio ↗</span><p>Ezzarion · Nasdaq futures trader</p></div>
+</div>
+</body></html>
