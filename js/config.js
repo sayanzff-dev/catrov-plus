@@ -69,8 +69,8 @@ window.SITE = {
         { market: "CFD", plan: "Stellar Lite",   base: 0, code: 7, sizes: [ { size: "$5K", price: 32.99, final: 29.99 }, { size: "$10K", price: 59.99, final: 55.79 }, { size: "$25K", price: 139.99, final: 130.19 }, { size: "$50K", price: 229.99, final: 213.89 }, { size: "$100K", price: 399.99, final: 371.99 }, { size: "$200K", price: 798.99, final: 743.06, estimate: true } ] },
         { market: "CFD", plan: "Stellar Instant", base: 0, code: 7, sizes: [ { size: "$2K", price: 59.99, final: 49.99 }, { size: "$5K", price: 149.99, final: 139.49 }, { size: "$10K", price: 299.99, final: 278.99 }, { size: "$20K", price: 599.99, final: 557.99 } ] },
         { market: "Futures", plan: "Flex",        base: 0, code: 47, sizes: [ { size: "$50K", price: 133.99, final: 69.99 }, { size: "$100K", price: 264.99, final: 139.99 }, { size: "$150K", price: 483.99, final: 255.7, estimate: true } ] },
-        { market: "Futures", plan: "Rapid Pro",   base: 0, code: 47, sizes: [ { size: "$25K", price: 159.98, final: 85.32, estimate: true }, { size: "$50K", price: 299.98, final: 159.99 }, { size: "$100K", price: 499.98, final: 279.99 } ] },
-        { market: "Futures", plan: "Rapid Daily", base: 0, code: 47, sizes: [ { size: "$25K", price: 159.98, final: 85.32, estimate: true }, { size: "$50K", price: 299.98, final: 159.99, estimate: true }, { size: "$100K", price: 499.98, final: 279.99 } ] },
+        { market: "Futures", plan: "Rapid Pro",   base: 0, code: 47, sizes: [ { size: "$25K", price: 159.98, final: 79.99 }, { size: "$50K", price: 299.98, final: 159.99 }, { size: "$100K", price: 499.98, final: 279.99 } ] },
+        { market: "Futures", plan: "Rapid Daily", base: 0, code: 47, sizes: [ { size: "$25K", price: 159.98, final: 79.99 }, { size: "$50K", price: 299.98, final: 159.99 }, { size: "$100K", price: 499.98, final: 279.99 } ] },
         { market: "Futures", plan: "Direct",      base: 0, code: 40.14, sizes: [ { size: "$50K", price: 283.99, final: 169.99 } ] }
       ] }
     ]
