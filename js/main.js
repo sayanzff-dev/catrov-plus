@@ -496,7 +496,7 @@
   }
 
   function initAbout() {
-    const sec = $('#about'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), cue = $('#abCue');
+    const sec = $('#about'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), cue = $('#abCue'), meta = $('#abMeta'), sub = $('#abSub');
     if (!sec) return;
     if (reduceMotion) { document.body.classList.add('static'); return; }
     const stage0 = $('#abStage');
@@ -553,6 +553,7 @@
       L.style.transform = `translateX(${-101 * open}%)`;
       R.style.transform = `translateX(${101 * open}%)`;
       cue.style.opacity = 1 - clamp(p / .08);
+      meta.style.opacity = sub.style.opacity = 1 - clamp(open * 3);
       lensFade = 1 - clamp(open / .08);
       const g = clamp(open / .1); L.style.setProperty('--g', g); R.style.setProperty('--g', g);
       L.style.opacity = R.style.opacity = 1 - .9 * open;                  // the halves fade as they part
