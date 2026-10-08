@@ -608,8 +608,8 @@
       // welcome (first leg) and HUD
       welcome.style.opacity = first ? ((1 - clamp((u - .04) / .26)) * rdy).toFixed(3) : 0; welcome.style.transform = `translateY(${(first ? -u * 90 + (1 - rdy) * 24 : 0).toFixed(1)}px)`;
       hudEl.style.opacity = (first ? rdy * (1 - ease(clamp((u - .8) / .12))) : 1).toFixed(3);
-      flash.style.opacity = first ? (ease(clamp((u - .66) / .16)) * (1 - ease(clamp((u - .86) / .12)))).toFixed(3) : 0;
-      dark.style.opacity = first ? ease(clamp((u - .84) / .16)).toFixed(3) : 0;
+      flash.style.opacity = first ? (.82 * ease(clamp((u - .56) / .2)) * (1 - ease(clamp((u - .78) / .22)))).toFixed(3) : 0;
+      dark.style.opacity = 0;
       if (active !== lastLeg) { const L = info[active]; hud.from.textContent = L.from; hud.to.textContent = L.to; hud.flight.textContent = 'EZZ 00' + (active + 1); lastLeg = active; }
       hud.fill.style.transform = `scaleX(${u.toFixed(3)})`; hud.plane.style.left = (u * 100).toFixed(1) + '%';
       hud.alt.textContent = alt.toLocaleString('en-US'); hud.spd.textContent = spd; hud.dist.textContent = Math.max(0, Math.round(dist[active] * (1 - u))).toLocaleString('en-US');

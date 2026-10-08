@@ -861,7 +861,7 @@ body.static .fl-welcome{animation:none;opacity:1}
 .fl-arrive{position:absolute;left:0;right:0;bottom:clamp(60px,12vh,120px);z-index:6;text-align:center;opacity:0}
 .fl-arrive span{display:block;font:600 11px Montserrat,sans-serif;letter-spacing:.42em;text-transform:uppercase;color:#ffb9ad}
 .fl-arrive b{display:block;margin-top:8px;font-family:'Instrument Serif','Bodoni Moda',serif;font-weight:400;font-size:clamp(40px,7vw,84px);line-height:1;color:#f4efe8}
-@media (max-width:700px){.fl-planewrap{width:104vw;margin-left:-52vw;margin-top:-16.2vw}.hud-read{gap:12px;font-size:9.5px}.hud-top{font-size:10px;gap:10px}.hud-route i{width:18px}.leg{height:150svh}.leg0{height:250svh}}
+@media (max-width:700px){.fl-planewrap{width:104vw;margin-left:-52vw;margin-top:-16.2vw}.hud-read{gap:12px;font-size:9.5px}.hud-top{font-size:10px;gap:10px}.hud-route i{width:18px}.leg{height:150svh}.leg0{height:215svh}}
 @media (prefers-reduced-motion:reduce){#world{display:none}.leg{display:none}}
 body.static #world,body.static .leg{display:none}
 /* the nav stays out of the way during the very first flight */
@@ -990,3 +990,8 @@ body.static #world,body.static .leg{display:none}
 .fl-sound svg .w1,.fl-sound svg .w2{display:none}.fl-sound.on svg .w1,.fl-sound.on svg .w2{display:inline}.fl-sound.on svg .x{display:none}
 .fl-sound.on{background:rgba(225,6,0,.35);border-color:rgba(255,90,70,.6)}
 @media (prefers-reduced-motion:reduce){.fl-sound,.fl-bolt,.fl-shoot{display:none}}
+
+/* hand-off: mist clears into the sky, which then fades into the page (no black gap) */
+.fl-flash{background:radial-gradient(ellipse 80% 70% at 50% 58%,#e4eaf8 0%,#aab6d6 34%,#4a587e 72%,#1a2038 100%)}
+.about{min-height:0!important;padding:clamp(96px,14vh,150px) 0 clamp(70px,10vh,120px)}
+.leg0{height:215svh}
