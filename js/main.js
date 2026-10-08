@@ -455,7 +455,7 @@
     if (reduceMotion) { panels.remove(); document.body.classList.add('gate-open'); return; }
     const L = panels.querySelector('.gp-l'), R = panels.querySelector('.gp-r'), stageAbout = gate.querySelector('.about');
     const mq = matchMedia('(max-width:900px),(max-height:700px)'), ease = t => t * t * (3 - 2 * t);
-    let H = innerHeight, done = false, target = 0, cur = 0, raf = 0, last = 0;
+    let H = innerHeight, done = false, counted = false, target = 0, cur = 0, raf = 0, last = 0;
     const apply = p => {
       const e = ease(p);
       L.style.transform = `translate3d(${(-e * 101).toFixed(3)}%,0,0)`; R.style.transform = `translate3d(${(e * 101).toFixed(3)}%,0,0)`;
@@ -463,6 +463,7 @@
       stageAbout.style.transform = p < .999 ? `scale(${(1.06 - .06 * e).toFixed(4)})` : '';
       stageAbout.style.opacity = (.2 + .8 * Math.min(1, p * 1.5)).toFixed(3);
       document.body.classList.toggle('gate-open', p > .5);
+      if (p > .45 && !counted) { counted = true; gate.querySelectorAll('[data-target]').forEach(countUp); }
       const fin = p >= .999; if (fin !== done) { done = fin; panels.style.visibility = fin ? 'hidden' : 'visible'; }
     };
     // the panels glide toward the scroll position instead of snapping to it
@@ -472,7 +473,7 @@
       apply(cur); raf = cur === target ? 0 : requestAnimationFrame(loop); if (!raf) last = 0;
     };
     const upd = onFrame(() => {
-      H = innerHeight; const len = mq.matches ? H * .75 : H;
+      H = innerHeight; const len = mq.matches ? H * .75 : H; gate.style.setProperty('--gl', len + 'px');
       target = Math.min(1, Math.max(0, scrollY / len)); if (!raf) raf = requestAnimationFrame(loop);
     });
     addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
