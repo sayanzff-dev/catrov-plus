@@ -28,109 +28,6 @@
   <button id="introSkip" type="button">Skip ›</button>
 </div>
 
-<!-- ============ FLIGHT WORLD: one plane that flies you from destination to destination ============ -->
-<div id="world" aria-hidden="true">
-  <div class="fl-sky"></div>
-  <div class="fl-dusk" id="flDusk"></div>
-  <canvas class="fl-stars" id="flStars"></canvas>
-  <div class="fl-milky"></div>
-  <div class="fl-moon"></div>
-  <div class="fl-glow"></div>
-  <i class="fl-shoot" id="flShoot"></i>
-  <div class="fl-bolt" id="flBolt"></div>
-  <div class="fl-layer fl-far" id="flFar"><i></i></div>
-  <div class="fl-layer fl-mid" id="flMid"><i></i></div>
-  <div class="fl-planewrap" id="flPlane">
-    <div class="fl-contrail" id="flTrail"></div>
-    <div class="fl-bob"><svg class="fl-svg" viewBox="0 0 960 300" aria-hidden="true">
-  <defs>
-    <linearGradient id="fBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdfdff"/><stop offset=".18" stop-color="#eceff5"/><stop offset=".5" stop-color="#c3c9d4"/><stop offset=".8" stop-color="#8a92a2"/><stop offset="1" stop-color="#4b5163"/></linearGradient>
-    <linearGradient id="fShade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a0e1c" stop-opacity=".38"/><stop offset=".22" stop-color="#0a0e1c" stop-opacity=".05"/><stop offset=".8" stop-color="#9fb0ff" stop-opacity=".06"/><stop offset="1" stop-color="#0a0e1c" stop-opacity=".25"/></linearGradient>
-    <linearGradient id="fWing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1f3f8"/><stop offset=".5" stop-color="#b3bac7"/><stop offset="1" stop-color="#697082"/></linearGradient>
-    <linearGradient id="fWingFar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7d8596"/><stop offset="1" stop-color="#40465a"/></linearGradient>
-    <linearGradient id="fFin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cfd4de"/><stop offset="1" stop-color="#f6f8fb"/></linearGradient>
-    <linearGradient id="fEng" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f7fb"/><stop offset=".45" stop-color="#b6bcc9"/><stop offset="1" stop-color="#3f4558"/></linearGradient>
-    <linearGradient id="fRed" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d0905"/><stop offset=".5" stop-color="#d90f08"/><stop offset="1" stop-color="#ff3a2b"/></linearGradient>
-    <radialGradient id="fFan"><stop offset="0" stop-color="#7c8497"/><stop offset=".35" stop-color="#2c3140"/><stop offset="1" stop-color="#0c0e15"/></radialGradient>
-    <radialGradient id="fGlowE"><stop offset="0" stop-color="#ffd2a0" stop-opacity=".95"/><stop offset=".4" stop-color="#ff6a3a" stop-opacity=".5"/><stop offset="1" stop-color="#ff3a1a" stop-opacity="0"/></radialGradient>
-    <radialGradient id="fGlowR"><stop offset="0" stop-color="#ff3030" stop-opacity=".95"/><stop offset="1" stop-color="#ff3030" stop-opacity="0"/></radialGradient>
-    <radialGradient id="fGlowG"><stop offset="0" stop-color="#3dff9c" stop-opacity=".95"/><stop offset="1" stop-color="#3dff9c" stop-opacity="0"/></radialGradient>
-    <radialGradient id="fGlowW"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
-    <linearGradient id="fGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b3850"/><stop offset="1" stop-color="#06080d"/></linearGradient>
-    <linearGradient id="fBelly" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1d28" stop-opacity="0"/><stop offset="1" stop-color="#1a1d28" stop-opacity=".55"/></linearGradient>
-    <clipPath id="fBodyClip"><path d="M944 172C940 142 902 116 842 108L330 103C220 103 120 114 36 132L36 148C120 170 230 198 340 201L800 201C884 201 934 192 944 172Z"/></clipPath>
-  </defs>
-  <!-- far side: engine, stabiliser, wing -->
-  <rect x="610" y="196" width="84" height="34" rx="16" fill="#3b4152"/>
-  <path d="M130 140 L50 104 L84 102 L190 134Z" fill="url(#fWingFar)"/>
-  <path d="M600 150 L470 96 L506 92 L660 146Z" fill="url(#fWingFar)"/>
-  <!-- vertical fin -->
-  <path d="M262 106 L150 18 L196 14 L346 106Z" fill="url(#fFin)"/>
-  <path d="M196 62 L150 18 L196 14 L228 40Z" fill="url(#fRed)"/>
-  <path d="M150 18 L196 14" stroke="#fff" stroke-opacity=".7" stroke-width="1.6"/>
-  <path d="M226 104 L176 28" stroke="#9aa2b3" stroke-opacity=".5" stroke-width="1"/>
-  <!-- fuselage -->
-  <path d="M944 172C940 142 902 116 842 108L330 103C220 103 120 114 36 132L36 148C120 170 230 198 340 201L800 201C884 201 934 192 944 172Z" fill="url(#fBody)"/>
-  <g clip-path="url(#fBodyClip)">
-    <rect x="30" y="104" width="920" height="100" fill="url(#fShade)"/>
-    <rect x="30" y="160" width="920" height="46" fill="url(#fBelly)"/>
-    <path d="M30 166 C300 158 640 152 950 148 L950 160 C640 164 300 174 30 184Z" fill="url(#fRed)"/>
-    <path d="M30 166 C300 158 640 152 950 148" stroke="#fff" stroke-opacity=".6" stroke-width="1.2" fill="none"/>
-    <path d="M30 124 C380 108 700 104 950 112" stroke="#fff" stroke-opacity=".55" stroke-width="5" fill="none"/>
-    <g fill="url(#fGlass)" stroke="#7b8394" stroke-width=".7">
-      <rect x="296" y="121" width="9" height="12" rx="4.5"/><rect x="320" y="121" width="9" height="12" rx="4.5"/><rect x="344" y="121" width="9" height="12" rx="4.5"/><rect x="368" y="121" width="9" height="12" rx="4.5"/><rect x="392" y="121" width="9" height="12" rx="4.5"/><rect x="416" y="121" width="9" height="12" rx="4.5"/><rect x="440" y="121" width="9" height="12" rx="4.5"/><rect x="464" y="121" width="9" height="12" rx="4.5"/><rect x="488" y="121" width="9" height="12" rx="4.5"/><rect x="512" y="121" width="9" height="12" rx="4.5"/><rect x="536" y="121" width="9" height="12" rx="4.5"/><rect x="560" y="121" width="9" height="12" rx="4.5"/><rect x="584" y="121" width="9" height="12" rx="4.5"/><rect x="608" y="121" width="9" height="12" rx="4.5"/><rect x="632" y="121" width="9" height="12" rx="4.5"/><rect x="656" y="121" width="9" height="12" rx="4.5"/><rect x="680" y="121" width="9" height="12" rx="4.5"/><rect x="704" y="121" width="9" height="12" rx="4.5"/><rect x="728" y="121" width="9" height="12" rx="4.5"/><rect x="752" y="121" width="9" height="12" rx="4.5"/>
-    </g>
-    <g fill="#ffcf8a" opacity=".92"><rect x="297.5" y="123" width="6" height="8" rx="3"/><rect x="345.5" y="123" width="6" height="8" rx="3"/><rect x="393.5" y="123" width="6" height="8" rx="3"/><rect x="417.5" y="123" width="6" height="8" rx="3"/><rect x="489.5" y="123" width="6" height="8" rx="3"/><rect x="537.5" y="123" width="6" height="8" rx="3"/><rect x="585.5" y="123" width="6" height="8" rx="3"/><rect x="633.5" y="123" width="6" height="8" rx="3"/><rect x="681.5" y="123" width="6" height="8" rx="3"/><rect x="729.5" y="123" width="6" height="8" rx="3"/></g>
-    <g fill="url(#fGlass)" stroke="#8a93a4" stroke-width=".9"><path d="M868 116 L898 124 L904 134 L876 130Z"/><path d="M840 111 L866 116 L874 130 L846 128Z"/><path d="M816 108 L838 111 L844 127 L822 126Z"/></g>
-    <path d="M868 117 L896 124" stroke="#fff" stroke-opacity=".5" stroke-width="1"/>
-    <g fill="none" stroke="#6b7384" stroke-opacity=".55" stroke-width=".8"><rect x="262" y="110" width="22" height="48" rx="6"/><rect x="772" y="110" width="22" height="48" rx="6"/><path d="M800 104 L800 200"/><path d="M262 104 L256 190"/><path d="M560 103 L560 201"/><path d="M130 118 L130 160"/></g>
-    <path d="M36 132 L36 148 L60 152 L60 128Z" fill="#5c6376"/>
-  </g>
-  <!-- near stabiliser -->
-  <path d="M200 148 L58 202 L96 208 L274 160Z" fill="url(#fWing)"/>
-  <path d="M200 148 L58 202" stroke="#fff" stroke-opacity=".7" stroke-width="1.3"/>
-  <!-- near wing + winglet -->
-  <path d="M776 182 L384 262 L336 270 L544 192Z" fill="url(#fWing)"/>
-  <path d="M776 182 L384 262" stroke="#fff" stroke-opacity=".8" stroke-width="1.6"/>
-  <path d="M336 270 L544 192" stroke="#2f3546" stroke-opacity=".55" stroke-width="1.2"/>
-  <path d="M560 214 L676 188 M492 232 L600 206 M430 248 L520 226" stroke="#4a5163" stroke-opacity=".5" stroke-width="1"/>
-  <path d="M352 266 L330 226 L344 224 L376 262Z" fill="url(#fRed)"/>
-  <!-- near engine -->
-  <path d="M612 190 L604 214 L568 214 L576 188Z" fill="#7d8597"/>
-  <path d="M530 207 Q528 226 546 242 L650 242 Q664 224 660 207Z" fill="url(#fEng)"/>
-  <rect x="530" y="207" width="130" height="35" rx="17" fill="url(#fEng)"/>
-  <path d="M536 226 L660 226" stroke="#d90f08" stroke-width="2.2" opacity=".85"/>
-  <ellipse cx="656" cy="224" rx="9" ry="17.5" fill="#1b1f2a"/><ellipse cx="656" cy="224" rx="6.5" ry="13" fill="url(#fFan)"/>
-  <ellipse cx="528" cy="224" rx="8" ry="15" fill="#303644"/><ellipse cx="528" cy="224" rx="4" ry="9" fill="#171a22"/>
-  <path d="M540 211 L650 211" stroke="#fff" stroke-opacity=".6" stroke-width="2"/>
-  <!-- lights -->
-  <ellipse cx="506" cy="224" rx="46" ry="16" fill="url(#fGlowE)" style="opacity:var(--thr,.4)"/>
-  <circle cx="342" cy="266" r="22" fill="url(#fGlowR)" class="fl-beacon"/><circle cx="342" cy="266" r="3" fill="#ff6a5e"/>
-  <circle cx="156" cy="18" r="26" fill="url(#fGlowW)" class="fl-strobe"/><circle cx="156" cy="18" r="2.4" fill="#fff"/>
-  <circle cx="62" cy="204" r="16" fill="url(#fGlowG)" class="fl-beacon fl-b2"/><circle cx="62" cy="204" r="2.4" fill="#8dffc2"/>
-  <circle cx="40" cy="140" r="12" fill="url(#fGlowW)" opacity=".9" class="fl-strobe fl-s2"/>
-</svg></div>
-  </div>
-  <div class="fl-layer fl-near" id="flNear"><i></i></div>
-  <div class="fl-speed" id="flSpeed"></div>
-  <div class="fl-hud" id="flHud">
-    <div class="hud-top"><span class="hud-flight" id="hudFlight">EZZ 001</span><span class="hud-route"><b id="hudFrom">Home</b><i></i><b id="hudTo">Ezzarion</b></span></div>
-    <div class="hud-bar"><u id="hudFill"></u><s id="hudPlane"></s></div>
-    <div class="hud-read"><span>ALT <b id="hudAlt">0</b> ft</span><span>SPD <b id="hudSpd">0</b> kts</span><span>DIST <b id="hudDist">0</b> km</span></div>
-  </div>
-  <div class="fl-welcome" id="flWelcome">
-    <div class="fl-kick">Now boarding</div>
-    <h1><span class="w w1">Welcome</span> <span class="w w2">to</span> <em class="w w3">Ezzarion</em></h1>
-    <p id="flSub">Scroll to take off.</p>
-    <p class="fl-hint">Tap anywhere or press a key for the plane sound</p>
-  </div>
-  <div class="fl-arrive" id="flArrive"><span>Landing in</span><b id="arrTo">Ezzarion&rsquo;s world</b></div>
-  <div class="fl-flash" id="flFlash"></div>
-  <div class="fl-dark" id="flDark"></div>
-</div>
-
-<button class="fl-sound" id="flSound" type="button" aria-pressed="false" aria-label="Engine sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="w1" d="M16 9a4 4 0 0 1 0 6"/><path class="w2" d="M18.5 6.5a8 8 0 0 1 0 11"/><path class="x" d="M16 9l5 6M21 9l-5 6"/></svg><span>Sound</span></button>
-
 <canvas id="bg" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div>
 
@@ -162,7 +59,6 @@
 </header>
 
 <main id="top">
-<div class="leg leg0" data-from="Home" data-to="Ezzarion"></div>
 
 <!-- ============ DESTINATION 1: Meet Ezzarion ============ -->
 <section class="about" id="about">
