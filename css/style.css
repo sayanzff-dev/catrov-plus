@@ -701,15 +701,9 @@ body.ready .about{opacity:1}
 /* ---------- opening name: Instrument Serif, plus a frosted glass lens that follows the pointer ---------- */
 .ab-stage{--ab-fs:min(clamp(4rem,30vw,20rem),24vw)}
 .ab-name span,.lw-name{font-family:'Instrument Serif','Bodoni Moda',Didot,serif;font-weight:400;letter-spacing:-.01em;line-height:.8;font-size:var(--ab-fs)}
-.ab-lens{--lr:clamp(150px,19vw,250px);position:absolute;left:0;top:0;width:var(--lr);height:var(--lr);border-radius:50%;overflow:hidden;z-index:3;pointer-events:none;will-change:transform,opacity;
   -webkit-backdrop-filter:blur(1.5px) brightness(1.16) saturate(1.5);backdrop-filter:blur(1.5px) brightness(1.16) saturate(1.5);
   background:radial-gradient(circle at 30% 24%,rgba(255,255,255,.26),rgba(255,255,255,.05) 42%,rgba(255,255,255,0) 68%);
   box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.45),inset 0 10px 26px rgba(255,255,255,.22),inset 0 -14px 34px rgba(255,255,255,.1),inset 0 0 40px rgba(0,0,0,.25),0 34px 60px -14px rgba(0,0,0,.65),0 0 90px rgba(225,6,0,.22)}
-.ab-lens::after{content:"";position:absolute;left:14%;top:9%;width:44%;height:20%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,0));filter:blur(2px);transform:rotate(-24deg)}
-.lens-world{position:absolute;left:0;top:0;width:100vw;height:100svh;display:grid;place-items:center;transform-origin:0 0;will-change:transform}
-.lw-name{text-transform:uppercase;white-space:nowrap;color:#fff;text-shadow:2px 0 rgba(255,40,40,.6),-2px 0 rgba(70,200,255,.45)}
-body.static .ab-lens{display:none}
-@media (hover:none){.ab-lens{--lr:clamp(130px,34vw,190px)}}
 
 .about{height:210svh}
 .about{height:260svh}

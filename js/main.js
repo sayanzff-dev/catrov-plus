@@ -520,21 +520,8 @@
     addEventListener('pointermove', e => { mx = e.clientX / innerWidth; my = e.clientY / innerHeight; }, { passive: true });
     new IntersectionObserver(es => { vis = es[0].isIntersecting; if (vis) tick(performance.now()); }, { threshold: 0 }).observe(stage);
 
-    const lens = $('#abLens'), world = $('#lensWorld'); let lx = innerWidth / 2, ly = innerHeight / 2, lastMove = 0, lensFade = 1;
-    addEventListener('pointermove', () => { lastMove = performance.now(); }, { passive: true });
-    function moveLens(now) {
-      const r = lens.offsetWidth / 2, t = now / 1000;
-      const idle = now - lastMove > 2500 || lastMove === 0;                  // no pointer (touch): the lens drifts on its own
-      const tx = idle ? innerWidth / 2 + Math.sin(t * .45) * innerWidth * .26 : mx * innerWidth;
-      const ty = idle ? innerHeight / 2 + Math.cos(t * .33) * innerHeight * .06 : my * innerHeight;
-      lx += (tx - lx) * .07; ly += (ty - ly) * .07;
-      lens.style.transform = `translate3d(${lx - r}px,${ly - r}px,0)`;
-      world.style.transform = `translate(${r}px,${r}px) scale(1.4) translate(${-lx}px,${-ly}px)`;
-      lens.style.opacity = lensFade;
-    }
     function tick(now) {
       if (!vis) return;
-      moveLens(now);
       sx += (mx - sx) * .045; sy += (my - sy) * .045;                   // spring-smoothed pointer
       const t = now / 1000;
       orbs.forEach((o, i) => {
@@ -554,7 +541,6 @@
       R.style.transform = `translateX(${101 * open}%)`;
       cue.style.opacity = 1 - clamp(p / .08);
       const mo = 1 - clamp(open * 3); meta.style.setProperty('--mo', mo); sub.style.setProperty('--mo', mo); meta.style.visibility = sub.style.visibility = mo <= 0 ? 'hidden' : 'visible';
-      lensFade = 1 - clamp(open / .08);
       const g = clamp(open / .1); L.style.setProperty('--g', g); R.style.setProperty('--g', g);
       L.style.opacity = R.style.opacity = 1 - .9 * open;                  // the halves fade as they part
       L.classList.toggle('moving', open > 0.001); R.classList.toggle('moving', open > 0.001);
