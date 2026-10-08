@@ -19,8 +19,11 @@
   }
   const usd = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
 
+  /* run fn at most once per frame, however many events fire */
+  function onFrame(fn) { let q = false; return (...a) => { if (q) return; q = true; requestAnimationFrame(() => { q = false; fn(...a); }); }; }
+
   function fitCanvas(c) {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const dpr = Math.min(devicePixelRatio || 1, 1.5);
     const r = c.getBoundingClientRect();
     c.width = Math.max(1, r.width * dpr); c.height = Math.max(1, r.height * dpr);
     const g = c.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -65,14 +68,15 @@
      ========================================================= */
   function startBackground() {
     const cv = $('#bg'); let { g, w, h: H } = fitCanvas(cv);
-    addEventListener('resize', () => ({ g, w, h: H } = fitCanvas(cv)));
+    addEventListener('resize', onFrame(() => ({ g, w, h: H } = fitCanvas(cv))));
     const r = rng(42), stars = Array.from({ length: 140 }, () => ({
       x: r(), y: r(), z: .2 + r() * .8, p: r() * 6.3, hot: r() < .18
     }));
     let mx = 0, my = 0, sy = 0;
     addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; }, { passive: true });
     addEventListener('scroll', () => { sy = scrollY; }, { passive: true });
-    (function loop(t) {
+    let lastT = -99;
+    function draw(t) {
       g.clearRect(0, 0, w, H);
       for (const s of stars) {
         const x = ((s.x * w + mx * 40 * s.z) % w + w) % w;
@@ -82,7 +86,11 @@
         g.fillRect(x, y, s.z * 2, s.z * 2);
       }
       g.globalAlpha = 1;
-      if (!reduceMotion) requestAnimationFrame(loop);
+    }
+    (function loop(t) {
+      if (reduceMotion) { draw(0); return; }
+      if (!document.hidden && t - lastT >= 33) { lastT = t; draw(t); }      // ~30 fps, paused in background tabs
+      requestAnimationFrame(loop);
     })(0);
   }
 
@@ -338,10 +346,13 @@
       let cur = -1; secs.forEach((s, i) => { if (s && s.getBoundingClientRect().top < innerHeight * .4) cur = i; });
       links.forEach((a, i) => a.classList.toggle('active', secs[i] === secs[cur]));
     };
-    addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); onScroll();
+    const onScrollF = onFrame(onScroll);
+    addEventListener('scroll', onScrollF, { passive: true }); addEventListener('resize', onScrollF); onScroll();
 
     // card spotlight
-    document.addEventListener('pointermove', e => {
+    let spot = null;
+    document.addEventListener('pointermove', e => { spot = e; spotF(); }, { passive: true });
+    const spotF = onFrame(() => { const e = spot; if (!e) return;
       const c = e.target.closest && e.target.closest('.card, .cm-card'); if (!c) return;
       const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
     }, { passive: true });
@@ -546,7 +557,8 @@
         nextSec.style.setProperty('--in-o', t); nextSec.style.setProperty('--in-s', (1.14 - .14 * t).toFixed(3)); nextSec.style.setProperty('--in-b', ((1 - t) * 10).toFixed(1) + 'px');
       }
     }
-    addEventListener('scroll', bridge, { passive: true }); addEventListener('resize', bridge); bridge();
+    const bridgeF = onFrame(bridge);
+    addEventListener('scroll', bridgeF, { passive: true }); addEventListener('resize', bridgeF); bridge();
     function render(p) {
       const name = 1;                              // 1. the name appears
       L.style.setProperty('--na', name); R.style.setProperty('--na', name);
@@ -571,7 +583,8 @@
     measure(); update(true); addEventListener('load', () => { measure(); update(true); });
     // the top bar stays out of the way during the whole opening section
     const navCheck = () => document.body.classList.toggle('nav-off', scrollY < sec.offsetTop + sec.offsetHeight - innerHeight * .7);
-    addEventListener('scroll', navCheck, { passive: true }); addEventListener('resize', navCheck); navCheck();
+    const navCheckF = onFrame(navCheck);
+    addEventListener('scroll', navCheckF, { passive: true }); addEventListener('resize', navCheckF); navCheck();
   }
 
   function boot() {
