@@ -539,20 +539,7 @@
       src.connect(flt); flt.connect(master); master.connect(ac.destination); src.start();
       const o = ac.createOscillator(), og = ac.createGain(); o.type = 'sawtooth'; o.frequency.value = 58; og.gain.value = .012; o.connect(og); og.connect(flt); o.start();
     }
-    // airport-style welcome: chime, then a spoken line; the hum runs until the second section. Browsers only allow sound after a tap or key press.
-    function chime() {
-      [[880, 0], [1108.7, .34], [1318.5, .68]].forEach(([f, t]) => [[1, .22], [2.01, .07]].forEach(([m, v]) => {
-        const o = ac.createOscillator(), g = ac.createGain(), s = ac.currentTime + .05 + t; o.type = 'sine'; o.frequency.value = f * m;
-        g.gain.setValueAtTime(0, s); g.gain.linearRampToValueAtTime(v, s + .015); g.gain.exponentialRampToValueAtTime(.0008, s + 1.5); o.connect(g); g.connect(ac.destination); o.start(s); o.stop(s + 1.6);
-      }));
-    }
-    function speak() {
-      if (!('speechSynthesis' in window) || active !== 0) return;
-      const u = new SpeechSynthesisUtterance('Ladies and gentlemen, welcome to Ezzarion\u2019s world. Sit back, enjoy the flight, and get ready for the journey.');
-      const vs = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang)), v = vs.find(x => /female|samantha|zira|aria|jenny|google uk english female|serena|susan/i.test(x.name)) || vs[0];
-      if (v) u.voice = v; u.lang = (v && v.lang) || 'en-US'; u.rate = .9; u.pitch = 1.08; u.volume = 1;
-      speechSynthesis.cancel(); speechSynthesis.speak(u);
-    }
+    // plane sound: engine from the first tap until the animation ends, then a jet fly-by. Browsers only allow sound after a tap or key press.
     // jet fly-by played once when the visitor arrives at the second section (the announcement and hum stop)
     let landed = false;
     function flyby() {
@@ -572,7 +559,7 @@
     function begin() {
       if (on) return; on = true; document.body.classList.add('snd-on');
       removeEventListener('pointerdown', begin); removeEventListener('keydown', begin); removeEventListener('touchend', begin);
-      try { audio(); ac.resume(); if (active === 0) { chime(); setTimeout(speak, 2300); } else flyby(); } catch (e) {}
+      try { audio(); ac.resume(); if (active !== 0) flyby(); } catch (e) {}
     }
     addEventListener('pointerdown', begin, { passive: true }); addEventListener('keydown', begin); addEventListener('touchend', begin, { passive: true });
     // far-off lightning in the clouds and the odd shooting star
@@ -652,10 +639,10 @@
     }
     function loop(now) {
       tick = null;
-      if (active < 0) { world.style.visibility = 'hidden'; if ('speechSynthesis' in window) speechSynthesis.cancel(); if (ac && master) master.gain.setTargetAtTime(0, ac.currentTime, .4); flyby(); return; }
+      if (active < 0) { world.style.visibility = 'hidden'; if (ac && master) master.gain.setTargetAtTime(0, ac.currentTime, .4); flyby(); return; }
       world.style.visibility = 'visible'; world.style.opacity = alpha.toFixed(3);
       cx += (tx - cx) * .06; cy += (ty - cy) * .06; world.style.setProperty('--cx', cx.toFixed(3)); world.style.setProperty('--cy', cy.toFixed(3));
-      if (ac && master) { const t = ac.currentTime; master.gain.setTargetAtTime(on ? .09 * alpha * (.45 + .55 * cur) : 0, t, .15); flt.frequency.setTargetAtTime(220 + cur * 900, t, .2); }
+      if (ac && master) { const t = ac.currentTime; master.gain.setTargetAtTime(on ? .22 * alpha * (.5 + .5 * cur) : 0, t, .15); flt.frequency.setTargetAtTime(220 + cur * 900, t, .2); }
       const dt = lastNow ? Math.min(.1, (now - lastNow) / 1000) : .016; lastNow = now;
       if (active !== lastLeg) cur = target;                                  // a new leg starts from its own beginning
       cur += (target - cur) * (1 - Math.exp(-dt * 7)); vel += (Math.abs(cur - prev) / dt - vel) * .1; prev = cur;
