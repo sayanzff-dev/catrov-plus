@@ -872,3 +872,21 @@ body.static #world,body.static .leg{display:none}
 .fl-welcome{top:clamp(70px,11vh,120px)}
 .fl-svg{filter:drop-shadow(0 22px 34px rgba(0,0,0,.7))}
 @media (max-width:700px){.fl-hud{bottom:18px}.fl-arrive{bottom:92px}.fl-welcome{top:clamp(70px,10vh,100px)}}
+
+/* ---------- flight opening: Ezzarion welcome, realistic night sky, no readouts ---------- */
+.fl-hud,.fl-arrive{display:none!important}
+.fl-welcome h1 em{font-style:italic;color:#ff5a47}
+.fl-sky{background:
+  radial-gradient(ellipse 120% 34% at 50% 104%,rgba(255,96,52,.5),rgba(170,30,22,.32) 38%,transparent 72%),
+  radial-gradient(ellipse 70% 40% at 78% 14%,rgba(70,98,170,.22),transparent 70%),
+  linear-gradient(180deg,#01030a 0%,#040a1c 30%,#0b1431 55%,#241230 74%,#5a1a22 90%,#8a2a1c 100%)}
+.fl-milky{position:absolute;left:-20%;right:-20%;top:-10%;height:62%;transform:rotate(-24deg);pointer-events:none;opacity:.55;
+  background:
+    radial-gradient(ellipse 50% 14% at 50% 50%,rgba(190,205,255,.22),transparent 70%),
+    radial-gradient(ellipse 30% 8% at 36% 52%,rgba(255,225,205,.16),transparent 70%),
+    radial-gradient(ellipse 36% 7% at 66% 46%,rgba(170,190,255,.14),transparent 70%)}
+.fl-moon{position:absolute;right:4%;top:27%;width:clamp(54px,7vw,92px);aspect-ratio:1;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 36% 34%,#fffdf6 0%,#eae6d8 44%,#b9b6aa 78%,#8d8b84 100%);
+  box-shadow:0 0 36px 8px rgba(190,205,255,.35),0 0 140px 40px rgba(120,150,255,.16)}
+.fl-moon::after{content:"";position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 32% 60%,rgba(120,118,110,.35) 0 7%,transparent 8%),radial-gradient(circle at 62% 38%,rgba(120,118,110,.3) 0 9%,transparent 10%),radial-gradient(circle at 58% 72%,rgba(120,118,110,.25) 0 6%,transparent 7%)}
