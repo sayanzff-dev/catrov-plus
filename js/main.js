@@ -156,10 +156,15 @@
     TikTok: '<svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/></svg>'
   };
   function renderSocials() {
-    $('#socialRow').append(...S.socials.map(s => {
-      const a = h('a', { class: 'social-icon', href: s.href, target: '_blank', rel: 'noopener', 'aria-label': s.name });
-      if (svgIcons[s.name]) a.innerHTML = svgIcons[s.name];
-      else a.append(h('img', { src: `assets/img/${s.name.toLowerCase()}.png`, alt: s.name }));
+    const fol = S.followers || {}, key = n => n.toLowerCase();
+    $('#socialRow').append(...S.socials.map((s, i) => {
+      const a = h('a', { class: 'social-card', href: s.href, target: '_blank', rel: 'noopener', 'aria-label': s.name, style: `--i:${i}` });
+      const ico = h('span', { class: 'sc-ico' });
+      if (svgIcons[s.name]) ico.innerHTML = svgIcons[s.name];
+      else ico.append(h('img', { src: `assets/img/${key(s.name)}.png`, alt: '' }));
+      const n = fol[key(s.name)];
+      a.append(ico, h('b', { text: s.name }), h('span', { class: 'sc-sub', text: n ? new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n) + ' followers' : 'Follow' }), h('i', { class: 'sc-go', text: '↗' }));
+      a.addEventListener('pointermove', e => { const r = a.getBoundingClientRect(); a.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%'); a.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%'); });
       return a;
     }));
   }
