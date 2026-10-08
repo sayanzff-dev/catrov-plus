@@ -946,3 +946,11 @@ body.gate-open .about .ab-facts{transition-delay:.5s}body.gate-open .about .ab-c
   .about .ab-ghost{font-size:34vw}
   .about .ab-badge.b1{left:-8px}.about .ab-badge.b2{right:-8px}
 }
+
+/* portrait: ring and frame share one centre, no badges */
+.about .ab-photo{width:min(100%,360px);justify-self:center;padding:14px}
+.about .ab-ring{inset:0;border-radius:200px 200px 34px 34px;border:1px solid rgba(255,70,55,.55)}
+.about .ab-photo:hover .ab-ring{transform:scale(1.03)}
+.about .ab-frame{border-radius:188px 188px 24px 24px;box-shadow:0 60px 100px -40px #000}
+.about .ab-frame img{transform:none}
+.about .ab-photo figcaption{margin-top:12px}
