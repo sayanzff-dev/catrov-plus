@@ -626,3 +626,9 @@ body.static .ab-panel,body.static .ab-seam{display:none}
   .ab-cta{justify-content:center;margin-top:14px}
   .ab-cta .btn{padding:11px 18px;font-size:13.5px}
 }
+
+.ab-cue{position:absolute;left:50%;bottom:max(22px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:12px;font:600 10px Montserrat,sans-serif;letter-spacing:.5em;text-indent:.5em;text-transform:uppercase;color:#efeae4;pointer-events:none}
+.ab-cue i{position:relative;display:block;width:1px;height:clamp(40px,8vh,72px);background:rgba(255,255,255,.22);overflow:hidden}
+.ab-cue b{position:absolute;left:0;top:-40%;width:100%;height:40%;background:linear-gradient(180deg,transparent,#fff);animation:cuedrop 2s cubic-bezier(.65,0,.35,1) infinite}
+body.static .ab-cue{display:none}
+body.ready .about{opacity:1}

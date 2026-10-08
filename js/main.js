@@ -483,6 +483,7 @@
      it, and the introduction opens up behind it
      ========================================================= */
   function initPortal() {
+    if (!$('#portal')) return;
     const sec = $('#portal'), photo = $('#heroPhoto'), cut = $('#heroCut'), type = $('#pText'), word = $('#heroWord');
     type.classList.add('enter');
 
@@ -560,7 +561,7 @@
   }
 
   function initAbout() {
-    const sec = $('#about'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), seam = $('#abSeam');
+    const sec = $('#about'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), seam = $('#abSeam'), cue = $('#abCue');
     if (!sec) return;
     if (reduceMotion) { document.body.classList.add('static'); return; }
     const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -568,11 +569,12 @@
     let range = 1, target = 0, cur = 0, running = false;
     const measure = () => { range = Math.max(1, sec.offsetHeight - innerHeight); };
     function render(p) {
-      const name = easeOut(clamp(p / .22));                              // 1. the name appears
+      const name = .3 + .7 * easeOut(clamp(p / .2));                              // 1. the name appears
       L.style.setProperty('--na', name); R.style.setProperty('--na', name);
       const open = ease(clamp((p - .3) / .4));                           // 2. the panels slide apart
       L.style.transform = `translateX(${-101 * open}%)`;
       R.style.transform = `translateX(${101 * open}%)`;
+      cue.style.opacity = 1 - clamp(p / .08);
       L.style.visibility = R.style.visibility = open >= 1 ? 'hidden' : 'visible';
       seam.style.opacity = open > 0 && open < 1 ? Math.sin(open * Math.PI) : 0;
       const c = ease(clamp((p - .38) / .4));                             // 3. the portrait and info arrive
