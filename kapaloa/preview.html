@@ -3,159 +3,166 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kapaloa — Swim Fins Factory</title>
-<meta name="description" content="Kapaloa designs and manufactures swim fins, built for the sea.">
-<style>:root{--deep:#04101f;--navy:#062a4a;--ocean:#0369a1;--sky:#38bdf8;--aqua:#5eead4;--foam:#e6f7ff;--sand:#f5e6c8}
+<title>Kpaloa — High Performance Swim Fins</title>
+<meta name="description" content="Kpaloa: Brazilian high-performance fins for swimming, bodyboarding, bodysurf, rescue and kids.">
+<style>:root{--ink:#eaf8ff;--aqua:#7be8ff;--glass:rgba(255,255,255,.10);--rim:rgba(255,255,255,.28)}
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--deep);color:var(--foam);line-height:1.6;overflow-x:hidden}
-#bubbles{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
-section,header,footer{position:relative;z-index:1}
-.nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:14px 5vw;z-index:10;transition:.3s}
-.nav.solid{background:rgba(4,16,31,.85);backdrop-filter:blur(8px)}
-.nav nav{display:flex;gap:22px;align-items:center}
-.nav a{color:var(--foam);text-decoration:none;font-size:.95rem;opacity:.85}
-.nav a:hover{opacity:1;color:var(--aqua)}
-.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.3rem;letter-spacing:.5px;opacity:1!important}
-.logo svg{width:34px;fill:var(--aqua)}
-.btn{display:inline-block;padding:12px 26px;border-radius:999px;background:linear-gradient(135deg,var(--aqua),var(--sky));color:var(--deep)!important;font-weight:700;text-decoration:none;transition:.25s;opacity:1!important;border:2px solid transparent}
-.btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(94,234,212,.35)}
-.btn.ghost{background:transparent;color:var(--foam)!important;border-color:var(--sky)}
-.btn.small{padding:7px 18px}
-.hero{min-height:100vh;display:flex;align-items:center;padding:0 5vw;background:radial-gradient(ellipse at 70% 20%,#0b4f7c 0,var(--navy) 45%,var(--deep) 100%);overflow:hidden}
-.hero-in{max-width:620px;position:relative;z-index:2}
-.eyebrow{text-transform:uppercase;letter-spacing:.3em;font-size:.8rem;color:var(--aqua);margin-bottom:12px}
-h1{font-size:clamp(2.6rem,7vw,5rem);line-height:1.05;margin-bottom:20px}
-h1 span{background:linear-gradient(90deg,var(--aqua),var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{font-size:1.15rem;opacity:.85;margin-bottom:30px}
-.cta{display:flex;gap:14px;flex-wrap:wrap}
-.fin-hero{position:absolute;right:6vw;top:50%;width:min(30vw,300px);transform:translateY(-50%) rotate(18deg);animation:bob 6s ease-in-out infinite;filter:drop-shadow(0 30px 40px rgba(0,0,0,.5))}
-@keyframes bob{50%{transform:translateY(-56%) rotate(10deg)}}
-.waves{position:absolute;bottom:-2px;left:0;width:100%;height:140px}
-.waves svg{width:200%;height:100%;position:absolute;bottom:0}
-.w1{fill:rgba(56,189,248,.35)}.w2{fill:var(--deep)}
-.waves svg:first-child{animation:wave 12s linear infinite}
-@keyframes wave{to{transform:translateX(-50%)}}
-.section{padding:110px 5vw}
-.section.alt{background:linear-gradient(180deg,var(--deep),var(--navy) 50%,var(--deep))}
-h2{font-size:clamp(1.9rem,4vw,3rem);margin-bottom:34px;position:relative;display:inline-block}
-h2::after{content:"";display:block;height:4px;width:60%;margin-top:8px;border-radius:4px;background:linear-gradient(90deg,var(--aqua),transparent)}
-.grid.two{display:grid;grid-template-columns:1.2fr 1fr;gap:50px;align-items:center}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.stats div{background:rgba(56,189,248,.08);border:1px solid rgba(94,234,212,.2);border-radius:18px;padding:22px 10px;text-align:center}
-.stats b{display:block;font-size:2.2rem;color:var(--aqua)}
-.stats span{font-size:.85rem;opacity:.8}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
-.card{background:rgba(56,189,248,.07);border:1px solid rgba(94,234,212,.18);border-radius:20px;padding:28px;transition:.3s}
-.card:hover{transform:translateY(-8px);border-color:var(--aqua);box-shadow:0 18px 40px rgba(3,105,161,.4)}
-.card .ico{font-size:2.2rem;margin-bottom:10px}
-.card h3{margin-bottom:6px;color:var(--aqua)}
-.steps{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;padding:0}
-.steps li{border-left:3px solid var(--sky);padding-left:18px}
-.steps span{font-size:2.4rem;font-weight:800;color:rgba(94,234,212,.35)}
-.links{display:flex;gap:14px;flex-wrap:wrap;margin:24px 0}
-.todo{color:var(--sand);font-size:.85rem;opacity:.8}
-.note{margin-top:20px}
-footer{text-align:center;padding:40px;opacity:.6;font-size:.9rem}
-.reveal{opacity:0;transform:translateY(34px);transition:opacity .8s,transform .8s}
-.reveal.in{opacity:1;transform:none}
-@media(max-width:800px){.grid.two{grid-template-columns:1fr}.nav nav a:not(.btn){display:none}.fin-hero{opacity:.25;right:-40px;width:60vw}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter","Segoe UI",Roboto,sans-serif;color:var(--ink);background:#021a30;line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.sea{position:fixed;inset:0;z-index:0;background:linear-gradient(180deg,#38c6e8 0%,#0a7db8 28%,#06487a 62%,#021a30 100%)}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;animation:drift 22s ease-in-out infinite alternate}
+.b1{width:55vw;height:55vw;background:#6fe7ff;top:-15vw;left:-10vw}
+.b2{width:45vw;height:45vw;background:#2f7bff;top:35vh;right:-12vw;animation-duration:28s}
+.b3{width:40vw;height:40vw;background:#00d1b2;bottom:-12vw;left:20vw;animation-duration:34s}
+@keyframes drift{to{transform:translate(8vw,6vh) scale(1.2)}}
+.caustics{position:absolute;inset:0;opacity:.28;mix-blend-mode:soft-light}
+#bubbles{position:absolute;inset:0;width:100%;height:100%}
+main,footer,.nav{position:relative;z-index:2}
+.glass{background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.06));backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid var(--rim);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(255,255,255,.08),0 20px 50px rgba(0,25,60,.35)}
+.nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:min(920px,92vw);display:flex;justify-content:space-between;align-items:center;padding:10px 12px 10px 24px;border-radius:999px;z-index:20}
+.nav nav{display:flex;gap:6px;align-items:center}
+.nav a{color:var(--ink);text-decoration:none;padding:8px 14px;border-radius:999px;font-size:.92rem;transition:.25s}
+.nav nav a:hover{background:rgba(255,255,255,.16)}
+.logo{font-weight:700;font-size:1.2rem;letter-spacing:-.02em}
+.pill{display:inline-block;padding:9px 20px;border-radius:999px;background:#fff;color:#04456f!important;font-weight:600;text-decoration:none;transition:.3s cubic-bezier(.2,.8,.2,1)}
+.pill:hover{transform:scale(1.05);box-shadow:0 8px 28px rgba(255,255,255,.4)}
+.pill.big{padding:15px 30px;font-size:1.02rem}
+.pill.ghost{background:rgba(255,255,255,.14);color:var(--ink)!important;border:1px solid var(--rim);backdrop-filter:blur(14px)}
+.hero{min-height:100vh;padding:150px 6vw 60px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
+.eyebrow{font-size:.85rem;letter-spacing:.22em;text-transform:uppercase;opacity:.85;margin-bottom:16px}
+h1{font-size:clamp(3rem,10vw,7.5rem);line-height:.98;letter-spacing:-.045em;font-weight:700}
+h1 span{background:linear-gradient(180deg,#fff,#a8f0ff 60%,#4fc3f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{max-width:560px;font-size:1.25rem;opacity:.9;margin:22px 0 30px}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.fin-stage{margin-top:40px;perspective:900px;height:clamp(260px,42vw,460px)}
+.fin{height:100%;transform-style:preserve-3d;transition:transform .15s ease-out;animation:float 7s ease-in-out infinite}
+@keyframes float{50%{translate:0 -16px}}
+.section{padding:90px 6vw;max-width:1180px;margin:auto;text-align:center}
+h2{font-size:clamp(2rem,5vw,3.4rem);letter-spacing:-.035em;margin-bottom:10px}
+.sub{opacity:.8;margin-bottom:36px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;margin-top:30px}
+.card{border-radius:28px;padding:30px 24px;text-align:left;transition:transform .25s ease-out,box-shadow .3s;transform-style:preserve-3d;position:relative;overflow:hidden}
+.card::after{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.28),transparent 60%);opacity:0;transition:.3s;pointer-events:none}
+.card:hover::after{opacity:1}
+.ic{font-size:2.3rem;display:block;margin-bottom:12px}
+.card h3{font-size:1.3rem;margin-bottom:6px;letter-spacing:-.02em}
+.card p{opacity:.85;font-size:.97rem}
+.panel{border-radius:40px;padding:clamp(30px,6vw,64px)}
+.panel p{max-width:640px;margin:14px auto 0;font-size:1.15rem;opacity:.92}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;margin-top:26px}
+.stats b{display:block;font-size:2.2rem;letter-spacing:-.03em}
+.stats span{opacity:.8;font-size:.9rem}
+.linklist{display:grid;gap:14px;max-width:560px;margin:34px auto 0}
+.link{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"i t a" "i s a";column-gap:16px;align-items:center;text-align:left;padding:18px 22px;border-radius:26px;color:var(--ink);text-decoration:none;transition:.3s cubic-bezier(.2,.8,.2,1)}
+.link span{grid-area:i;font-size:1.7rem}.link b{grid-area:t}.link small{grid-area:s;opacity:.75}.link i{grid-area:a;font-style:normal;font-size:1.6rem;opacity:.7;transition:.3s}
+.link:hover{transform:translateY(-4px) scale(1.02)}
+.link:hover i{transform:translateX(5px);opacity:1}
+footer{text-align:center;padding:50px 20px;opacity:.7;font-size:.9rem}
+.rv{opacity:0;transform:translateY(40px) scale(.97);filter:blur(8px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1),filter .9s}
+.rv.in{opacity:1;transform:none;filter:none}
+@media(max-width:640px){.nav nav a:not(.pill){display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none;filter:none}}
 </style>
 </head>
 <body>
-<canvas id="bubbles" aria-hidden="true"></canvas>
+<div class="sea" aria-hidden="true">
+  <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>
+  <svg class="caustics" width="100%" height="100%"><filter id="c"><feTurbulence type="fractalNoise" baseFrequency=".012 .03" numOctaves="2" seed="4"><animate attributeName="baseFrequency" dur="30s" values=".012 .03;.02 .018;.012 .03" repeatCount="indefinite"/></feTurbulence><feColorMatrix values="0 0 0 0 .6  0 0 0 0 .95  0 0 0 0 1  0 0 0 1.4 -.55"/></filter><rect width="100%" height="100%" filter="url(#c)"/></svg>
+  <canvas id="bubbles"></canvas>
+</div>
 
-<header class="nav" id="nav">
-  <a class="logo" href="#top"><svg viewBox="0 0 40 24"><path d="M2 12C10 2 20 2 28 12c-8 10-18 10-26 0Zm26 0 10-8v16z"/></svg>Kapaloa</a>
-  <nav>
-    <a href="#about">About</a><a href="#fins">Fins</a><a href="#factory">Factory</a><a href="#why">Why us</a><a href="#contact" class="btn small">Contact</a>
-  </nav>
+<header class="nav glass" id="nav">
+  <a class="logo" href="#top">Kpaloa</a>
+  <nav><a href="#lines">Lines</a><a href="#fin">Technology</a><a href="#about">About</a><a href="#links" class="pill">Buy</a></nav>
 </header>
 
+<main>
 <section class="hero" id="top">
-  <div class="hero-in">
-    <p class="eyebrow reveal">Swim fin factory</p>
-    <h1 class="reveal">Built for the <span>deep blue</span></h1>
-    <p class="lead reveal">Kapaloa designs and manufactures swim fins that move with the sea — powerful, comfortable, made to last.</p>
-    <div class="cta reveal"><a class="btn" href="#fins">Explore fins</a><a class="btn ghost" href="#contact">Get in touch</a></div>
+  <p class="eyebrow rv">High performance swim fins</p>
+  <h1 class="rv">Move like<br><span>the ocean.</span></h1>
+  <p class="lead rv">Brazilian-made fins for swimming, bodyboarding, bodysurf, rescue and kids.</p>
+  <div class="row rv"><a class="pill big" href="https://linktr.ee/kpaloa" target="_blank" rel="noopener">Buy — choose your country</a><a class="pill big ghost" href="#lines">Explore</a></div>
+  <div class="fin-stage rv" id="stage">
+    <svg class="fin" id="finEl" viewBox="0 0 320 520" aria-hidden="true">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9bf3ff"/><stop offset=".45" stop-color="#1aa7d9"/><stop offset="1" stop-color="#05396b"/></linearGradient>
+        <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <radialGradient id="g3" cx=".3" cy=".2"><stop offset="0" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        <filter id="sh"><feDropShadow dx="0" dy="30" stdDeviation="22" flood-color="#001a33" flood-opacity=".55"/></filter>
+      </defs>
+      <g filter="url(#sh)">
+        <path d="M110 12c50-14 98 12 112 62l62 300c12 56-36 134-100 134-62 0-112-60-102-118L110 12Z" fill="url(#g1)"/>
+        <path d="M110 12c50-14 98 12 112 62l62 300c12 56-36 134-100 134-62 0-112-60-102-118L110 12Z" fill="url(#g2)"/>
+        <path d="M160 40v440M124 70l-18 380M196 70l20 380M232 130l30 300" stroke="#fff" stroke-opacity=".28" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="140" cy="90" rx="60" ry="90" fill="url(#g3)" transform="rotate(-12 140 90)"/>
+      </g>
+    </svg>
   </div>
-  <svg class="fin-hero" viewBox="0 0 300 500" aria-hidden="true"><defs><linearGradient id="fg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5eead4"/><stop offset="1" stop-color="#0369a1"/></linearGradient></defs><path d="M120 10c40 0 70 20 80 60l40 300c6 50-40 120-90 120S60 420 70 370L100 60c4-30 10-50 20-50Z" fill="url(#fg)"/><path d="M150 60v380M110 90l-6 330M190 90l6 330" stroke="#fff" stroke-opacity=".25" stroke-width="3" fill="none"/></svg>
-  <div class="waves"><svg viewBox="0 0 1440 160" preserveAspectRatio="none"><path class="w1" d="M0 80c120-40 240-40 360 0s240 40 360 0 240-40 360 0 240 40 360 0v80H0z"/><path class="w2" d="M0 100c120-40 240-40 360 0s240 40 360 0 240-40 360 0 240 40 360 0v60H0z"/></svg></div>
 </section>
 
-<section class="section" id="about">
-  <h2 class="reveal">About Kapaloa</h2>
-  <div class="grid two">
-    <p class="reveal">Kapaloa is a swim fin factory. We shape rubber and composite into fins for swimmers, snorkelers, bodyboarders and divers. <em class="todo">[Replace with your story from the Linktree]</em></p>
-    <div class="stats reveal">
-      <div><b data-count="10">0</b><span>Years of craft</span></div>
-      <div><b data-count="25">0</b><span>Fin models</span></div>
-      <div><b data-count="40">0</b><span>Countries shipped</span></div>
+<section class="section" id="lines">
+  <h2 class="rv">Choose your line</h2>
+  <p class="sub rv">Natação · Bodyboarding · Bodysurf · Resgate · Infantil</p>
+  <div class="cards">
+    <article class="card glass tilt rv"><span class="ic">🏊</span><h3>Swimming</h3><p>Short, responsive blades for technique and leg power.</p></article>
+    <article class="card glass tilt rv"><span class="ic">🌊</span><h3>Bodyboarding</h3><p>Compact fins that launch you into the wave.</p></article>
+    <article class="card glass tilt rv"><span class="ic">🏄</span><h3>Bodysurf</h3><p>Maximum drive for catching and riding the swell.</p></article>
+    <article class="card glass tilt rv"><span class="ic">🛟</span><h3>Rescue</h3><p>Built for lifeguards: speed and reliability.</p></article>
+    <article class="card glass tilt rv"><span class="ic">🐠</span><h3>Kids</h3><p>Light, comfortable fins for young swimmers.</p></article>
+  </div>
+</section>
+
+<section class="section" id="fin">
+  <div class="glass panel rv">
+    <h2>Engineered in Brazil</h2>
+    <div class="stats">
+      <div><b>High</b><span>performance</span></div>
+      <div><b>5</b><span>product lines</span></div>
+      <div><b>Worldwide</b><span>shipping</span></div>
     </div>
   </div>
 </section>
 
-<section class="section alt" id="fins">
-  <h2 class="reveal">Our fins</h2>
-  <div class="cards">
-    <article class="card reveal"><div class="ico">🏊</div><h3>Swim Training</h3><p>Short, flexible blades that build leg strength and technique.</p></article>
-    <article class="card reveal"><div class="ico">🤿</div><h3>Snorkel &amp; Dive</h3><p>Open-heel comfort with drainage holes and long-range propulsion.</p></article>
-    <article class="card reveal"><div class="ico">🌊</div><h3>Bodyboard</h3><p>Compact, grippy fins that snap you into the wave.</p></article>
-    <article class="card reveal"><div class="ico">🐠</div><h3>Kids</h3><p>Light, soft and bright — first fins for little swimmers.</p></article>
-  </div>
-  <p class="note reveal todo">[Edit models, sizes and prices to match your catalogue]</p>
-</section>
-
-<section class="section" id="factory">
-  <h2 class="reveal">From mould to ocean</h2>
-  <ol class="steps">
-    <li class="reveal"><span>01</span><h3>Design</h3><p>Hydrodynamic blade shapes tested in water.</p></li>
-    <li class="reveal"><span>02</span><h3>Mould</h3><p>Precision steel moulds for every size.</p></li>
-    <li class="reveal"><span>03</span><h3>Vulcanise</h3><p>Rubber cured for flex and durability.</p></li>
-    <li class="reveal"><span>04</span><h3>Quality check</h3><p>Every pair inspected before it leaves.</p></li>
-  </ol>
-</section>
-
-<section class="section alt" id="why">
-  <h2 class="reveal">Why Kapaloa</h2>
-  <div class="cards">
-    <div class="card reveal"><h3>Powerful</h3><p>Efficient blades turn every kick into speed.</p></div>
-    <div class="card reveal"><h3>Comfortable</h3><p>Soft foot pockets that don't rub.</p></div>
-    <div class="card reveal"><h3>Durable</h3><p>Salt, sun and sand resistant materials.</p></div>
-    <div class="card reveal"><h3>Factory price</h3><p>Direct from the maker, wholesale available.</p></div>
+<section class="section" id="about">
+  <div class="glass panel rv">
+    <h2>About Kpaloa</h2>
+    <p>Kpaloa is a Brazilian industry specialising in high-performance fins, based in Rio de Janeiro. Our fins are now available worldwide.</p>
   </div>
 </section>
 
-<section class="section" id="contact">
-  <h2 class="reveal">Contact &amp; links</h2>
-  <p class="reveal">Order, wholesale or custom fins — reach us here.</p>
-  <div class="links reveal">
-    <a class="btn" href="https://kpaloa.com" target="_blank" rel="noopener">Website</a>
-    <a class="btn ghost" href="#" >Instagram</a>
-    <a class="btn ghost" href="#">WhatsApp</a>
-    <a class="btn ghost" href="#">Email</a>
+<section class="section" id="links">
+  <h2 class="rv">Find us</h2>
+  <div class="linklist">
+    <a class="glass link rv" href="https://linktr.ee/kpaloa" target="_blank" rel="noopener"><span>🌍</span><b>Buy your fins</b><small>Choose your country</small><i>›</i></a>
+    <a class="glass link rv" href="https://www.kpaloa.com" target="_blank" rel="noopener"><span>🛒</span><b>Official website</b><small>kpaloa.com</small><i>›</i></a>
+    <a class="glass link rv" href="https://www.facebook.com/kpaloa.oficial/" target="_blank" rel="noopener"><span>📘</span><b>Facebook</b><small>@kpaloa.oficial</small><i>›</i></a>
+    <a class="glass link rv" href="https://www.instagram.com/kpaloa.oficial/" target="_blank" rel="noopener"><span>📸</span><b>Instagram</b><small>@kpaloa.oficial</small><i>›</i></a>
   </div>
-  <p class="note todo">[Put your real social links in these buttons]</p>
 </section>
-
-<footer>© <span id="yr"></span> Kapaloa · Swim fins factory</footer>
-<script>// reveal on scroll
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);const c=e.target.querySelectorAll('[data-count]');c.forEach(count)}}),{threshold:.15});
-document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4)*.08+'s';io.observe(el)});
-function count(el){const t=+el.dataset.count;let n=0;const s=()=>{n+=Math.ceil(t/40);if(n>=t){el.textContent=t+'+';return}el.textContent=n;requestAnimationFrame(s)};s()}
-// nav
-const nav=document.getElementById('nav');
-addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>40),{passive:true});
+</main>
+<footer>© <span id="yr"></span> Kpaloa · Rio de Janeiro, Brazil</footer>
+<script>const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%5)*.07+'s';io.observe(el)});
 document.getElementById('yr').textContent=new Date().getFullYear();
+// card tilt + glare
+document.querySelectorAll('.tilt').forEach(c=>{
+  c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+    c.style.transform=`perspective(700px) rotateX(${(.5-y)*10}deg) rotateY(${(x-.5)*12}deg) translateY(-4px)`;
+    c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%')});
+  c.addEventListener('pointerleave',()=>c.style.transform='');
+});
+// fin follows pointer and scroll
+const fin=document.getElementById('finEl');let px=0,py=0;
+addEventListener('pointermove',e=>{px=e.clientX/innerWidth-.5;py=e.clientY/innerHeight-.5},{passive:true});
+function fl(){fin.style.transform=`rotateY(${px*28}deg) rotateX(${-py*18}deg) rotateZ(${12+scrollY*.03}deg)`;requestAnimationFrame(fl)}fl();
 // bubbles
-const cv=document.getElementById('bubbles'),cx=cv.getContext('2d');let W,H,bs=[];
-function size(){W=cv.width=innerWidth;H=cv.height=innerHeight}
-size();addEventListener('resize',size);
-for(let i=0;i<40;i++)bs.push({x:Math.random()*W,y:Math.random()*H,r:2+Math.random()*7,v:.3+Math.random()*.9,p:Math.random()*6});
-(function loop(t){cx.clearRect(0,0,W,H);for(const b of bs){b.y-=b.v;if(b.y<-10){b.y=H+10;b.x=Math.random()*W}
-const x=b.x+Math.sin(t/1000+b.p)*12;cx.beginPath();cx.arc(x,b.y,b.r,0,7);cx.strokeStyle='rgba(125,211,252,.35)';cx.fillStyle='rgba(125,211,252,.08)';cx.fill();cx.stroke()}
-requestAnimationFrame(loop)})(0);
+const cv=document.getElementById('bubbles'),cx=cv.getContext('2d');let W,H;
+const bs=Array.from({length:36},()=>({x:Math.random(),y:Math.random(),r:2+Math.random()*9,v:.0006+Math.random()*.0016,p:Math.random()*6}));
+function size(){const d=devicePixelRatio||1;W=cv.width=innerWidth*d;H=cv.height=innerHeight*d}size();addEventListener('resize',size);
+(function loop(t){cx.clearRect(0,0,W,H);for(const b of bs){b.y-=b.v*(1+scrollY*.0004);if(b.y<-.05){b.y=1.05;b.x=Math.random()}
+const x=(b.x+Math.sin(t/1500+b.p)*.01)*W,y=b.y*H,r=b.r*(devicePixelRatio||1);
+const g=cx.createRadialGradient(x-r*.35,y-r*.35,r*.1,x,y,r);g.addColorStop(0,'rgba(255,255,255,.55)');g.addColorStop(.7,'rgba(180,240,255,.08)');g.addColorStop(1,'rgba(255,255,255,.35)');
+cx.beginPath();cx.arc(x,y,r,0,7);cx.fillStyle=g;cx.fill()}requestAnimationFrame(loop)})(0);
 </script>
 </body>
 </html>

@@ -1,16 +1,22 @@
-// reveal on scroll
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);const c=e.target.querySelectorAll('[data-count]');c.forEach(count)}}),{threshold:.15});
-document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4)*.08+'s';io.observe(el)});
-function count(el){const t=+el.dataset.count;let n=0;const s=()=>{n+=Math.ceil(t/40);if(n>=t){el.textContent=t+'+';return}el.textContent=n;requestAnimationFrame(s)};s()}
-// nav
-const nav=document.getElementById('nav');
-addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>40),{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%5)*.07+'s';io.observe(el)});
 document.getElementById('yr').textContent=new Date().getFullYear();
+// card tilt + glare
+document.querySelectorAll('.tilt').forEach(c=>{
+  c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+    c.style.transform=`perspective(700px) rotateX(${(.5-y)*10}deg) rotateY(${(x-.5)*12}deg) translateY(-4px)`;
+    c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%')});
+  c.addEventListener('pointerleave',()=>c.style.transform='');
+});
+// fin follows pointer and scroll
+const fin=document.getElementById('finEl');let px=0,py=0;
+addEventListener('pointermove',e=>{px=e.clientX/innerWidth-.5;py=e.clientY/innerHeight-.5},{passive:true});
+function fl(){fin.style.transform=`rotateY(${px*28}deg) rotateX(${-py*18}deg) rotateZ(${12+scrollY*.03}deg)`;requestAnimationFrame(fl)}fl();
 // bubbles
-const cv=document.getElementById('bubbles'),cx=cv.getContext('2d');let W,H,bs=[];
-function size(){W=cv.width=innerWidth;H=cv.height=innerHeight}
-size();addEventListener('resize',size);
-for(let i=0;i<40;i++)bs.push({x:Math.random()*W,y:Math.random()*H,r:2+Math.random()*7,v:.3+Math.random()*.9,p:Math.random()*6});
-(function loop(t){cx.clearRect(0,0,W,H);for(const b of bs){b.y-=b.v;if(b.y<-10){b.y=H+10;b.x=Math.random()*W}
-const x=b.x+Math.sin(t/1000+b.p)*12;cx.beginPath();cx.arc(x,b.y,b.r,0,7);cx.strokeStyle='rgba(125,211,252,.35)';cx.fillStyle='rgba(125,211,252,.08)';cx.fill();cx.stroke()}
-requestAnimationFrame(loop)})(0);
+const cv=document.getElementById('bubbles'),cx=cv.getContext('2d');let W,H;
+const bs=Array.from({length:36},()=>({x:Math.random(),y:Math.random(),r:2+Math.random()*9,v:.0006+Math.random()*.0016,p:Math.random()*6}));
+function size(){const d=devicePixelRatio||1;W=cv.width=innerWidth*d;H=cv.height=innerHeight*d}size();addEventListener('resize',size);
+(function loop(t){cx.clearRect(0,0,W,H);for(const b of bs){b.y-=b.v*(1+scrollY*.0004);if(b.y<-.05){b.y=1.05;b.x=Math.random()}
+const x=(b.x+Math.sin(t/1500+b.p)*.01)*W,y=b.y*H,r=b.r*(devicePixelRatio||1);
+const g=cx.createRadialGradient(x-r*.35,y-r*.35,r*.1,x,y,r);g.addColorStop(0,'rgba(255,255,255,.55)');g.addColorStop(.7,'rgba(180,240,255,.08)');g.addColorStop(1,'rgba(255,255,255,.35)');
+cx.beginPath();cx.arc(x,y,r,0,7);cx.fillStyle=g;cx.fill()}requestAnimationFrame(loop)})(0);
