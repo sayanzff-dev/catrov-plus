@@ -1002,3 +1002,11 @@ body.static #world,body.static .leg{display:none}
 body.snd-on .fl-hint{display:none}
 @keyframes hintPulse{0%,100%{opacity:.45}50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){.fl-hint{display:none}}
+
+/* phones: keep the moon clear of the text, plane fully in frame */
+@media (max-width:700px){
+  .fl-moon{top:6%;right:7%;width:46px}
+  .fl-planewrap{width:92vw;margin-left:-46vw;margin-top:-14.4vw}
+  .fl-hint{font-size:10px!important;letter-spacing:.2em!important;padding:0 28px}
+}
+@media (max-width:700px){.ab-photo{width:min(72vw,300px)}.ab-frame{aspect-ratio:4/5;max-height:none}}
