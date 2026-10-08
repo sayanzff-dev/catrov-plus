@@ -455,16 +455,25 @@
     if (reduceMotion) { panels.remove(); document.body.classList.add('gate-open'); return; }
     const L = panels.querySelector('.gp-l'), R = panels.querySelector('.gp-r'), stageAbout = gate.querySelector('.about');
     const mq = matchMedia('(max-width:900px),(max-height:700px)'), ease = t => t * t * (3 - 2 * t);
-    let H = innerHeight, done = false;
+    let H = innerHeight, done = false, target = 0, cur = 0, raf = 0, last = 0;
+    const apply = p => {
+      const e = ease(p);
+      L.style.transform = `translate3d(${(-e * 101).toFixed(3)}%,0,0)`; R.style.transform = `translate3d(${(e * 101).toFixed(3)}%,0,0)`;
+      panels.style.setProperty('--gp', Math.max(0, 1 - p * 2.4).toFixed(3));
+      stageAbout.style.transform = p < .999 ? `scale(${(1.06 - .06 * e).toFixed(4)})` : '';
+      stageAbout.style.opacity = (.2 + .8 * Math.min(1, p * 1.5)).toFixed(3);
+      document.body.classList.toggle('gate-open', p > .5);
+      const fin = p >= .999; if (fin !== done) { done = fin; panels.style.visibility = fin ? 'hidden' : 'visible'; }
+    };
+    // the panels glide toward the scroll position instead of snapping to it
+    const loop = now => {
+      const dt = last ? Math.min(.05, (now - last) / 1000) : .016; last = now;
+      cur += (target - cur) * (1 - Math.exp(-dt * 7)); if (Math.abs(target - cur) < .0005) cur = target;
+      apply(cur); raf = cur === target ? 0 : requestAnimationFrame(loop); if (!raf) last = 0;
+    };
     const upd = onFrame(() => {
-      H = innerHeight;
-      const len = mq.matches ? H * .75 : H, p = Math.min(1, Math.max(0, scrollY / len)), e = ease(p);
-      L.style.transform = `translate3d(${(-e * 101).toFixed(2)}%,0,0)`; R.style.transform = `translate3d(${(e * 101).toFixed(2)}%,0,0)`;
-      panels.style.setProperty('--gp', Math.max(0, 1 - p * 2.2).toFixed(3));
-      stageAbout.style.transform = p < 1 ? `scale(${(1.07 - .07 * e).toFixed(4)})` : '';
-      stageAbout.style.opacity = (.25 + .75 * Math.min(1, p * 1.6)).toFixed(3);
-      document.body.classList.toggle('gate-open', p > .55);
-      const fin = p >= 1; if (fin !== done) { done = fin; panels.style.visibility = fin ? 'hidden' : 'visible'; }
+      H = innerHeight; const len = mq.matches ? H * .75 : H;
+      target = Math.min(1, Math.max(0, scrollY / len)); if (!raf) raf = requestAnimationFrame(loop);
     });
     addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
   }

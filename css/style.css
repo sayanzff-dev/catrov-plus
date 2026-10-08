@@ -837,17 +837,12 @@ body{animation:pageIn .7s ease-out both}
 .gate-stage{position:sticky;top:0;height:100svh;overflow:hidden}
 .gate-stage .about{height:100%!important;min-height:0!important;padding:clamp(84px,11vh,120px) 0 40px;box-sizing:border-box;will-change:transform,opacity;transform-origin:50% 50%}
 .gate-panels{position:fixed;inset:0;z-index:45;pointer-events:none;--gp:1}
-.gp{position:absolute;top:0;bottom:0;width:50.1%;overflow:hidden;background:#050304;will-change:transform}
-.gp::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 120% 70% at var(--cx,100%) 50%,rgba(225,6,0,.3),transparent 70%),linear-gradient(180deg,#0b0506,#030203)}
+.gp{position:absolute;top:0;bottom:0;width:50.2%;overflow:hidden;background:#000;will-change:transform}
 .gp-l{left:0;--cx:100%}.gp-r{right:0;--cx:0%}
-.gp-l::after,.gp-r::after{content:"";position:absolute;top:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,rgba(255,90,70,.9),transparent);box-shadow:0 0 22px rgba(255,61,46,.7)}
-.gp-l::after{right:0}.gp-r::after{left:0}
 .gp-in{position:absolute;top:0;bottom:0;width:100vw;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,26px);opacity:var(--gp)}
 .gp-l .gp-in{left:0}.gp-r .gp-in{right:0}
-.gp-logo{width:clamp(70px,12vw,110px);filter:drop-shadow(0 0 22px rgba(255,61,46,.7))}
 .gp-name{font:400 clamp(48px,12vw,150px)/1 Anton,sans-serif;letter-spacing:.14em;padding-left:.14em;color:#f6efe9;white-space:nowrap}
 .gp-hint{font:600 11px Montserrat,sans-serif;letter-spacing:.42em;text-transform:uppercase;color:#ffb9ad;animation:gpHint 2s ease-in-out infinite}
-.gp-hint::after{content:"";display:block;width:1px;height:34px;margin:14px auto 0;background:linear-gradient(180deg,#ff5a46,transparent)}
 @keyframes gpHint{0%,100%{opacity:.5;transform:translateY(0)}50%{opacity:1;transform:translateY(6px)}}
 .gp-in .gp-logo,.gp-in .gp-name,.gp-in .gp-hint{opacity:0;animation:gpIn 1s var(--ease) .15s forwards}
 .gp-in .gp-name{animation-delay:.3s}.gp-in .gp-hint{animation:gpIn 1s var(--ease) .6s forwards,gpHint 2s ease-in-out 1.6s infinite}
