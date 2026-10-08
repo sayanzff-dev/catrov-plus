@@ -69,8 +69,6 @@ h1{font-family:Anton,sans-serif;font-weight:400;font-size:clamp(54px,13vw,128px)
 .btn.ghost:hover{border-color:var(--red-bright);transform:translateY(-2px)}
 
 /* ---------- JOURNEY LINE ---------- */
-main{position:relative}
-.journey{position:absolute;left:0;top:0;z-index:0;pointer-events:none;overflow:visible}
 
 /* ---------- PORTAL ---------- */
 .portal,.hero-tail,.wrap{position:relative;z-index:1}
@@ -719,25 +717,9 @@ body.static .ab-lens{display:none}
 .pillnav{transition:opacity .5s var(--ease),transform .6s var(--ease)}
 body.nav-off .pillnav{opacity:0;transform:translateY(-130%);pointer-events:none}
 
-/* ---------- journey thread: a real-looking glowing cord drawn down the page edges ---------- */
-.journey{z-index:1}
-.j-track,.j-glow,.j-body,.j-thread,.j-core,.j-trail{fill:none;stroke-linecap:round;stroke-linejoin:round}
-.j-track{stroke:rgba(255,255,255,.22);stroke-width:1.5;stroke-dasharray:2 9}
-.j-glow{stroke:#ff2a1c;stroke-width:16;opacity:.45;filter:url(#jblur)}
-.j-body{stroke:url(#jg);stroke-width:6}
-.j-thread{stroke:#fff;stroke-width:6;stroke-linecap:butt;stroke-dasharray:1.4 7;opacity:.32}
-.j-core{stroke:#ffb4a8;stroke-width:1.6;opacity:.8}
-.j-trail{stroke:url(#jtrail);stroke-width:3.4}
-.j-node{fill:#0a0505;stroke:rgba(255,255,255,.35);stroke-width:2.5;transition:fill .5s var(--ease),stroke .5s,r .5s}
-.j-node.on{fill:#ff3d2e;stroke:#fff;r:10;filter:drop-shadow(0 0 10px #ff3d2e)}
-.j-head{transition:opacity .3s}
-.j-halo{fill:rgba(255,61,46,.4);filter:blur(5px)}
-.j-ring{fill:none;stroke:rgba(255,255,255,.7);stroke-width:1.5}
 .section{padding-top:150px}
-@media (max-width:700px){.j-body{stroke-width:5}.j-glow{stroke-width:12}.section{padding-top:120px}}
 
-/* keep a clear lane at each edge for the journey cord */
-.wrap{width:min(1080px,100% - 76px)}
+.wrap{width:min(1080px,100% - 40px)}
 .pw-rail{margin-inline:0;padding-inline:0;scroll-padding-inline:0}
-@media (max-width:700px){.wrap{width:calc(100% - 60px)}}
+
 .section{padding-bottom:84px}

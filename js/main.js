@@ -349,78 +349,6 @@
 
 
 
-  /* =========================================================
-     JOURNEY LINE — an SVG path down the whole page that draws
-     itself as you scroll; a glowing head leads it and
-     section nodes light up when reached
-     ========================================================= */
-  function initJourney() {
-    const NS = 'http://www.w3.org/2000/svg', main = $('main');
-    const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'journey'); svg.setAttribute('aria-hidden', 'true');
-    svg.innerHTML = `<defs>
-      <linearGradient id="jg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5a46"/><stop offset=".6" stop-color="#e10600"/><stop offset="1" stop-color="#8f0a05"/></linearGradient>
-      <linearGradient id="jtrail" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".95"/></linearGradient>
-      <filter id="jblur" x="-100%" y="-5%" width="300%" height="110%"><feGaussianBlur stdDeviation="7"/></filter>
-      <clipPath id="jclip"><rect x="0" y="0" width="10" height="0"/></clipPath></defs>
-      <path class="j-track"/>
-      <g clip-path="url(#jclip)">
-        <path class="j-glow"/><path class="j-body"/><path class="j-thread"/><path class="j-core"/><path class="j-trail"/>
-      </g>
-      <g class="j-nodes"></g>
-      <g class="j-head"><circle r="22" class="j-halo"/><circle r="9" class="j-ring"/><circle r="4.5" fill="#fff"/></g>`;
-    main.prepend(svg);
-    const q = s => svg.querySelector(s), track = q('.j-track'), body = q('.j-body'), clipRect = q('#jclip rect'), trail = q('.j-trail'),
-          nodesG = q('.j-nodes'), head = q('.j-head'), halo = q('.j-halo'), grad = q('#jg'), tgrad = q('#jtrail');
-    const paths = [q('.j-glow'), body, q('.j-thread'), q('.j-core'), trail];
-    let L = 1, nodes = [], startY = 0, endY = 1, W = 0, vel = 0, lastScroll = scrollY, run = false;
-
-    const lengthAtY = y => { let a = 0, b = L; for (let i = 0; i < 14; i++) { const mid = (a + b) / 2; body.getPointAtLength(mid).y < y ? a = mid : b = mid; } return (a + b) / 2; };
-
-    function build() {
-      W = main.clientWidth; const H = main.scrollHeight, mt = main.getBoundingClientRect().top;
-      svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
-      const wrapW = Math.min(1080, W - 40), gutter = (W - wrapW) / 2, edge = Math.max(10, gutter / 2), cx = W / 2;
-      const tail = $('.hero-tail'); startY = tail.offsetTop + tail.offsetHeight; endY = H - 110;
-      const secs = [...document.querySelectorAll('main .section')].filter(s => s.offsetHeight > 0).map(s => { const r = s.getBoundingClientRect(); return { t: r.top - mt, b: r.bottom - mt }; });
-      const cross = (x1, y1, x2, y2) => { const k = (y2 - y1) * .55; return ` C${x1} ${y1 + k} ${x2} ${y2 - k} ${x2} ${y2}`; };
-      let d = `M${cx} ${startY}`, px = cx, py = startY; const marks = [];
-      secs.forEach((s, i) => {                                       // run down one edge during a section, cross over in the gap between sections
-        const x = i % 2 ? W - edge : edge, y1 = s.t + 64, y2 = Math.max(y1 + 40, s.b - 2);
-        d += cross(px, py, x, y1) + ` L${x} ${y2}`; marks.push({ x, y: y1 }); px = x; py = y2;
-      });
-      d += cross(px, py, cx, endY);
-      [track, ...paths].forEach(p => p.setAttribute('d', d));
-      L = body.getTotalLength();
-      grad.setAttribute('y1', startY); grad.setAttribute('y2', endY); clipRect.setAttribute('width', W);
-      nodesG.replaceChildren();
-      nodes = marks.map(mk => { const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', mk.x); c.setAttribute('cy', mk.y); c.setAttribute('r', 8); c.setAttribute('class', 'j-node'); nodesG.append(c); return { c, y: mk.y }; });
-      update();
-    }
-
-    function update() {
-      const top = main.getBoundingClientRect().top;
-      const y = Math.max(startY, Math.min(endY, innerHeight * .62 - top));
-      clipRect.setAttribute('height', y <= startY ? 0 : y);          // the thread is revealed down to the head
-      const len = y <= startY ? 0 : lengthAtY(y), pt = body.getPointAtLength(Math.max(len, .01));
-      head.setAttribute('transform', `translate(${pt.x} ${pt.y})`);
-      head.style.opacity = len > 1 ? 1 : 0;
-      const sp = Math.min(1, Math.abs(vel) / 40);
-      halo.setAttribute('r', 20 + sp * 22); halo.style.opacity = .55 + sp * .45;       // the glow swells with scroll speed
-      tgrad.setAttribute('y1', pt.y - (90 + sp * 160)); tgrad.setAttribute('y2', pt.y);   // comet tail grows with speed
-      nodes.forEach(n => n.c.classList.toggle('on', y >= n.y - 2));
-    }
-
-    function frame() {
-      vel = vel * .9 + (scrollY - lastScroll) * .1; lastScroll = scrollY;
-      update();
-      if (Math.abs(vel) > .05) requestAnimationFrame(frame); else { vel = 0; run = false; update(); }
-    }
-    addEventListener('scroll', () => { if (!run) { run = true; requestAnimationFrame(frame); } }, { passive: true });
-    let rt; const rebuild = () => { clearTimeout(rt); rt = setTimeout(build, 150); };
-    addEventListener('resize', rebuild); addEventListener('load', rebuild);
-    if ('ResizeObserver' in window) new ResizeObserver(rebuild).observe(main);
-    build();
-  }
 
   /* =========================================================
      ACCOUNT SIMULATOR — price with and without the discount code
@@ -650,7 +578,7 @@
     $('#year').textContent = new Date().getFullYear();
     $('#statFirms').dataset.target = S.partners.length;
     renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
-    startBackground(); initFollowers(); initPortal(); initAbout(); initJourney(); initPillNav(); initSimulator();
+    startBackground(); initFollowers(); initPortal(); initAbout(); initPillNav(); initSimulator();
   }
 
   let seen = false;
