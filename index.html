@@ -28,100 +28,6 @@
   <button id="introSkip" type="button">Skip ›</button>
 </div>
 
-<!-- ============ FLIGHT WORLD: one plane that flies you from destination to destination ============ -->
-<div id="world" aria-hidden="true">
-  <div class="fl-sky"></div>
-  <canvas class="fl-stars" id="flStars"></canvas>
-  <div class="fl-glow"></div>
-  <div class="fl-layer fl-far" id="flFar"><i></i></div>
-  <div class="fl-layer fl-mid" id="flMid"><i></i></div>
-  <div class="fl-planewrap" id="flPlane">
-    <div class="fl-contrail" id="flTrail"></div>
-    <div class="fl-bob"><svg class="fl-svg" viewBox="0 0 960 300" aria-hidden="true">
-  <defs>
-    <linearGradient id="fBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6fa"/><stop offset=".42" stop-color="#cfd5df"/><stop offset=".78" stop-color="#8f97a6"/><stop offset="1" stop-color="#4a505d"/></linearGradient>
-    <linearGradient id="fBelly" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d95a3" stop-opacity="0"/><stop offset="1" stop-color="#2a2d36" stop-opacity=".75"/></linearGradient>
-    <linearGradient id="fWing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8ebf1"/><stop offset=".55" stop-color="#aab1bd"/><stop offset="1" stop-color="#5e6573"/></linearGradient>
-    <linearGradient id="fWingFar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a92a1"/><stop offset="1" stop-color="#4c525e"/></linearGradient>
-    <linearGradient id="fFin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9dde5"/><stop offset="1" stop-color="#f5f7fa"/></linearGradient>
-    <linearGradient id="fEng" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0f2f6"/><stop offset=".5" stop-color="#a4abb8"/><stop offset="1" stop-color="#454a56"/></linearGradient>
-    <linearGradient id="fRed" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8f0a05"/><stop offset=".5" stop-color="#e10600"/><stop offset="1" stop-color="#ff3d2e"/></linearGradient>
-    <radialGradient id="fGlowR"><stop offset="0" stop-color="#ff3030" stop-opacity=".95"/><stop offset="1" stop-color="#ff3030" stop-opacity="0"/></radialGradient>
-    <radialGradient id="fGlowG"><stop offset="0" stop-color="#3dff9c" stop-opacity=".95"/><stop offset="1" stop-color="#3dff9c" stop-opacity="0"/></radialGradient>
-    <radialGradient id="fGlowW"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
-    <linearGradient id="fGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a2230"/><stop offset="1" stop-color="#05070b"/></linearGradient>
-    <linearGradient id="fSun" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a1030" stop-opacity=".34"/><stop offset=".7" stop-color="#0a1030" stop-opacity=".3"/><stop offset="1" stop-color="#2a1430" stop-opacity=".25"/></linearGradient>
-    <linearGradient id="fTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fb4ff" stop-opacity=".16"/><stop offset=".3" stop-color="#9fb4ff" stop-opacity="0"/><stop offset=".8" stop-color="#ff3a2a" stop-opacity="0"/><stop offset="1" stop-color="#ff3a2a" stop-opacity=".22"/></linearGradient>
-    <clipPath id="fBodyClip"><path d="M930 150C922 118 878 100 822 98L222 98C170 98 118 106 62 118L40 128C78 150 138 178 224 188L820 188C884 188 924 176 930 150Z"/></clipPath>
-  </defs>
-  <!-- far wing and far stabiliser (behind the body) -->
-  <path d="M600 112 L470 62 L512 56 L668 104Z" fill="url(#fWingFar)"/>
-  <path d="M120 118 L40 78 L74 76 L168 112Z" fill="url(#fWingFar)"/>
-  <!-- vertical fin -->
-  <path d="M210 104 L98 14 L146 12 L300 104Z" fill="url(#fFin)"/>
-  <path d="M150 52 L98 14 L146 12 L186 44Z" fill="url(#fRed)"/>
-  <image href="assets/img/ezzarion-brain-bold.png" x="130" y="34" width="38" height="38" opacity=".95"/>
-  <path d="M98 14 L146 12" stroke="#fff" stroke-opacity=".6" stroke-width="1.5"/>
-  <!-- fuselage -->
-  <path d="M930 150C922 118 878 100 822 98L222 98C170 98 118 106 62 118L40 128C78 150 138 178 224 188L820 188C884 188 924 176 930 150Z" fill="url(#fBody)"/>
-  <g clip-path="url(#fBodyClip)">
-    <rect x="30" y="150" width="910" height="48" fill="url(#fBelly)"/>
-    <path d="M30 156 C 300 150 620 148 940 142 L940 160 C 620 166 300 168 30 174Z" fill="url(#fRed)"/>
-    <path d="M30 156 C 300 150 620 148 940 142" stroke="#fff" stroke-opacity=".55" stroke-width="1.4" fill="none"/>
-    <rect x="30" y="99" width="910" height="3" fill="#fff" opacity=".8"/>
-    <rect x="30" y="96" width="910" height="100" fill="url(#fSun)"/><rect x="30" y="96" width="910" height="100" fill="url(#fTop)"/>
-    <g fill="url(#fGlass)" stroke="#6c7482" stroke-width=".8">
-      <rect x="258" y="116" width="15" height="19" rx="7"/><rect x="288" y="116" width="15" height="19" rx="7"/><rect x="318" y="116" width="15" height="19" rx="7"/>
-      <rect x="348" y="116" width="15" height="19" rx="7"/><rect x="378" y="116" width="15" height="19" rx="7"/><rect x="408" y="116" width="15" height="19" rx="7"/>
-      <rect x="438" y="116" width="15" height="19" rx="7"/><rect x="468" y="116" width="15" height="19" rx="7"/><rect x="498" y="116" width="15" height="19" rx="7"/>
-      <rect x="528" y="116" width="15" height="19" rx="7"/><rect x="558" y="116" width="15" height="19" rx="7"/><rect x="588" y="116" width="15" height="19" rx="7"/>
-      <rect x="618" y="116" width="15" height="19" rx="7"/><rect x="648" y="116" width="15" height="19" rx="7"/><rect x="678" y="116" width="15" height="19" rx="7"/>
-      <rect x="708" y="116" width="15" height="19" rx="7"/><rect x="738" y="116" width="15" height="19" rx="7"/>
-    </g>
-    <g fill="#ffd9a0" opacity=".85"><rect x="261" y="119" width="9" height="13" rx="4"/><rect x="321" y="119" width="9" height="13" rx="4"/><rect x="411" y="119" width="9" height="13" rx="4"/><rect x="501" y="119" width="9" height="13" rx="4"/><rect x="591" y="119" width="9" height="13" rx="4"/><rect x="681" y="119" width="9" height="13" rx="4"/></g>
-    <path d="M790 106 L880 112 C 902 120 912 130 914 138 L842 132 Z" fill="url(#fGlass)" stroke="#8a93a2" stroke-width="1"/>
-    <path d="M800 108 L860 112" stroke="#fff" stroke-opacity=".45" stroke-width="1.2"/>
-    <path d="M30 122 C 400 108 700 100 940 112" stroke="#fff" stroke-opacity=".28" stroke-width="10" fill="none"/>
-    <path d="M770 98 L774 188" stroke="#555c69" stroke-width=".8" opacity=".6"/><path d="M226 98 L222 188" stroke="#555c69" stroke-width=".8" opacity=".5"/>
-  </g>
-  <!-- near horizontal stabiliser -->
-  <path d="M170 162 L40 214 L82 220 L246 170Z" fill="url(#fWing)"/>
-  <!-- near wing -->
-  <path d="M640 150 L360 252 L424 262 L736 166Z" fill="url(#fWing)"/>
-  <path d="M640 150 L360 252" stroke="#fff" stroke-opacity=".7" stroke-width="1.6"/>
-  <path d="M424 262 L736 166" stroke="#3b4150" stroke-opacity=".5" stroke-width="1.2"/>
-  <path d="M470 232 L690 160" stroke="#fff" stroke-opacity=".25" stroke-width="1"/>
-  <path d="M376 248 L402 256" stroke="url(#fRed)" stroke-width="5"/>
-  <!-- engine -->
-  <path d="M600 190 L596 212 L560 212 L566 188Z" fill="#8c93a1"/>
-  <rect x="520" y="196" width="130" height="46" rx="22" fill="url(#fEng)"/>
-  <ellipse cx="646" cy="219" rx="8" ry="21" fill="#1a1d24"/><ellipse cx="646" cy="219" rx="4" ry="14" fill="#3a3f4b"/>
-  <rect x="520" y="219" width="130" height="3" fill="url(#fRed)" opacity=".9"/>
-  <ellipse cx="520" cy="219" rx="9" ry="18" fill="#2b2f39"/>
-  <!-- lights -->
-  <circle cx="376" cy="251" r="22" fill="url(#fGlowR)" class="fl-beacon"/><circle cx="376" cy="251" r="3.2" fill="#ff6a5e"/>
-  <circle cx="98" cy="14" r="26" fill="url(#fGlowW)" class="fl-strobe"/><circle cx="98" cy="14" r="2.6" fill="#fff"/>
-  <circle cx="60" cy="217" r="18" fill="url(#fGlowG)" class="fl-beacon fl-b2"/><circle cx="60" cy="217" r="2.6" fill="#8dffc2"/>
-  <circle cx="928" cy="156" r="14" fill="url(#fGlowW)" opacity=".9" class="fl-strobe fl-s2"/>
-</svg></div>
-  </div>
-  <div class="fl-layer fl-near" id="flNear"><i></i></div>
-  <div class="fl-speed" id="flSpeed"></div>
-  <div class="fl-hud" id="flHud">
-    <div class="hud-top"><span class="hud-flight" id="hudFlight">EZZ 001</span><span class="hud-route"><b id="hudFrom">Home</b><i></i><b id="hudTo">Ezzarion</b></span></div>
-    <div class="hud-bar"><u id="hudFill"></u><s id="hudPlane"></s></div>
-    <div class="hud-read"><span>ALT <b id="hudAlt">0</b> ft</span><span>SPD <b id="hudSpd">0</b> kts</span><span>DIST <b id="hudDist">0</b> km</span></div>
-  </div>
-  <div class="fl-welcome" id="flWelcome">
-    <div class="fl-kick">Now boarding</div>
-    <h1>Welcome aboard</h1>
-    <p>Every section is a destination.<br>Scroll to take off.</p>
-  </div>
-  <div class="fl-arrive" id="flArrive"><span>Arriving</span><b id="arrTo">Ezzarion</b></div>
-  <div class="fl-flash" id="flFlash"></div>
-  <div class="fl-dark" id="flDark"></div>
-</div>
-
 <canvas id="bg" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div>
 
@@ -153,7 +59,6 @@
 </header>
 
 <main id="top">
-<div class="leg leg0" data-from="Home" data-to="Ezzarion"></div>
 
 <!-- ============ DESTINATION 1: Meet Ezzarion ============ -->
 <section class="about" id="about">
@@ -163,7 +68,7 @@
       <figcaption><i></i>Morocco · Nasdaq futures</figcaption>
     </figure>
     <div class="ab-text reveal" style="--d:.1s">
-      <div class="ab-kick">Destination 01 · About</div>
+      <div class="ab-kick">About</div>
       <h2>Meet Ezzarion</h2>
       <p class="ab-lead">An independent, full-time Nasdaq Futures trader and content creator from Morocco.</p>
       <p>With over 5 years of trading experience, he started out in the Forex markets before moving fully to trading stock index futures.</p>
@@ -205,7 +110,6 @@
 <div class="wrap">
 
 <!-- ============ COMMUNITY ============ -->
-<div class="leg" data-from="Ezzarion" data-to="Community"></div>
 <section id="community" class="section">
   <div class="eyebrow reveal"><span class="eb-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9.5" r="2.4"/><path d="M3 19c.5-3.4 3-5.2 6-5.2s5.5 1.8 6 5.2M15.5 14.2c2.7-.3 4.9 1.1 5.5 4.3"/></svg></span><span class="eb-txt">Community</span></div>
   <h2 class="reveal">Built for serious traders only</h2>
@@ -243,7 +147,6 @@
 </section>
 
 <!-- ============ VIDEOS ============ -->
-<div class="leg" data-from="Community" data-to="Videos"></div>
 <section id="videos" class="section">
   <div class="eyebrow reveal"><span class="eb-ico"><svg viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="4"/><path d="m10.5 9.5 4.2 2.5-4.2 2.5z"/></svg></span><span class="eb-txt">YouTube</span></div>
   <h2 class="reveal">Watch &amp; learn</h2>
@@ -252,7 +155,6 @@
 </section>
 
 <!-- ============ PAYOUTS ============ -->
-<div class="leg" data-from="Videos" data-to="Payouts"></div>
 <section id="payouts" class="section">
   <div class="eyebrow reveal"><span class="eb-ico"><svg viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.4 3.1 7.8 7.5 9.5 4.4-1.7 7.5-5.1 7.5-9.5V6z"/><path d="m8.8 12.2 2.4 2.4 4.2-4.6"/></svg></span><span class="eb-txt">Proof, not promises</span></div>
   <h2 class="reveal">Payout wall</h2>
@@ -279,7 +181,6 @@
 </section>
 
 <!-- ============ PARTNERS ============ -->
-<div class="leg" data-from="Payouts" data-to="Partners"></div>
 <section id="partners" class="section">
   <div class="eyebrow reveal"><span class="eb-ico"><svg viewBox="0 0 24 24"><path d="M8 12.5 5.2 9.7a2.8 2.8 0 0 1 4-4L12 8l2.8-2.3a2.8 2.8 0 0 1 4 4L16 12.5"/><path d="m8 12.5 4 4 4-4M10 18l2 2 2-2"/></svg></span><span class="eb-txt">Prop Firm Partners</span></div>
   <h2 class="reveal">Trade with an edge — use code <span class="code">EZZX</span></h2>
@@ -287,7 +188,6 @@
 </section>
 
 <!-- ============ ACCOUNT SIMULATOR ============ -->
-<div class="leg" data-from="Partners" data-to="Account simulator"></div>
 <section id="simulator" class="section" hidden>
   <div class="eyebrow reveal"><span class="eb-ico"><svg viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="2.5"/><path d="M8.5 8h7M8.5 12.5h1.5M12 12.5h1.5M15.5 12.5h.1M8.5 16h1.5M12 16h1.5M15.5 16h.1"/></svg></span><span class="eb-txt">Account simulator</span></div>
   <h2 class="reveal">See your price with code <span class="code">EZZX</span></h2>
@@ -323,7 +223,6 @@
 </section>
 
 <!-- ============ SOCIALS ============ -->
-<div class="leg" data-from="Account simulator" data-to="Socials"></div>
 <section class="section" id="socials">
   <div class="eyebrow reveal"><span class="eb-ico"><svg viewBox="0 0 24 24"><circle cx="6.5" cy="12" r="2.6"/><circle cx="17.5" cy="6" r="2.6"/><circle cx="17.5" cy="18" r="2.6"/><path d="m8.8 10.8 6.4-3.6M8.8 13.2l6.4 3.6"/></svg></span><span class="eb-txt">Socials</span></div>
   <div class="social-row reveal" id="socialRow"></div>
