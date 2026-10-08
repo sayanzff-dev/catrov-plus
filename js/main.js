@@ -595,6 +595,7 @@
       L.style.transform = `translateX(${-101 * open}%)`;
       R.style.transform = `translateX(${101 * open}%)`;
       cue.style.opacity = 1 - clamp(p / .08);
+      const g = clamp(open / .1); L.style.setProperty('--g', g); R.style.setProperty('--g', g);
       L.classList.toggle('moving', open > 0.001); R.classList.toggle('moving', open > 0.001);
       L.style.visibility = R.style.visibility = open >= 1 ? 'hidden' : 'visible';
       const c = ease(clamp((p - .38) / .4));                             // 3. the portrait and info arrive

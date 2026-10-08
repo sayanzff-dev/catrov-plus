@@ -692,3 +692,18 @@ body.ready .about{opacity:1}
 .ab-fluid::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 85% 75% at 50% 50%,transparent 30%,rgba(3,2,2,.75) 100%)}
 .ab-panel{background:rgba(255,255,255,.045)}
 .ab-panel::after{background:linear-gradient(180deg,rgba(255,255,255,.05),transparent 24%,transparent 76%,rgba(0,0,0,.25))}
+
+/* seamless centre: the halves overlap and fade into each other, so no edge of the glass can show */
+.ab-l{width:calc(50% + 70px);-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 70px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 70px),transparent)}
+.ab-r{left:calc(50% - 70px);width:calc(50% + 70px);-webkit-mask-image:linear-gradient(270deg,#000 calc(100% - 70px),transparent);mask-image:linear-gradient(270deg,#000 calc(100% - 70px),transparent)}
+.ab-l .ab-name{width:calc((100vw) )}
+.ab-r .ab-name{right:0;left:auto}
+.ab-l.moving,.ab-r.moving{box-shadow:none}
+
+/* closed: only the name is visible, no glass edge anywhere. The frosted glass fades in as the halves begin to part. */
+.ab-l,.ab-r{width:50%;-webkit-mask-image:none;mask-image:none;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+.ab-r{left:50%}
+.ab-panel::before{display:block;content:"";position:absolute;inset:0;opacity:var(--g,0);background:rgba(255,255,255,.045);-webkit-backdrop-filter:blur(42px) saturate(190%) brightness(.9);backdrop-filter:blur(42px) saturate(190%) brightness(.9);box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.ab-panel::after{opacity:var(--g,0)}
+.ab-l.moving{box-shadow:40px 0 80px rgba(0,0,0,.6)}
+.ab-r.moving{box-shadow:-40px 0 80px rgba(0,0,0,.6)}
