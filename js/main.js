@@ -518,7 +518,7 @@
     // ---- state ----
     let readyAt = 0, active = null, cur = 0, target = 0, alpha = 0, lastLeg = -1, lastNow = 0, t0 = performance.now(), tick = null;
     const info = legs.map(l => ({ el: l, from: l.dataset.from, to: l.dataset.to }));
-    const dist = [0, 1840, 960, 1380, 2210, 640, 780];                     // pretend leg lengths in km
+    const dist = [1840, 1840, 960, 1380, 2210, 640, 780];                     // pretend leg lengths in km
     function measure() {
       W = innerWidth; H = innerHeight;
       let best = -1, bestA = 0, uu = 0;
