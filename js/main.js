@@ -385,7 +385,7 @@
       const cross = (x1, y1, x2, y2) => { const k = (y2 - y1) * .55; return ` C${x1} ${y1 + k} ${x2} ${y2 - k} ${x2} ${y2}`; };
       let d = `M${cx} ${startY}`, px = cx, py = startY; const marks = [];
       secs.forEach((s, i) => {                                       // run down one edge during a section, cross over in the gap between sections
-        const x = i % 2 ? W - edge : edge, y1 = s.t + 64, y2 = Math.max(y1 + 40, s.b - 56);
+        const x = i % 2 ? W - edge : edge, y1 = s.t + 64, y2 = Math.max(y1 + 40, s.b - 2);
         d += cross(px, py, x, y1) + ` L${x} ${y2}`; marks.push({ x, y: y1 }); px = x; py = y2;
       });
       d += cross(px, py, cx, endY);

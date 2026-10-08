@@ -735,3 +735,9 @@ body.nav-off .pillnav{opacity:0;transform:translateY(-130%);pointer-events:none}
 .j-ring{fill:none;stroke:rgba(255,255,255,.7);stroke-width:1.5}
 .section{padding-top:150px}
 @media (max-width:700px){.j-body{stroke-width:5}.j-glow{stroke-width:12}.section{padding-top:120px}}
+
+/* keep a clear lane at each edge for the journey cord */
+.wrap{width:min(1080px,100% - 76px)}
+.pw-rail{margin-inline:0;padding-inline:0;scroll-padding-inline:0}
+@media (max-width:700px){.wrap{width:calc(100% - 60px)}}
+.section{padding-bottom:84px}
