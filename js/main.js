@@ -634,6 +634,9 @@
     addEventListener('scroll', () => update(), { passive: true });
     addEventListener('resize', () => { measure(); update(true); });
     measure(); update(true); addEventListener('load', () => { measure(); update(true); });
+    // the top bar stays out of the way during the whole opening section
+    const navCheck = () => document.body.classList.toggle('nav-off', scrollY < sec.offsetTop + sec.offsetHeight - innerHeight * .7);
+    addEventListener('scroll', navCheck, { passive: true }); addEventListener('resize', navCheck); navCheck();
   }
 
   function boot() {

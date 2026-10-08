@@ -723,3 +723,6 @@ body.static .ab-lens{display:none}
 
 .about{height:210svh}
 .about{height:260svh}
+
+.pillnav{transition:opacity .5s var(--ease),transform .6s var(--ease)}
+body.nav-off .pillnav{opacity:0;transform:translateY(-130%);pointer-events:none}
