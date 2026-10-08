@@ -31,10 +31,13 @@
 <!-- ============ FLIGHT WORLD: one plane that flies you from destination to destination ============ -->
 <div id="world" aria-hidden="true">
   <div class="fl-sky"></div>
+  <div class="fl-dusk" id="flDusk"></div>
   <canvas class="fl-stars" id="flStars"></canvas>
   <div class="fl-milky"></div>
   <div class="fl-moon"></div>
   <div class="fl-glow"></div>
+  <i class="fl-shoot" id="flShoot"></i>
+  <div class="fl-bolt" id="flBolt"></div>
   <div class="fl-layer fl-far" id="flFar"><i></i></div>
   <div class="fl-layer fl-mid" id="flMid"><i></i></div>
   <div class="fl-planewrap" id="flPlane">
@@ -49,6 +52,7 @@
     <linearGradient id="fEng" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f7fb"/><stop offset=".45" stop-color="#b6bcc9"/><stop offset="1" stop-color="#3f4558"/></linearGradient>
     <linearGradient id="fRed" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d0905"/><stop offset=".5" stop-color="#d90f08"/><stop offset="1" stop-color="#ff3a2b"/></linearGradient>
     <radialGradient id="fFan"><stop offset="0" stop-color="#7c8497"/><stop offset=".35" stop-color="#2c3140"/><stop offset="1" stop-color="#0c0e15"/></radialGradient>
+    <radialGradient id="fGlowE"><stop offset="0" stop-color="#ffd2a0" stop-opacity=".95"/><stop offset=".4" stop-color="#ff6a3a" stop-opacity=".5"/><stop offset="1" stop-color="#ff3a1a" stop-opacity="0"/></radialGradient>
     <radialGradient id="fGlowR"><stop offset="0" stop-color="#ff3030" stop-opacity=".95"/><stop offset="1" stop-color="#ff3030" stop-opacity="0"/></radialGradient>
     <radialGradient id="fGlowG"><stop offset="0" stop-color="#3dff9c" stop-opacity=".95"/><stop offset="1" stop-color="#3dff9c" stop-opacity="0"/></radialGradient>
     <radialGradient id="fGlowW"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
@@ -100,6 +104,7 @@
   <ellipse cx="528" cy="224" rx="8" ry="15" fill="#303644"/><ellipse cx="528" cy="224" rx="4" ry="9" fill="#171a22"/>
   <path d="M540 211 L650 211" stroke="#fff" stroke-opacity=".6" stroke-width="2"/>
   <!-- lights -->
+  <ellipse cx="506" cy="224" rx="46" ry="16" fill="url(#fGlowE)" style="opacity:var(--thr,.4)"/>
   <circle cx="342" cy="266" r="22" fill="url(#fGlowR)" class="fl-beacon"/><circle cx="342" cy="266" r="3" fill="#ff6a5e"/>
   <circle cx="156" cy="18" r="26" fill="url(#fGlowW)" class="fl-strobe"/><circle cx="156" cy="18" r="2.4" fill="#fff"/>
   <circle cx="62" cy="204" r="16" fill="url(#fGlowG)" class="fl-beacon fl-b2"/><circle cx="62" cy="204" r="2.4" fill="#8dffc2"/>
@@ -115,13 +120,15 @@
   </div>
   <div class="fl-welcome" id="flWelcome">
     <div class="fl-kick">Now boarding</div>
-    <h1>Welcome to <em>Ezzarion</em></h1>
-    <p>Scroll to take off.</p>
+    <h1><span class="w w1">Welcome</span> <span class="w w2">to</span> <em class="w w3">Ezzarion</em></h1>
+    <p id="flSub">Scroll to take off.</p>
   </div>
-  <div class="fl-arrive" id="flArrive"><span>Arriving</span><b id="arrTo">Ezzarion</b></div>
+  <div class="fl-arrive" id="flArrive"><span>Landing in</span><b id="arrTo">Ezzarion&rsquo;s world</b></div>
   <div class="fl-flash" id="flFlash"></div>
   <div class="fl-dark" id="flDark"></div>
 </div>
+
+<button class="fl-sound" id="flSound" type="button" aria-pressed="false" aria-label="Engine sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="w1" d="M16 9a4 4 0 0 1 0 6"/><path class="w2" d="M18.5 6.5a8 8 0 0 1 0 11"/><path class="x" d="M16 9l5 6M21 9l-5 6"/></svg><span>Sound</span></button>
 
 <canvas id="bg" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div>

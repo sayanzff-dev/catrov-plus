@@ -482,13 +482,13 @@
     const world = $('#world'), legs = [...document.querySelectorAll('.leg')];
     if (!world || !legs.length) return;
     const hudEl = $('#flHud'), plane = $('#flPlane'), trail = $('#flTrail'), welcome = $('#flWelcome'), far = $('#flFar'), mid = $('#flMid'), near = $('#flNear'),
-          speed = $('#flSpeed'), flash = $('#flFlash'), dark = $('#flDark'), stars = $('#flStars'), arrive = $('#flArrive'),
+          speed = $('#flSpeed'), dusk = $('#flDusk'), moon = $('.fl-moon'), sub = $('#flSub'), w1 = $('.fl-welcome .w1'), w2 = $('.fl-welcome .w2'), w3 = $('.fl-welcome .w3'), bolt = $('#flBolt'), shoot = $('#flShoot'), sbtn = $('#flSound'), flash = $('#flFlash'), dark = $('#flDark'), stars = $('#flStars'), arrive = $('#flArrive'),
           hud = { from: $('#hudFrom'), to: $('#hudTo'), flight: $('#hudFlight'), fill: $('#hudFill'), plane: $('#hudPlane'), alt: $('#hudAlt'), spd: $('#hudSpd'), dist: $('#hudDist'), arrTo: $('#arrTo') };
     const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), ease = t => t * t * (3 - 2 * t), easeOut = t => 1 - Math.pow(1 - t, 3), lerp = (a, b, t) => a + (b - a) * t;
     const mob = () => innerWidth < 700;
     let W = innerWidth, H = innerHeight;
 
-    if (reduceMotion) { document.body.classList.add('static'); world.style.display = 'none'; legs.forEach(l => l.style.display = 'none'); return; }
+    if (reduceMotion) { sbtn.remove(); document.body.classList.add('static'); world.style.display = 'none'; legs.forEach(l => l.style.display = 'none'); return; }
 
     // ---- paint the night sky once: stars, then soft clouds with a faint red light from below (no live blur) ----
     function drawStars() {
@@ -526,6 +526,24 @@
     paint();
 
     // ---- state ----
+    let cx = 0, cy = 0, tx = 0, ty = 0, prev = 0, vel = 0, subTxt = '', on = false, ac = null, master = null, flt = null;
+    addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { tx = e.clientX / W * 2 - 1; ty = e.clientY / H * 2 - 1; } }, { passive: true });
+    addEventListener('deviceorientation', e => { if (e.gamma != null) { tx = clamp(e.gamma / 30, -1, 1); ty = clamp((e.beta - 45) / 30, -1, 1); } }, { passive: true });
+    // engine hum (opt-in): filtered brown noise + a low saw, opens up as the plane climbs
+    function audio() {
+      if (ac) return; ac = new (window.AudioContext || window.webkitAudioContext)();
+      const len = ac.sampleRate * 2, buf = ac.createBuffer(1, len, ac.sampleRate), d = buf.getChannelData(0); let l = 0;
+      for (let i = 0; i < len; i++) { l = (l + .02 * (Math.random() * 2 - 1)) / 1.02; d[i] = l * 3.5; }
+      const src = ac.createBufferSource(); src.buffer = buf; src.loop = true;
+      flt = ac.createBiquadFilter(); flt.type = 'lowpass'; flt.frequency.value = 260; master = ac.createGain(); master.gain.value = 0;
+      src.connect(flt); flt.connect(master); master.connect(ac.destination); src.start();
+      const o = ac.createOscillator(), og = ac.createGain(); o.type = 'sawtooth'; o.frequency.value = 58; og.gain.value = .012; o.connect(og); og.connect(flt); o.start();
+    }
+    sbtn.addEventListener('click', () => { on = !on; if (on) { audio(); ac.resume(); } sbtn.setAttribute('aria-pressed', on); sbtn.classList.toggle('on', on); });
+    // far-off lightning in the clouds and the odd shooting star
+    function bolts() { setTimeout(() => { if (active === 0 && cur < .6 && !document.hidden) { bolt.style.left = (10 + Math.random() * 80) + '%'; bolt.animate([{ opacity: 0 }, { opacity: .55 }, { opacity: .1 }, { opacity: .4 }, { opacity: 0 }], { duration: 700 }); } bolts(); }, 6000 + Math.random() * 8000); }
+    function stars2() { setTimeout(() => { if (active === 0 && !document.hidden) { shoot.style.left = (25 + Math.random() * 55) + '%'; shoot.style.top = (6 + Math.random() * 24) + '%'; shoot.animate([{ opacity: 0, transform: 'translate(0,0) rotate(-24deg) scaleX(.3)' }, { opacity: 1, offset: .15 }, { opacity: 0, transform: 'translate(-260px,118px) rotate(-24deg) scaleX(1)' }], { duration: 900, easing: 'ease-out' }); } stars2(); }, 4000 + Math.random() * 5000); }
+    bolts(); stars2();
     let readyAt = 0, active = null, cur = 0, target = 0, alpha = 0, lastLeg = -1, lastNow = 0, t0 = performance.now(), tick = null;
     const info = legs.map(l => ({ el: l, from: l.dataset.from, to: l.dataset.to }));
     const dist = [1840, 1840, 960, 1380, 2210, 640, 780];                     // pretend leg lengths in km
@@ -551,7 +569,7 @@
       let px, py, rot, sc, wing = 0, alt, spd;
       if (first) {
         const e1 = ease(clamp(u / .72));
-        px = lerp(0, mob() ? W * .9 : W * .5, e1); py = lerp(H * .1, -H * .2, e1); rot = lerp(0, -8, e1); sc = lerp(1, mob() ? 1.5 : 2.1, e1);
+        px = lerp(0, mob() ? W * .9 : W * .5, e1); py = lerp(H * .17, -H * .2, e1); rot = lerp(1.5, -8, easeOut(clamp(u / .25))) + lerp(0, -2, e1); sc = lerp(1, mob() ? 1.5 : 2.1, e1);
         alt = Math.round(lerp(0, 36000, easeOut(clamp(u / .6))) / 100) * 100; spd = Math.round(lerp(0, 480, easeOut(clamp(u / .5))));
       } else {
         const a = easeOut(clamp(u / .3)), b = ease(clamp((u - .7) / .3));
@@ -562,10 +580,12 @@
         const climb = easeOut(clamp(u / .3)), desc = ease(clamp((u - .66) / .34));
         alt = Math.round(36000 * (climb - desc * climb) / 100) * 100; spd = Math.round(lerp(190, 482, climb) * (1 - .55 * desc));
       }
-      plane.style.transform = `translate3d(${px.toFixed(1)}px,${py.toFixed(1)}px,0) rotate(${(rot + turb + wing).toFixed(2)}deg) scale(${sc.toFixed(3)})`;
+      const bank = cx * -1.4 + cy * .8;
+      plane.style.translate = `${(cx * 14).toFixed(1)}px ${(cy * 8).toFixed(1)}px`;
+      plane.style.transform = `translate3d(${px.toFixed(1)}px,${py.toFixed(1)}px,0) rotate(${(rot + turb + wing + bank).toFixed(2)}deg) scale(${sc.toFixed(3)})`;
       plane.style.opacity = first ? 1 - clamp((u - .78) / .12) : 1;
       const cruise = first ? clamp(u / .4) : ease(clamp((u - .15) / .25)) * (1 - ease(clamp((u - .72) / .2)));
-      trail.style.transform = `scaleX(${(.2 + cruise * 1.3).toFixed(3)})`; trail.style.opacity = (.15 + .65 * cruise).toFixed(2);
+      trail.style.transform = `scaleX(${(.2 + cruise * 1.3 + Math.min(.9, vel * 5)).toFixed(3)})`; trail.style.opacity = (.15 + .65 * cruise).toFixed(2);
 
       // clouds stream by faster the further you scroll; the near layer streaks
       const km = first ? 1.2 : 1;
@@ -579,23 +599,32 @@
       mid.style.opacity = first ? 1 - .85 * clamp((u - .78) / .16) : 1; near.style.opacity = first ? 1 - clamp((u - .76) / .12) : 1;
       speed.style.opacity = (first ? clamp((u - .12) / .3) * (1 - clamp((u - .82) / .12)) : cruise * .6).toFixed(3);
 
+      // dusk -> night as she climbs; moon and stars come up with it
+      const prog = first ? clamp(u / .55) : 1;
+      dusk.style.opacity = (.8 * (1 - ease(prog))).toFixed(3); moon.style.opacity = (.3 + .7 * ease(prog)).toFixed(3); stars.style.opacity = (.5 + .5 * ease(prog)).toFixed(3);
+      plane.style.setProperty('--thr', (first ? .35 + .65 * (1 - easeOut(clamp(u / .3))) : .35).toFixed(2));
+      if (first) { const d = ease(clamp(u / .3)) * 220, o = (1 - ease(clamp(u / .34))) ; w1.style.transform = `translateX(${(-d).toFixed(1)}px)`; w3.style.transform = `translateX(${d.toFixed(1)}px)`; w2.style.opacity = (1 - clamp(u / .16)).toFixed(3); }
+      const st = u > .1 ? 'Climbing into Ezzarion\u2019s world' : 'Scroll to take off.'; if (st !== subTxt) { sub.textContent = st; subTxt = st; }
       // welcome (first leg) and HUD
-      welcome.style.opacity = first ? ((1 - clamp(u / .2)) * rdy).toFixed(3) : 0; welcome.style.transform = `translateY(${(first ? -u * 90 + (1 - rdy) * 24 : 0).toFixed(1)}px)`;
+      welcome.style.opacity = first ? ((1 - clamp((u - .04) / .26)) * rdy).toFixed(3) : 0; welcome.style.transform = `translateY(${(first ? -u * 90 + (1 - rdy) * 24 : 0).toFixed(1)}px)`;
       hudEl.style.opacity = (first ? rdy * (1 - ease(clamp((u - .8) / .12))) : 1).toFixed(3);
       flash.style.opacity = first ? (ease(clamp((u - .66) / .16)) * (1 - ease(clamp((u - .86) / .12)))).toFixed(3) : 0;
       dark.style.opacity = first ? ease(clamp((u - .84) / .16)).toFixed(3) : 0;
-      if (active !== lastLeg) { const L = info[active]; hud.from.textContent = L.from; hud.to.textContent = L.to; hud.arrTo.textContent = L.to; hud.flight.textContent = 'EZZ 00' + (active + 1); lastLeg = active; }
+      if (active !== lastLeg) { const L = info[active]; hud.from.textContent = L.from; hud.to.textContent = L.to; hud.flight.textContent = 'EZZ 00' + (active + 1); lastLeg = active; }
       hud.fill.style.transform = `scaleX(${u.toFixed(3)})`; hud.plane.style.left = (u * 100).toFixed(1) + '%';
       hud.alt.textContent = alt.toLocaleString('en-US'); hud.spd.textContent = spd; hud.dist.textContent = Math.max(0, Math.round(dist[active] * (1 - u))).toLocaleString('en-US');
       arrive.style.opacity = (first ? ease(clamp((u - .5) / .12)) * (1 - ease(clamp((u - .72) / .1))) : ease(clamp((u - .62) / .08)) * (1 - ease(clamp((u - .8) / .07)))).toFixed(3);
     }
     function loop(now) {
       tick = null;
-      if (active < 0) { world.style.visibility = 'hidden'; return; }
+      if (active < 0) { world.style.visibility = 'hidden'; sbtn.classList.remove('show'); if (ac && master) master.gain.setTargetAtTime(0, ac.currentTime, .1); return; }
       world.style.visibility = 'visible'; world.style.opacity = alpha.toFixed(3);
+      cx += (tx - cx) * .06; cy += (ty - cy) * .06; world.style.setProperty('--cx', cx.toFixed(3)); world.style.setProperty('--cy', cy.toFixed(3));
+      sbtn.classList.toggle('show', active === 0 && alpha > .5);
+      if (ac && master) { const t = ac.currentTime; master.gain.setTargetAtTime(on ? .16 * alpha * (.45 + .55 * cur) : 0, t, .15); flt.frequency.setTargetAtTime(220 + cur * 900, t, .2); }
       const dt = lastNow ? Math.min(.1, (now - lastNow) / 1000) : .016; lastNow = now;
       if (active !== lastLeg) cur = target;                                  // a new leg starts from its own beginning
-      cur += (target - cur) * (1 - Math.exp(-dt * 7));
+      cur += (target - cur) * (1 - Math.exp(-dt * 7)); vel += (Math.abs(cur - prev) / dt - vel) * .1; prev = cur;
       if (Math.abs(target - cur) < .0004) cur = target;
       render(cur, now); tick = requestAnimationFrame(loop);
     }

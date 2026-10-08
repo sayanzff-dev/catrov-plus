@@ -964,3 +964,29 @@ body.static #world,body.static .leg{display:none}
 @keyframes scFloat{0%,100%{translate:0 0}50%{translate:0 -10px}}
 @media (max-width:700px){.social-row{gap:12px}.social-card{width:calc(50% - 6px)}}
 @media (prefers-reduced-motion:reduce){.social-card{animation:none}}
+
+/* ---------- opening v3: dusk-to-night, camera drift, mist hand-off, lightning, shooting stars, sound ---------- */
+.fl-dusk{position:absolute;inset:0;pointer-events:none;will-change:opacity;
+  background:radial-gradient(ellipse 110% 55% at 50% 100%,rgba(255,140,70,.75),rgba(220,60,40,.45) 40%,transparent 75%),linear-gradient(180deg,transparent 30%,rgba(120,50,90,.35) 70%,rgba(190,70,50,.5) 100%)}
+.fl-stars{scale:1.05;translate:calc(var(--cx,0) * -6px) calc(var(--cy,0) * -4px)}
+.fl-milky{translate:calc(var(--cx,0) * -9px) calc(var(--cy,0) * -6px)}
+.fl-moon{translate:calc(var(--cx,0) * -14px) calc(var(--cy,0) * -9px)}
+.fl-layer{left:-70px;right:-70px}
+.fl-far{translate:calc(var(--cx,0) * -12px) calc(var(--cy,0) * -3px)}
+.fl-mid{translate:calc(var(--cx,0) * -26px) calc(var(--cy,0) * -6px)}
+.fl-near{translate:calc(var(--cx,0) * -48px) calc(var(--cy,0) * -10px)}
+.fl-flash{background:radial-gradient(ellipse at 50% 56%,#f6f8ff 0%,#d3dbf1 26%,#8793b3 58%,#1c2238 100%)}
+.fl-welcome h1 .w{display:inline-block;will-change:transform}
+.fl-arrive{display:block!important;bottom:auto;top:clamp(84px,13vh,130px)}
+.fl-arrive b{font-size:clamp(34px,6vw,72px)}
+.fl-bolt{position:absolute;top:34%;width:46vw;height:30vh;margin-left:-23vw;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 50%,rgba(190,210,255,.5),rgba(150,175,255,.18) 40%,transparent 70%)}
+.fl-shoot{position:absolute;width:120px;height:2px;pointer-events:none;opacity:0;border-radius:2px;background:linear-gradient(90deg,transparent,#fff);transform-origin:100% 50%}
+.fl-sound{position:fixed;left:18px;bottom:18px;z-index:30;display:flex;align-items:center;gap:8px;height:38px;padding:0 14px 0 11px;border-radius:999px;cursor:pointer;color:#e9e4de;font:600 10px Montserrat,sans-serif;letter-spacing:.2em;text-transform:uppercase;
+  background:rgba(14,14,20,.55);border:1px solid rgba(255,255,255,.2);opacity:0;pointer-events:none;transition:opacity .5s,background .3s,border-color .3s}
+.fl-sound.show{opacity:1;pointer-events:auto}
+.fl-sound:hover{border-color:rgba(255,90,70,.6)}
+.fl-sound svg{width:17px;height:17px;fill:currentColor;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.fl-sound svg path{fill:currentColor;stroke:none}.fl-sound svg .w1,.fl-sound svg .w2,.fl-sound svg .x{fill:none;stroke:currentColor}
+.fl-sound svg .w1,.fl-sound svg .w2{display:none}.fl-sound.on svg .w1,.fl-sound.on svg .w2{display:inline}.fl-sound.on svg .x{display:none}
+.fl-sound.on{background:rgba(225,6,0,.35);border-color:rgba(255,90,70,.6)}
+@media (prefers-reduced-motion:reduce){.fl-sound,.fl-bolt,.fl-shoot{display:none}}
