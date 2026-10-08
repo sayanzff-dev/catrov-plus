@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kapaloa — Swim Fins Factory</title>
+<meta name="description" content="Kapaloa designs and manufactures swim fins, built for the sea.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="bubbles" aria-hidden="true"></canvas>
+
+<header class="nav" id="nav">
+  <a class="logo" href="#top"><svg viewBox="0 0 40 24"><path d="M2 12C10 2 20 2 28 12c-8 10-18 10-26 0Zm26 0 10-8v16z"/></svg>Kapaloa</a>
+  <nav>
+    <a href="#about">About</a><a href="#fins">Fins</a><a href="#factory">Factory</a><a href="#why">Why us</a><a href="#contact" class="btn small">Contact</a>
+  </nav>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-in">
+    <p class="eyebrow reveal">Swim fin factory</p>
+    <h1 class="reveal">Built for the <span>deep blue</span></h1>
+    <p class="lead reveal">Kapaloa designs and manufactures swim fins that move with the sea — powerful, comfortable, made to last.</p>
+    <div class="cta reveal"><a class="btn" href="#fins">Explore fins</a><a class="btn ghost" href="#contact">Get in touch</a></div>
+  </div>
+  <svg class="fin-hero" viewBox="0 0 300 500" aria-hidden="true"><defs><linearGradient id="fg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5eead4"/><stop offset="1" stop-color="#0369a1"/></linearGradient></defs><path d="M120 10c40 0 70 20 80 60l40 300c6 50-40 120-90 120S60 420 70 370L100 60c4-30 10-50 20-50Z" fill="url(#fg)"/><path d="M150 60v380M110 90l-6 330M190 90l6 330" stroke="#fff" stroke-opacity=".25" stroke-width="3" fill="none"/></svg>
+  <div class="waves"><svg viewBox="0 0 1440 160" preserveAspectRatio="none"><path class="w1" d="M0 80c120-40 240-40 360 0s240 40 360 0 240-40 360 0 240 40 360 0v80H0z"/><path class="w2" d="M0 100c120-40 240-40 360 0s240 40 360 0 240-40 360 0 240 40 360 0v60H0z"/></svg></div>
+</section>
+
+<section class="section" id="about">
+  <h2 class="reveal">About Kapaloa</h2>
+  <div class="grid two">
+    <p class="reveal">Kapaloa is a swim fin factory. We shape rubber and composite into fins for swimmers, snorkelers, bodyboarders and divers. <em class="todo">[Replace with your story from the Linktree]</em></p>
+    <div class="stats reveal">
+      <div><b data-count="10">0</b><span>Years of craft</span></div>
+      <div><b data-count="25">0</b><span>Fin models</span></div>
+      <div><b data-count="40">0</b><span>Countries shipped</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="fins">
+  <h2 class="reveal">Our fins</h2>
+  <div class="cards">
+    <article class="card reveal"><div class="ico">🏊</div><h3>Swim Training</h3><p>Short, flexible blades that build leg strength and technique.</p></article>
+    <article class="card reveal"><div class="ico">🤿</div><h3>Snorkel &amp; Dive</h3><p>Open-heel comfort with drainage holes and long-range propulsion.</p></article>
+    <article class="card reveal"><div class="ico">🌊</div><h3>Bodyboard</h3><p>Compact, grippy fins that snap you into the wave.</p></article>
+    <article class="card reveal"><div class="ico">🐠</div><h3>Kids</h3><p>Light, soft and bright — first fins for little swimmers.</p></article>
+  </div>
+  <p class="note reveal todo">[Edit models, sizes and prices to match your catalogue]</p>
+</section>
+
+<section class="section" id="factory">
+  <h2 class="reveal">From mould to ocean</h2>
+  <ol class="steps">
+    <li class="reveal"><span>01</span><h3>Design</h3><p>Hydrodynamic blade shapes tested in water.</p></li>
+    <li class="reveal"><span>02</span><h3>Mould</h3><p>Precision steel moulds for every size.</p></li>
+    <li class="reveal"><span>03</span><h3>Vulcanise</h3><p>Rubber cured for flex and durability.</p></li>
+    <li class="reveal"><span>04</span><h3>Quality check</h3><p>Every pair inspected before it leaves.</p></li>
+  </ol>
+</section>
+
+<section class="section alt" id="why">
+  <h2 class="reveal">Why Kapaloa</h2>
+  <div class="cards">
+    <div class="card reveal"><h3>Powerful</h3><p>Efficient blades turn every kick into speed.</p></div>
+    <div class="card reveal"><h3>Comfortable</h3><p>Soft foot pockets that don't rub.</p></div>
+    <div class="card reveal"><h3>Durable</h3><p>Salt, sun and sand resistant materials.</p></div>
+    <div class="card reveal"><h3>Factory price</h3><p>Direct from the maker, wholesale available.</p></div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <h2 class="reveal">Contact &amp; links</h2>
+  <p class="reveal">Order, wholesale or custom fins — reach us here.</p>
+  <div class="links reveal">
+    <a class="btn" href="https://kpaloa.com" target="_blank" rel="noopener">Website</a>
+    <a class="btn ghost" href="#" >Instagram</a>
+    <a class="btn ghost" href="#">WhatsApp</a>
+    <a class="btn ghost" href="#">Email</a>
+  </div>
+  <p class="note todo">[Put your real social links in these buttons]</p>
+</section>
+
+<footer>© <span id="yr"></span> Kapaloa · Swim fins factory</footer>
+<script src="main.js"></script>
+</body>
+</html>
