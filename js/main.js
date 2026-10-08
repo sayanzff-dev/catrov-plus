@@ -507,7 +507,7 @@
   }
 
   function initAbout() {
-    const sec = $('#about'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), meta = $('#abMeta'), sub = $('#abSub');
+    const sec = $('#about'), solo = $('#abSolo'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), meta = $('#abMeta'), sub = $('#abSub');
     if (!sec) return;
     if (reduceMotion) { document.body.classList.add('static'); return; }
     const stage0 = $('#abStage');
@@ -569,7 +569,9 @@
       const g = clamp(open / .1); L.style.setProperty('--g', g); R.style.setProperty('--g', g);
       L.style.opacity = R.style.opacity = 1 - .9 * open;                  // the halves fade as they part
       L.classList.toggle('moving', open > 0.001); R.classList.toggle('moving', open > 0.001);
-      L.style.visibility = R.style.visibility = open >= 1 ? 'hidden' : 'visible';
+      const closed = open <= 0.002;                                       // closed: one solid name, so there is no seam to see
+      solo.style.visibility = closed ? 'visible' : 'hidden';
+      L.style.visibility = R.style.visibility = (closed || open >= 1) ? 'hidden' : 'visible';
       const c = ease(clamp((p - .18) / .3));                             // 3. the portrait and info arrive
       content.style.setProperty('--c-o', .15 + .85 * c);
       content.style.transform = `scale(${1.12 - .12 * c})`;

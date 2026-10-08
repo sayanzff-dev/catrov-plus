@@ -753,7 +753,7 @@ body.ready .ab-sub{animation-play-state:running}
 /* ---------- PERFORMANCE PASS ---------- */
 /* soft red light is baked into the gradients, so no live blur filter is needed */
 .ab-fluid b{filter:none!important;animation:orbmorph 16s ease-in-out infinite alternate}
-.ab-fluid i{will-change:transform;contain:layout paint}
+.ab-fluid i{will-change:transform}
 .ab-fluid b{will-change:transform}
 @keyframes orbmorph{0%{transform:scale(1)}100%{transform:scale(1.14)}}
 .ab-spec{mix-blend-mode:normal!important;opacity:.35}
@@ -767,3 +767,17 @@ body.ready .ab-sub{animation-play-state:running}
 .section h2{filter:none}
 .eb-txt,.ab-facts li,.stat,.growth,.cm-card,.vcard,.pw-card,.cw-card,.sim,.card,.f-row{contain:layout style}
 .tape{will-change:auto}
+
+/* one solid name while closed; the split halves only exist while opening */
+.ab-solo{position:absolute;inset:0;z-index:2;pointer-events:none}
+.ab-solo .ab-name{left:0}
+.ab-l.moving,.ab-r.moving,.ab-l,.ab-r{box-shadow:none!important}
+.ab-panel{border:0!important;outline:0}
+
+.ab-fluid b{border-radius:0!important}
+.ab-fluid .o1 b{background:radial-gradient(closest-side,#e0160a 0%,rgba(122,5,0,.7) 45%,rgba(0,0,0,0) 100%)!important}
+.ab-fluid .o2 b{background:radial-gradient(closest-side,#c80d05 0%,rgba(74,8,6,.7) 45%,rgba(0,0,0,0) 100%)!important}
+.ab-fluid .o3 b{background:radial-gradient(closest-side,#ff6a55 0%,rgba(194,8,0,.6) 50%,rgba(0,0,0,0) 100%)!important}
+.ab-fluid .o4 b{background:radial-gradient(closest-side,#8f0a05 0%,rgba(58,5,4,.7) 50%,rgba(0,0,0,0) 100%)!important}
+.ab-fluid .o1 b{opacity:.85!important}.ab-fluid .o2 b{opacity:.75!important}.ab-fluid .o3 b{opacity:.4!important}.ab-fluid .o4 b{opacity:.8!important}
+.ab-fluid .o1{width:70vw;height:70vw}.ab-fluid .o2{width:74vw;height:74vw}.ab-fluid .o4{width:58vw;height:58vw}
