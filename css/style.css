@@ -920,3 +920,27 @@ body.static #world,body.static .leg{display:none}
 .pw-prog i{background:linear-gradient(90deg,#8f0a05,var(--red-bright))}
 .pw-btns button{box-shadow:none;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18)}
 .pw-card{translate:0 36px;transition:opacity .9s var(--ease) var(--d,0s),translate .9s var(--ease) var(--d,0s),transform .5s var(--ease),border-color .3s}
+
+/* ---------- certificates: just the certificate, in a framed gallery cadre ---------- */
+.cw-card{width:auto;padding:0;border:0;background:none;box-shadow:none;border-radius:0;overflow:visible;transition:opacity .9s var(--ease) var(--d,0s),translate .9s var(--ease) var(--d,0s),transform .6s var(--ease)}
+.cw-card{translate:0 40px}.cw-card.in{translate:0 0}
+.cw-card:hover{transform:translateY(-8px);border-color:transparent;box-shadow:none}
+.cw-frame{position:relative;display:block;padding:12px;border-radius:6px;background:linear-gradient(145deg,#2a2220,#0d0908 55%,#1d1513);
+  border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 60px -34px #000,inset 0 0 0 1px rgba(255,255,255,.04);transition:box-shadow .5s var(--ease),border-color .4s}
+.cw-card:hover .cw-frame{border-color:rgba(255,80,66,.55);box-shadow:0 36px 70px -32px rgba(225,6,0,.45),inset 0 0 0 1px rgba(255,255,255,.06)}
+.cw-mat{position:relative;display:block;overflow:hidden;background:#06040a;border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 0 18px rgba(0,0,0,.7);
+  clip-path:inset(0 0 100% 0);transition:clip-path 1.1s var(--ease) calc(var(--d,0s) + .25s)}
+.cw-card.in .cw-mat{clip-path:inset(0)}
+.cw-mat img{display:block;height:clamp(290px,32vw,370px);width:auto;max-width:none;transform:scale(1.14);transition:transform 1.8s var(--ease) calc(var(--d,0s) + .25s)}
+.cw-card.in .cw-mat img{transform:scale(1)}
+.cw-card.in:hover .cw-mat img{transform:scale(1.04);transition:transform .9s var(--ease)}
+.cw-shine{position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.2) 50%,transparent 62%);transform:translateX(-120%);transition:none}
+.cw-card:hover .cw-shine{transform:translateX(120%);transition:transform 1s var(--ease)}
+.cw-frame i{position:absolute;width:16px;height:16px;border:2px solid var(--red-bright);opacity:0;transition:opacity .5s var(--ease) calc(var(--d,0s) + .9s),transform .7s var(--ease) calc(var(--d,0s) + .9s);z-index:2;pointer-events:none}
+.cw-frame .c1{left:-1px;top:-1px;border-right:0;border-bottom:0;transform:translate(8px,8px)}
+.cw-frame .c2{right:-1px;top:-1px;border-left:0;border-bottom:0;transform:translate(-8px,8px)}
+.cw-frame .c3{left:-1px;bottom:-1px;border-right:0;border-top:0;transform:translate(8px,-8px)}
+.cw-frame .c4{right:-1px;bottom:-1px;border-left:0;border-top:0;transform:translate(-8px,-8px)}
+.cw-card.in .cw-frame i{opacity:1;transform:none}
+@media (max-width:700px){.cw-mat img{height:300px}}
+@media (prefers-reduced-motion:reduce){.cw-mat{clip-path:none}.cw-mat img{transform:none}}

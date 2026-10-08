@@ -303,10 +303,9 @@
     if (!list.length) { rail.parentElement.querySelectorAll('.eyebrow.sub,.cw-title,.cw-rail,.pw-ctrl:last-of-type').forEach(n => n.remove()); return; }
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .2 });
     grid.append(...list.map((c, i) => {
-      const img = h('div', { class: 'cw-img' }); img.style.backgroundImage = `url("${c.image}")`;
-      const el = h('button', { class: 'cw-card', type: 'button', style: `--d:${i * .08}s`, 'aria-label': `${c.firm}: ${c.title}` }, [
-        h('span', { class: 'cw-seal', text: '✓', 'aria-hidden': 'true' }), img,
-        h('div', { class: 'cw-info' }, [h('div', { class: 'cw-firm', text: c.firm }), h('div', { class: 'cw-sub', text: c.title }), c.date && h('span', { class: 'cw-date', text: fmt(c.date) })])
+      const el = h('button', { class: 'cw-card', type: 'button', style: `--d:${i * .12}s`, 'aria-label': `${c.firm}: ${c.title}` }, [
+        h('span', { class: 'cw-frame' }, [h('i', { class: 'c1' }), h('i', { class: 'c2' }), h('i', { class: 'c3' }), h('i', { class: 'c4' }),
+          h('span', { class: 'cw-mat' }, [h('img', { src: c.image, alt: `${c.firm} certificate`, loading: 'lazy', draggable: 'false' }), h('span', { class: 'cw-shine' })])])
       ]);
       el.onclick = () => { if (!rail.dataset.moved) openLightbox(h('img', { src: c.image, alt: `${c.firm} certificate` }), `${c.firm} · ${c.title}`); };
       io.observe(el); return el;
