@@ -511,7 +511,7 @@
       type.style.opacity = live ? 1 - e : '';
     }
     function loop() {
-      cur += (target - cur) * .16;
+      cur += (target - cur) * .24;
       if (Math.abs(target - cur) < .0004) cur = target;
       render(cur);
       if (cur !== target) requestAnimationFrame(loop); else running = false;
@@ -614,21 +614,22 @@
     function render(p) {
       const name = 1;                              // 1. the name appears
       L.style.setProperty('--na', name); R.style.setProperty('--na', name);
-      const open = ease(clamp((p - .3) / .4));                           // 2. the panels slide apart
+      const open = ease(clamp((p - .1) / .34));                           // 2. the panels slide apart
       L.style.transform = `translateX(${-101 * open}%)`;
       R.style.transform = `translateX(${101 * open}%)`;
       cue.style.opacity = 1 - clamp(p / .08);
       lensFade = 1 - clamp(open / .08);
       const g = clamp(open / .1); L.style.setProperty('--g', g); R.style.setProperty('--g', g);
+      L.style.opacity = R.style.opacity = 1 - .9 * open;                  // the halves fade as they part
       L.classList.toggle('moving', open > 0.001); R.classList.toggle('moving', open > 0.001);
       L.style.visibility = R.style.visibility = open >= 1 ? 'hidden' : 'visible';
-      const c = ease(clamp((p - .38) / .4));                             // 3. the portrait and info arrive
+      const c = ease(clamp((p - .18) / .3));                             // 3. the portrait and info arrive
       content.style.opacity = .15 + .85 * c;
       content.style.transform = `scale(${1.12 - .12 * c})`;
       content.style.visibility = open > 0 ? 'visible' : 'hidden';
-      content.querySelectorAll('.ab-photo,.ab-text').forEach((n, i) => { const k = ease(clamp((p - .5 - i * .06) / .22)); n.style.opacity = k; n.style.transform = `translateY(${(1 - k) * 36}px)`; });
+      content.querySelectorAll('.ab-photo,.ab-text').forEach((n, i) => { const k = ease(clamp((p - .22 - i * .05) / .18)); n.style.opacity = k; n.style.transform = `translateY(${(1 - k) * 36}px)`; });
     }
-    function loop() { cur += (target - cur) * .16; if (Math.abs(target - cur) < .0004) cur = target; render(cur); if (cur !== target) requestAnimationFrame(loop); else running = false; }
+    function loop() { cur += (target - cur) * .24; if (Math.abs(target - cur) < .0004) cur = target; render(cur); if (cur !== target) requestAnimationFrame(loop); else running = false; }
     function update(snap) { target = clamp(-sec.getBoundingClientRect().top / range); if (snap) { cur = target; render(cur); return; } if (!running) { running = true; requestAnimationFrame(loop); } }
     addEventListener('scroll', () => update(), { passive: true });
     addEventListener('resize', () => { measure(); update(true); });

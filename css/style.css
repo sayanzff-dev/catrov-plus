@@ -720,3 +720,5 @@ body.ready .about{opacity:1}
 .lw-name{text-transform:uppercase;white-space:nowrap;color:#fff;text-shadow:2px 0 rgba(255,40,40,.6),-2px 0 rgba(70,200,255,.45)}
 body.static .ab-lens{display:none}
 @media (hover:none){.ab-lens{--lr:clamp(130px,34vw,190px)}}
+
+.about{height:210svh}
