@@ -98,7 +98,7 @@ window.SITE = {
   /* ---------- FOLLOWERS (adds up to the "Total followers" tile) ----------
      Type the current number for each platform. Leave 0 for any you don't
      want counted. If every number is 0 the tile shows "—".            */
-  followers: { youtube: 2700, kick: 566, tiktok: 14, instagram: 272000, x: 5000 },
+  followers: { youtube: 2700, kick: 566, tiktok: 14, instagram: 27200, x: 5000 },
 
   socials: [
     { name: "X", href: "https://x.com/ezzarion" },
