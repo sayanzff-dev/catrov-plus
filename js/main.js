@@ -428,49 +428,6 @@
      PORTAL — the logo grows as you scroll until you fly through
      it, and the introduction opens up behind it
      ========================================================= */
-  function initPortal() {
-    if (!$('#portal')) return;
-    const sec = $('#portal'), photo = $('#heroPhoto'), cut = $('#heroCut'), type = $('#pText'), word = $('#heroWord');
-    type.classList.add('enter');
-
-    // safety net: if the real font runs wider than planned, shrink until it clears the screen
-    function fit() {
-      word.style.fontSize = '';
-      const max = innerWidth * .94, w = word.scrollWidth;
-      if (w > max) word.style.fontSize = (parseFloat(getComputedStyle(word).fontSize) * max / w) + 'px';
-    }
-    fit();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-    if (reduceMotion) return;
-
-    let range = 1, target = 0, cur = 0, running = false;
-    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-    const ease = t => t * t * (3 - 2 * t);
-    const measure = () => { range = Math.max(1, sec.offsetHeight - innerHeight); };
-
-    function render(p) {
-      const live = p > 0.001;
-      type.classList.toggle('live', live);
-      photo.style.transform = cut.style.transform = `translate3d(0,${-3 * p}%,0) scale(${1.04 + .07 * p})`;   // photo and cut-out move as one: push-in, drifting up
-      const e = ease(clamp(p / .6));
-      type.style.transform = live ? `translateY(${-46 * e}px) scale(${1 + .05 * e})` : '';        // type sits behind the person, lifts and fades
-      type.style.opacity = live ? 1 - e : '';
-    }
-    function loop() {
-      cur += (target - cur) * .18;
-      if (Math.abs(target - cur) < .0004) cur = target;
-      render(cur);
-      if (cur !== target) requestAnimationFrame(loop); else running = false;
-    }
-    function update(snap) {
-      target = clamp(-sec.getBoundingClientRect().top / range);
-      if (snap) { cur = target; render(cur); return; }
-      if (!running) { running = true; requestAnimationFrame(loop); }
-    }
-    addEventListener('scroll', () => update(), { passive: true });
-    addEventListener('resize', () => { fit(); measure(); update(true); });
-    measure(); update(true);
-  }
 
   /* =========================================================
      PILL NAV — rising-circle hover (geometry ported from the PillNav component)
@@ -506,105 +463,28 @@
     addEventListener('scroll', () => set(false), { passive: true });
   }
 
-  function initAbout() {
-    const sec = $('#about'), solo = $('#abSolo'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), meta = $('#abMeta'), sub = $('#abSub');
-    if (!sec) return;
-    if (reduceMotion) { document.body.classList.add('static'); return; }
-    const stage0 = $('#abStage');
-
-    // size the name from its real measured width so any font fits the screen
-    const nameEl = $('.ab-name span', sec);
-    function fitName() {
-      stage0.style.setProperty('--ab-fs', '100px');
-      const w = nameEl.getBoundingClientRect().width || 1;
-      stage0.style.setProperty('--ab-fs', Math.min(100 * (innerWidth * (innerWidth < 700 ? .9 : .86)) / w, innerHeight * .5) + 'px');
-    }
-    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-    const ease = t => t * t * (3 - 2 * t), easeOut = t => 1 - Math.pow(1 - t, 3);
-    let range = 1, target = 0, cur = 0, running = false;
-    const measure = () => { range = Math.max(1, sec.offsetHeight - innerHeight); };
-
-    // living background: liquid red light that follows the pointer, seen through frosted glass
-    const stage = $('#abStage'), fluid = $('#abFluid'), orbs = [...fluid.querySelectorAll('i')];
-    const depth = [.9, -.6, .45, -1.2];                                // each orb follows the pointer differently
-    let mx = .5, my = .5, sx = .5, sy = .5, vis = true;
-    addEventListener('pointermove', e => { mx = e.clientX / innerWidth; my = e.clientY / innerHeight; }, { passive: true });
-    new IntersectionObserver(es => { vis = es[0].isIntersecting; if (vis) tick(performance.now()); }, { threshold: 0 }).observe(stage);
-
-    function tick(now) {
-      if (!vis) return;
-      sx += (mx - sx) * .045; sy += (my - sy) * .045;                   // spring-smoothed pointer
-      const t = now / 1000;
-      orbs.forEach((o, i) => {
-        const dx = (sx - .5) * 38 * depth[i], dy = (sy - .5) * 30 * depth[i];
-        const ax = Math.sin(t * (.21 + i * .07) + i * 2) * 5, ay = Math.cos(t * (.17 + i * .05) + i) * 5;
-        o.style.transform = `translate3d(${dx + ax}vw,${dy + ay}vh,0)`;
-      });
-      fluid.style.setProperty('--mx', (sx * 100).toFixed(1) + '%'); fluid.style.setProperty('--my', (sy * 100).toFixed(1) + '%');
-      requestAnimationFrame(tick);
-    }
-    tick(performance.now());
-
-    // section 2 -> 3: as the portrait screen leaves, it fades and stretches; the next section fades and settles in
-    const nextSec = $('#growth');
-    function bridge() {
-      const r = sec.getBoundingClientRect(), q = clamp((innerHeight - r.bottom) / (innerHeight * .8));      // 0 -> 1 while the screen scrolls away
-      const e = ease(q);
-      content.style.transformOrigin = '50% 0%';
-      content.style.setProperty('--exit-o', 1 - e); content.style.setProperty('--exit-s', 1 + .22 * e); content.style.setProperty('--exit-b', (e * 8).toFixed(1) + 'px');
-      if (nextSec) {
-        const n = nextSec.getBoundingClientRect(), t = ease(clamp((innerHeight - n.top) / (innerHeight * .75)));
-        nextSec.style.setProperty('--in-o', t); nextSec.style.setProperty('--in-s', (1.14 - .14 * t).toFixed(3)); nextSec.style.setProperty('--in-b', ((1 - t) * 10).toFixed(1) + 'px');
-      }
-    }
-    const bridgeF = onFrame(bridge);
-    addEventListener('scroll', bridgeF, { passive: true }); addEventListener('resize', bridgeF); bridge();
-    function render(p) {
-      const name = 1;                              // 1. the name appears
-      L.style.setProperty('--na', name); R.style.setProperty('--na', name);
-      const open = ease(clamp((p - .1) / .34));                           // 2. the panels slide apart
-      L.style.transform = `translateX(${-101 * open}%)`;
-      R.style.transform = `translateX(${101 * open}%)`;
-      const mo = 1 - clamp(open * 3); meta.style.setProperty('--mo', mo); sub.style.setProperty('--mo', mo); meta.style.visibility = sub.style.visibility = mo <= 0 ? 'hidden' : 'visible';
-      const g = clamp(open / .1); L.style.setProperty('--g', g); R.style.setProperty('--g', g);
-      L.style.opacity = R.style.opacity = 1 - .9 * open;                  // the halves fade as they part
-      L.classList.toggle('moving', open > 0.001); R.classList.toggle('moving', open > 0.001);
-      const closed = open <= 0.002;                                       // closed: one solid name, so there is no seam to see
-      solo.style.visibility = closed ? 'visible' : 'hidden';
-      L.style.visibility = R.style.visibility = (closed || open >= 1) ? 'hidden' : 'visible';
-      const c = ease(clamp((p - .18) / .3));                             // 3. the portrait and info arrive
-      content.style.setProperty('--c-o', .15 + .85 * c);
-      content.style.transform = `scale(${1.12 - .12 * c})`;
-      content.style.visibility = open > 0 ? 'visible' : 'hidden';
-      content.querySelectorAll('.ab-photo,.ab-text').forEach((n, i) => { const k = ease(clamp((p - .22 - i * .05) / .18)); n.style.opacity = k; n.style.transform = `translateY(${(1 - k) * 36}px)`; });
-    }
-    function loop() { cur += (target - cur) * .18; if (Math.abs(target - cur) < .0004) cur = target; render(cur); if (cur !== target) requestAnimationFrame(loop); else running = false; }
-    function update(snap) { target = clamp(-sec.getBoundingClientRect().top / range); if (snap) { cur = target; render(cur); return; } if (!running) { running = true; requestAnimationFrame(loop); } }
-    addEventListener('scroll', () => update(), { passive: true });
-    addEventListener('resize', () => { measure(); update(true); });
-    measure(); update(true); addEventListener('load', () => { measure(); update(true); });
-    // the top bar stays out of the way during the whole opening section
-    const navCheck = () => document.body.classList.toggle('nav-off', scrollY < sec.offsetTop + sec.offsetHeight - innerHeight * .7);
-    const navCheckF = onFrame(navCheck);
-    addEventListener('scroll', navCheckF, { passive: true }); addEventListener('resize', navCheckF); navCheck();
-  }
 
   /* =========================================================
-     FLIGHT — welcome screen; scrolling flies the plane into Ezzarion's world
+     FLIGHT WORLD — one plane for the whole page. Between every two sections
+     there is a flight leg: take-off, cruise, descent, arrival.
      ========================================================= */
-  function initFlight() {
-    const sec = $('#flight'); if (!sec) return;
-    if (reduceMotion) { document.body.classList.add('static'); return; }
-    const stage = $('#flStage'), plane = $('#flPlane'), trail = $('#flTrail'), sun = $('#flSun'), welcome = $('#flWelcome'),
-          far = $('#flFar'), mid = $('#flMid'), near = $('#flNear'), speed = $('#flSpeed'), flash = $('#flFlash'), dark = $('#flDark'), stars = $('#flStars');
-    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), ease = t => t * t * (3 - 2 * t), lerp = (a, b, t) => a + (b - a) * t;
+  function initWorld() {
+    const world = $('#world'), legs = [...document.querySelectorAll('.leg')];
+    if (!world || !legs.length) return;
+    const hudEl = $('#flHud'), plane = $('#flPlane'), trail = $('#flTrail'), welcome = $('#flWelcome'), far = $('#flFar'), mid = $('#flMid'), near = $('#flNear'),
+          speed = $('#flSpeed'), flash = $('#flFlash'), dark = $('#flDark'), stars = $('#flStars'), arrive = $('#flArrive'),
+          hud = { from: $('#hudFrom'), to: $('#hudTo'), flight: $('#hudFlight'), fill: $('#hudFill'), plane: $('#hudPlane'), alt: $('#hudAlt'), spd: $('#hudSpd'), dist: $('#hudDist'), arrTo: $('#arrTo') };
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), ease = t => t * t * (3 - 2 * t), easeOut = t => 1 - Math.pow(1 - t, 3), lerp = (a, b, t) => a + (b - a) * t;
+    const mob = () => innerWidth < 700;
+    let W = innerWidth, H = innerHeight;
 
-    // stars, drawn once
+    if (reduceMotion) { document.body.classList.add('static'); world.style.display = 'none'; legs.forEach(l => l.style.display = 'none'); return; }
+
+    // ---- paint the night sky once: stars, then soft clouds with a faint red light from below (no live blur) ----
     function drawStars() {
-      const w = stars.width = innerWidth, h = stars.height = innerHeight, g = stars.getContext('2d'), r = rng(11);
-      for (let i = 0; i < 170; i++) { const y = r() * h * .72, a = (.25 + .75 * r()) * (1 - y / (h * .8)); g.fillStyle = `rgba(255,${230 + Math.round(r() * 25)},${220 + Math.round(r() * 35)},${a.toFixed(2)})`; const s = r() < .08 ? 2 : 1; g.fillRect(r() * w, y, s, s); }
+      const w = stars.width = W, h = stars.height = H, g = stars.getContext('2d'), r = rng(11);
+      for (let i = 0; i < 210; i++) { const y = r() * h * .8, a = (.2 + .8 * r()) * (1 - y / (h * .95)), s = r() < .07 ? 2 : 1; g.fillStyle = `rgba(${220 + Math.round(r() * 35)},${228 + Math.round(r() * 27)},255,${a.toFixed(2)})`; g.fillRect(r() * w, y, s, s); }
     }
-    // dusk clouds painted once into tiles (no live blur): soft puffs, warm light on the underside
     function cloudTile(w, h, count, seed, o) {
       const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'), r = rng(seed);
       for (let i = 0; i < count; i++) {
@@ -619,70 +499,107 @@
           }
         }
       }
-      g.globalCompositeOperation = 'source-atop';                       // warm light from the sunset on the underside
-      const lg = g.createLinearGradient(0, h * .2, 0, h); lg.addColorStop(0, 'rgba(0,0,0,0)'); lg.addColorStop(1, `rgba(${o.glow},${o.ga})`); g.fillStyle = lg; g.fillRect(0, 0, w, h);
-      g.globalCompositeOperation = 'destination-out';                   // soft top edge, never a hard line
+      g.globalCompositeOperation = 'source-atop';
+      const lg = g.createLinearGradient(0, h * .15, 0, h); lg.addColorStop(0, `rgba(${o.moon},${o.ma})`); lg.addColorStop(.55, 'rgba(0,0,0,0)'); lg.addColorStop(1, `rgba(${o.glow},${o.ga})`); g.fillStyle = lg; g.fillRect(0, 0, w, h);
+      g.globalCompositeOperation = 'destination-out';
       const fg = g.createLinearGradient(0, 0, 0, h * .22); fg.addColorStop(0, 'rgba(0,0,0,1)'); fg.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = fg; g.fillRect(0, 0, w, h * .22);
       return c.toDataURL('image/png');
     }
+    const tiles = [[far, 1400, 360, 9, 3, { y0: .1, y1: .8, r0: 80, r1: 150, col: '48,56,86', a: .5, moon: '150,170,220', ma: .22, glow: '140,24,28', ga: .5 }],
+                   [mid, 1600, 420, 8, 7, { y0: .1, y1: .85, r0: 95, r1: 175, col: '22,26,44', a: .88, moon: '110,130,190', ma: .16, glow: '170,26,22', ga: .48 }],
+                   [near, 1800, 340, 7, 19, { y0: .2, y1: .95, r0: 120, r1: 200, col: '8,9,16', a: .98, moon: '70,86,140', ma: .1, glow: '110,16,14', ga: .42 }]];
+    const tileW = tiles.map(t => t[1]);
     function paint() {
       drawStars();
-      [[far, 1400, 360, 9, 3, { y0: .1, y1: .8, r0: 80, r1: 150, col: '120,52,58', a: .42, glow: '255,110,70', ga: .55 }],
-       [mid, 1600, 420, 8, 7, { y0: .1, y1: .85, r0: 95, r1: 175, col: '34,24,36', a: .85, glow: '255,92,52', ga: .5 }],
-       [near, 1800, 340, 7, 19, { y0: .2, y1: .95, r0: 120, r1: 200, col: '9,7,12', a: .98, glow: '120,24,14', ga: .4 }]].forEach(([layer, w, h, n, seed, o]) => {
-        const i = layer.firstChild; i.style.backgroundImage = `url(${cloudTile(w, h, n, seed, o)})`;
-        i.style.backgroundSize = `${w}px ${h}px`; i.style.backgroundPosition = 'left bottom';      // exact tile size, so the loop never jumps
-        i.style.width = `calc(100% + ${w}px)`;
-      });
+      tiles.forEach(([layer, w, h, n, seed, o]) => { const i = layer.firstChild; i.style.backgroundImage = `url(${cloudTile(w, h, n, seed, o)})`; i.style.backgroundSize = `${w}px ${h}px`; i.style.backgroundPosition = 'left bottom'; i.style.width = `calc(100% + ${w}px)`; });
     }
     paint();
-    let tileW = [1400, 1600, 1800], range = 1, target = 0, cur = 0, vis = true, t0 = performance.now(), W = innerWidth, H = innerHeight;
-    const measure = () => { range = Math.max(1, sec.offsetHeight - innerHeight); W = innerWidth; H = innerHeight; };
-    addEventListener('resize', onFrame(() => { measure(); drawStars(); }));
-    const mob = () => innerWidth < 700;
 
-    function render(p, now) {
-      const idle = (now - t0) / 1000;
-      const e1 = ease(clamp(p / .72)), e2 = ease(clamp((p - .3) / .62)), e3 = clamp((p - .7) / .3);
-      // plane: pulls forward, climbs and banks, grows as it leaves the camera behind
-      const px = lerp(0, mob() ? W * .9 : W * .5, e1), py = lerp(0, -H * .2, e1), rot = lerp(0, -8, e1), sc = lerp(1, mob() ? 1.5 : 2.1, e1);
-      plane.style.transform = `translate3d(${px.toFixed(1)}px,${py.toFixed(1)}px,0) rotate(${rot.toFixed(2)}deg) scale(${sc.toFixed(3)})`;
-      plane.style.opacity = 1 - clamp((p - .78) / .12);
-      trail.style.transform = `scaleX(${(.25 + e1 * 1.5).toFixed(3)})`; trail.style.opacity = .55 + .45 * e1;
-      // clouds: constant slow drift plus a push that scales with the scroll; the near layer streaks past
-      const off = (tile, k, slow) => -(((idle * slow + p * range * k) % tile + tile) % tile);
-      far.firstChild.style.transform = `translate3d(${off(tileW[0], .18, 7).toFixed(1)}px,0,0)`;
-      mid.firstChild.style.transform = `translate3d(${off(tileW[1], .5, 16).toFixed(1)}px,0,0)`;
-      near.firstChild.style.transform = `translate3d(${off(tileW[2], 1.35, 34).toFixed(1)}px,0,0)`;
-      far.style.transform = `scale(${(1 + .45 * e2).toFixed(3)})`;
-      mid.style.transform = `scale(${(1 + 1.1 * e2).toFixed(3)})`; mid.style.opacity = 1 - .85 * clamp((p - .78) / .16);
-      near.style.transform = `translate3d(0,${(e2 * H * .12).toFixed(1)}px,0) scale(${(1 + 2.6 * e2).toFixed(3)})`; near.style.opacity = 1 - clamp((p - .76) / .12);
-      sun.style.transform = `scale(${(1 + 1.7 * e2).toFixed(3)})`; sun.style.opacity = 1 - .4 * e3;
-      speed.style.opacity = (clamp((p - .12) / .3) * (1 - clamp((p - .82) / .12))).toFixed(3);
-      welcome.style.setProperty('--wo', (1 - clamp(p / .2)).toFixed(3)); welcome.style.opacity = ''; welcome.style.transform = `translateY(${(-p * 90).toFixed(1)}px)`;
-      welcome.style.opacity = (1 - clamp(p / .2)).toFixed(3);
-      // flying through the cloud bank: warm flash, then everything settles to the dark of the next screen
-      flash.style.opacity = (ease(clamp((p - .66) / .16)) * (1 - ease(clamp((p - .86) / .12)))).toFixed(3);
-      dark.style.opacity = ease(clamp((p - .84) / .16)).toFixed(3);
+    // ---- state ----
+    let readyAt = 0, active = null, cur = 0, target = 0, alpha = 0, lastLeg = -1, lastNow = 0, t0 = performance.now(), tick = null;
+    const info = legs.map(l => ({ el: l, from: l.dataset.from, to: l.dataset.to }));
+    const dist = [0, 1840, 960, 1380, 2210, 640, 780];                     // pretend leg lengths in km
+    function measure() {
+      W = innerWidth; H = innerHeight;
+      let best = -1, bestA = 0, uu = 0;
+      info.forEach((L, i) => {
+        const r = L.el.getBoundingClientRect(); if (r.bottom < 0 || r.top > H) return;
+        const enter = clamp((H - r.top) / (H * .28)), exit = clamp(r.bottom / (H * .28)), a = i === 0 ? clamp(r.bottom / H) : ease(Math.min(enter, exit));
+        if (a > bestA) { bestA = a; best = i; uu = i === 0 ? clamp(-r.top / Math.max(1, r.height - H)) : clamp((H - r.top) / (r.height + H)); }
+      });
+      active = best; alpha = bestA; target = uu;
     }
-    let lastNow = 0;
+    const measureF = onFrame(() => { measure(); if (active >= 0 && !tick) { lastNow = 0; tick = requestAnimationFrame(loop); } nav(); });
+    function nav() { document.body.classList.toggle('nav-off', scrollY < legs[0].offsetHeight - H * .7); }
+
+    // ---- pose and render ----
+    function render(u, now) {
+      const first = active === 0, idle = (now - t0) / 1000;
+      if (!readyAt && document.body.classList.contains('ready')) readyAt = now;
+      const rdy = readyAt ? easeOut(clamp((now - readyAt - 350) / 1400)) : 0;           // welcome and readout fade in once the intro has opened
+      const turb = Math.sin(idle * 1.3) * .35 + Math.sin(idle * 2.9 + 1) * .18;            // light turbulence
+      let px, py, rot, sc, wing = 0, alt, spd;
+      if (first) {
+        const e1 = ease(clamp(u / .72));
+        px = lerp(0, mob() ? W * .9 : W * .5, e1); py = lerp(H * .1, -H * .2, e1); rot = lerp(0, -8, e1); sc = lerp(1, mob() ? 1.5 : 2.1, e1);
+        alt = Math.round(lerp(0, 36000, easeOut(clamp(u / .6))) / 100) * 100; spd = Math.round(lerp(0, 480, easeOut(clamp(u / .5))));
+      } else {
+        const a = easeOut(clamp(u / .3)), b = ease(clamp((u - .7) / .3));
+        px = lerp(-W * (mob() ? .9 : .78), -W * (mob() ? .02 : .1), a) + lerp(0, W * (mob() ? 1.1 : .95), b) + (u - .3) * W * .05;
+        py = lerp(H * .12, 0, a) + lerp(0, H * .16, b);
+        rot = lerp(-9, 0, a) + lerp(0, 7, b); sc = (mob() ? 1 : 1) + .22 * b;
+        wing = Math.sin(u * 5) * .8;
+        const climb = easeOut(clamp(u / .3)), desc = ease(clamp((u - .66) / .34));
+        alt = Math.round(36000 * (climb - desc * climb) / 100) * 100; spd = Math.round(lerp(190, 482, climb) * (1 - .55 * desc));
+      }
+      plane.style.transform = `translate3d(${px.toFixed(1)}px,${py.toFixed(1)}px,0) rotate(${(rot + turb + wing).toFixed(2)}deg) scale(${sc.toFixed(3)})`;
+      plane.style.opacity = first ? 1 - clamp((u - .78) / .12) : 1;
+      const cruise = first ? clamp(u / .4) : ease(clamp((u - .15) / .25)) * (1 - ease(clamp((u - .72) / .2)));
+      trail.style.transform = `scaleX(${(.2 + cruise * 1.3).toFixed(3)})`; trail.style.opacity = (.15 + .65 * cruise).toFixed(2);
+
+      // clouds stream by faster the further you scroll; the near layer streaks
+      const km = first ? 1.2 : 1;
+      const off = (tile, k, slow) => -(((idle * slow + u * H * 8 * k * km) % tile + tile) % tile);
+      far.firstChild.style.transform = `translate3d(${off(tileW[0], .16, 7).toFixed(1)}px,0,0)`;
+      mid.firstChild.style.transform = `translate3d(${off(tileW[1], .45, 15).toFixed(1)}px,0,0)`;
+      near.firstChild.style.transform = `translate3d(${off(tileW[2], 1.3, 32).toFixed(1)}px,0,0) translateY(${(Math.sin(idle * .8) * 3).toFixed(1)}px)`;
+      const e2 = first ? ease(clamp((u - .3) / .62)) : 0;
+      far.style.transform = `scale(${(1 + .45 * e2).toFixed(3)})`; mid.style.transform = `scale(${(1 + 1.1 * e2).toFixed(3)})`;
+      near.style.transform = `translate3d(0,${(e2 * H * .12).toFixed(1)}px,0) scale(${(1 + 2.6 * e2).toFixed(3)})`;
+      mid.style.opacity = first ? 1 - .85 * clamp((u - .78) / .16) : 1; near.style.opacity = first ? 1 - clamp((u - .76) / .12) : 1;
+      speed.style.opacity = (first ? clamp((u - .12) / .3) * (1 - clamp((u - .82) / .12)) : cruise * .6).toFixed(3);
+
+      // welcome (first leg) and HUD
+      welcome.style.opacity = first ? ((1 - clamp(u / .2)) * rdy).toFixed(3) : 0; welcome.style.transform = `translateY(${(first ? -u * 90 + (1 - rdy) * 24 : 0).toFixed(1)}px)`;
+      hudEl.style.opacity = (first ? rdy * (1 - ease(clamp((u - .8) / .12))) : 1).toFixed(3);
+      flash.style.opacity = first ? (ease(clamp((u - .66) / .16)) * (1 - ease(clamp((u - .86) / .12)))).toFixed(3) : 0;
+      dark.style.opacity = first ? ease(clamp((u - .84) / .16)).toFixed(3) : 0;
+      if (active !== lastLeg) { const L = info[active]; hud.from.textContent = L.from; hud.to.textContent = L.to; hud.arrTo.textContent = L.to; hud.flight.textContent = 'EZZ 00' + (active + 1); lastLeg = active; }
+      hud.fill.style.transform = `scaleX(${u.toFixed(3)})`; hud.plane.style.left = (u * 100).toFixed(1) + '%';
+      hud.alt.textContent = alt.toLocaleString('en-US'); hud.spd.textContent = spd; hud.dist.textContent = Math.max(0, Math.round(dist[active] * (1 - u))).toLocaleString('en-US');
+      arrive.style.opacity = (first ? ease(clamp((u - .5) / .12)) * (1 - ease(clamp((u - .72) / .1))) : ease(clamp((u - .62) / .08)) * (1 - ease(clamp((u - .8) / .07)))).toFixed(3);
+    }
     function loop(now) {
-      if (!vis) { lastNow = 0; return; }
+      tick = null;
+      if (active < 0) { world.style.visibility = 'hidden'; return; }
+      world.style.visibility = 'visible'; world.style.opacity = alpha.toFixed(3);
       const dt = lastNow ? Math.min(.1, (now - lastNow) / 1000) : .016; lastNow = now;
-      cur += (target - cur) * (1 - Math.exp(-dt * 7)); if (Math.abs(target - cur) < .0004) cur = target;      // time-based easing: same feel at any frame rate
-      render(cur, now); requestAnimationFrame(loop);
+      if (active !== lastLeg) cur = target;                                  // a new leg starts from its own beginning
+      cur += (target - cur) * (1 - Math.exp(-dt * 7));
+      if (Math.abs(target - cur) < .0004) cur = target;
+      render(cur, now); tick = requestAnimationFrame(loop);
     }
-    function update() { target = clamp(-sec.getBoundingClientRect().top / range); }
-    new IntersectionObserver(es => { const was = vis; vis = es[0].isIntersecting; if (vis && !was) requestAnimationFrame(loop); }, { threshold: 0 }).observe(stage);
-    addEventListener('scroll', onFrame(update), { passive: true });
-    measure(); update(); cur = target; requestAnimationFrame(loop);
+    addEventListener('scroll', measureF, { passive: true });
+    addEventListener('resize', onFrame(() => { measure(); drawStars(); }));
+    document.addEventListener('visibilitychange', () => { lastNow = 0; });
+    measure(); cur = target; nav(); tick = requestAnimationFrame(loop);
   }
 
   function boot() {
     $('#year').textContent = new Date().getFullYear();
     $('#statFirms').dataset.target = S.partners.length;
     renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
-    startBackground(); initFollowers(); initPortal(); initFlight(); initAbout(); initPillNav(); initSimulator();
+    startBackground(); initFollowers(); initWorld(); initPillNav(); initSimulator();
   }
 
   let seen = false;
