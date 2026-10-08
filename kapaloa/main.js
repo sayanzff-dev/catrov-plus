@@ -8,10 +8,28 @@ document.querySelectorAll('.tilt').forEach(c=>{
     c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%')});
   c.addEventListener('pointerleave',()=>c.style.transform='');
 });
-// fin follows pointer and scroll
-const fin=document.getElementById('finEl');let px=0,py=0;
+// 3D fin built from real product photo: stacked extruded layers + true side profile
+const fin=document.getElementById('fin3d'),stage=document.getElementById('stage');
+const N=34,T=26; // layers, thickness px
+for(let i=0;i<N;i++){const d=document.createElement('div');d.className='ly';const z=(i/(N-1)-.5)*T;
+  const edge=Math.abs(i/(N-1)-.5)*2; // 0 centre, 1 faces
+  d.style.backgroundImage="url('fin-front.png')";d.style.transform=`translateZ(${z}px)`;
+  d.style.filter=i==0||i==N-1?'none':`brightness(${.35+.25*(1-edge)})`;fin.appendChild(d)}
+const front=fin.lastChild,back=fin.firstChild;front.style.filter='contrast(1.05)';back.style.filter='brightness(.55)';
+const sd=document.createElement('div');sd.className='ly side';sd.style.backgroundImage="url('fin-side.png')";
+sd.style.cssText+=';top:0;height:100%;width:'+(177/1253*100)+'%;left:50%;margin-left:-'+(177/1253*50)+'%;aspect-ratio:auto;transform:rotateY(90deg)';fin.appendChild(sd);
+// glossy highlight sweeping across the front face
+const gl=document.createElement('div');gl.className='ly';gl.style.cssText+=';transform:translateZ('+(T/2+.5)+'px);pointer-events:none;mix-blend-mode:screen;-webkit-mask-image:url(fin-front.png);mask-image:url(fin-front.png);-webkit-mask-size:100% 100%;mask-size:100% 100%;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.45) 48%,transparent 60%);background-size:260% 100%';fin.appendChild(gl);
+let ry=-25,rx=12,vy=.25,vx=0,drag=false,lx=0,ly=0,px=0,py=0,t0=performance.now();
+stage.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;stage.setPointerCapture(e.pointerId)});
+stage.addEventListener('pointerup',()=>drag=false);
+stage.addEventListener('pointermove',e=>{if(drag){vy=(e.clientX-lx)*.35;vx=-(e.clientY-ly)*.2;ry+=vy;rx=Math.max(-60,Math.min(60,rx+vx));lx=e.clientX;ly=e.clientY}});
 addEventListener('pointermove',e=>{px=e.clientX/innerWidth-.5;py=e.clientY/innerHeight-.5},{passive:true});
-function fl(){fin.style.transform=`rotateY(${px*28}deg) rotateX(${-py*18}deg) rotateZ(${12+scrollY*.03}deg)`;requestAnimationFrame(fl)}fl();
+(function fl(t){if(!drag){vy+=(.25-vy)*.02;ry+=vy}
+ const bob=Math.sin((t-t0)/1100)*10,sc=1+Math.min(scrollY,600)*0;
+ fin.style.transform=`translateY(${bob}px) rotateX(${rx+py*14}deg) rotateY(${ry+px*20}deg) rotateZ(${8+Math.sin((t-t0)/2200)*3}deg)`;
+ gl.style.backgroundPosition=((t-t0)/18%260-80)+'% 0';
+ requestAnimationFrame(fl)})(0);
 // bubbles
 const cv=document.getElementById('bubbles'),cx=cv.getContext('2d');let W,H;
 const bs=Array.from({length:36},()=>({x:Math.random(),y:Math.random(),r:2+Math.random()*9,v:.0006+Math.random()*.0016,p:Math.random()*6}));
