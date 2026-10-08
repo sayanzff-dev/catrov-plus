@@ -607,7 +607,7 @@ footer{text-align:center;color:var(--muted-dim);font-size:12px;padding:70px 20px
 .ab-r{border-left:1px solid rgba(255,61,46,.55);box-shadow:-8px 0 40px rgba(225,6,0,.35)}
 .ab-name{position:absolute;top:0;bottom:0;width:100vw;display:grid;place-items:center;pointer-events:none}
 .ab-l .ab-name{left:0}.ab-r .ab-name{right:0}
-.ab-name span{font-family:'Bodoni Moda',Didot,serif;font-weight:600;text-transform:uppercase;line-height:.8;letter-spacing:-.05em;white-space:nowrap;color:#f5f1ec;font-size:min(clamp(3.5rem,30vw,18rem),calc(86vw / (8 * .60)));opacity:var(--na,0);transform:scale(calc(.94 + .06 * var(--na,0)));filter:blur(calc((1 - var(--na,0)) * 10px))}
+.ab-name span{font-family:'Bodoni Moda',Didot,serif;font-weight:600;text-transform:uppercase;line-height:.8;letter-spacing:-.05em;white-space:nowrap;color:#f5f1ec;font-size:min(clamp(3.5rem,30vw,18rem),calc(86vw / (8 * .60)));opacity:var(--na,1);transform:scale(calc(.94 + .06 * var(--na,1)))}
 .ab-seam{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;z-index:3;background:linear-gradient(180deg,transparent,#ff3d2e 20%,#fff 50%,#ff3d2e 80%,transparent);box-shadow:0 0 24px #ff3d2e,0 0 60px rgba(255,61,46,.5);opacity:0;pointer-events:none}
 body.static .about{height:auto}
 body.static .ab-stage{position:relative;height:auto;min-height:100svh}

@@ -569,7 +569,7 @@
     let range = 1, target = 0, cur = 0, running = false;
     const measure = () => { range = Math.max(1, sec.offsetHeight - innerHeight); };
     function render(p) {
-      const name = .3 + .7 * easeOut(clamp(p / .2));                              // 1. the name appears
+      const name = 1;                              // 1. the name appears
       L.style.setProperty('--na', name); R.style.setProperty('--na', name);
       const open = ease(clamp((p - .3) / .4));                           // 2. the panels slide apart
       L.style.transform = `translateX(${-101 * open}%)`;
