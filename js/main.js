@@ -511,7 +511,7 @@
       type.style.opacity = live ? 1 - e : '';
     }
     function loop() {
-      cur += (target - cur) * .24;
+      cur += (target - cur) * .18;
       if (Math.abs(target - cur) < .0004) cur = target;
       render(cur);
       if (cur !== target) requestAnimationFrame(loop); else running = false;
@@ -629,7 +629,7 @@
       content.style.visibility = open > 0 ? 'visible' : 'hidden';
       content.querySelectorAll('.ab-photo,.ab-text').forEach((n, i) => { const k = ease(clamp((p - .22 - i * .05) / .18)); n.style.opacity = k; n.style.transform = `translateY(${(1 - k) * 36}px)`; });
     }
-    function loop() { cur += (target - cur) * .24; if (Math.abs(target - cur) < .0004) cur = target; render(cur); if (cur !== target) requestAnimationFrame(loop); else running = false; }
+    function loop() { cur += (target - cur) * .18; if (Math.abs(target - cur) < .0004) cur = target; render(cur); if (cur !== target) requestAnimationFrame(loop); else running = false; }
     function update(snap) { target = clamp(-sec.getBoundingClientRect().top / range); if (snap) { cur = target; render(cur); return; } if (!running) { running = true; requestAnimationFrame(loop); } }
     addEventListener('scroll', () => update(), { passive: true });
     addEventListener('resize', () => { measure(); update(true); });

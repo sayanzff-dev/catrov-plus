@@ -722,3 +722,4 @@ body.static .ab-lens{display:none}
 @media (hover:none){.ab-lens{--lr:clamp(130px,34vw,190px)}}
 
 .about{height:210svh}
+.about{height:260svh}
