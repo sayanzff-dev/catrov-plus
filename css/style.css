@@ -573,3 +573,56 @@ footer{text-align:center;color:var(--muted-dim);font-size:12px;padding:70px 20px
 .sim-sum::before{background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 30%,transparent),transparent)}
 .sim-new{background:linear-gradient(180deg,#fff 10%,color-mix(in srgb,var(--acc) 40%,#fff) 55%,var(--acc));-webkit-background-clip:text;background-clip:text}
 .sim-kick{color:var(--acc)}
+
+/* ---------- ABOUT: name, then two panels open onto the portrait ---------- */
+.about{position:relative;z-index:6;height:320svh}
+.ab-stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#030202}
+.ab-content{position:absolute;inset:0;display:grid;place-items:center;will-change:transform,opacity}
+.ab-bg{position:absolute;inset:0;background:url(assets/photos/ezzarion.jpg) 52% 40%/cover;opacity:.22;filter:blur(18px) saturate(.7);transform:scale(1.15)}
+.ab-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(3,2,2,.5),#030202 75%)}
+.ab-inner{position:relative;width:min(1120px,100% - 40px);display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(28px,6vw,90px);align-items:center;padding-block:84px 36px}
+.ab-photo{margin:0;justify-self:center;width:min(100%,420px)}
+.ab-frame{position:relative;aspect-ratio:4/5;max-height:64svh;width:100%;border-radius:26px;overflow:hidden;background:#0b0606;border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 40px 90px -30px rgba(0,0,0,.9),0 0 80px -30px rgba(225,6,0,.5)}
+.ab-frame img{width:100%;height:100%;object-fit:cover;object-position:52% 50%;display:block}
+.ab-frame::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.6));pointer-events:none}
+.ab-photo figcaption{display:flex;align-items:center;gap:10px;margin-top:14px;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.ab-photo figcaption i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+.ab-text{min-width:0}
+.ab-kick{font:600 11px Montserrat,sans-serif;letter-spacing:.34em;text-transform:uppercase;color:var(--red-bright);margin-bottom:10px}
+.ab-text h2{margin:0 0 18px;font-family:Anton,sans-serif;font-weight:400;font-size:clamp(40px,7vw,82px);letter-spacing:.03em;line-height:1.02;background:linear-gradient(180deg,#fff 25%,#d9cfc9 75%,#a99d97);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ab-lead{margin:0 0 12px;color:#fff;font-size:clamp(17px,2vw,22px);font-weight:500;line-height:1.45;max-width:30ch}
+.ab-text p{margin:0 0 12px;color:#c9c0bb;font-size:clamp(14.5px,1.5vw,17px);line-height:1.6;max-width:52ch}
+.ab-text p.ab-lead{color:#fff}
+.ab-facts{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:12px}
+.ab-facts li{padding:14px 18px;border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.02));-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.ab-facts b{display:block;font-family:Anton,sans-serif;font-weight:400;font-size:clamp(22px,3vw,32px);letter-spacing:.03em;line-height:1.1}
+.ab-facts span{font:500 10px Montserrat,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.ab-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+/* panels */
+.ab-panel{position:absolute;top:0;bottom:0;width:50.15%;z-index:2;overflow:hidden;background:#030202;will-change:transform}
+.ab-l{left:0}.ab-r{right:0}
+.ab-panel::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 100% 50%,rgba(225,6,0,.2),transparent 70%)}
+.ab-r::before{background:radial-gradient(ellipse 80% 70% at 0% 50%,rgba(225,6,0,.2),transparent 70%)}
+.ab-l{border-right:1px solid rgba(255,61,46,.55);box-shadow:8px 0 40px rgba(225,6,0,.35)}
+.ab-r{border-left:1px solid rgba(255,61,46,.55);box-shadow:-8px 0 40px rgba(225,6,0,.35)}
+.ab-name{position:absolute;top:0;bottom:0;width:100vw;display:grid;place-items:center;pointer-events:none}
+.ab-l .ab-name{left:0}.ab-r .ab-name{right:0}
+.ab-name span{font-family:'Bodoni Moda',Didot,serif;font-weight:600;text-transform:uppercase;line-height:.8;letter-spacing:-.05em;white-space:nowrap;color:#f5f1ec;font-size:min(clamp(3.5rem,30vw,18rem),calc(86vw / (8 * .60)));opacity:var(--na,0);transform:scale(calc(.94 + .06 * var(--na,0)));filter:blur(calc((1 - var(--na,0)) * 10px))}
+.ab-seam{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;z-index:3;background:linear-gradient(180deg,transparent,#ff3d2e 20%,#fff 50%,#ff3d2e 80%,transparent);box-shadow:0 0 24px #ff3d2e,0 0 60px rgba(255,61,46,.5);opacity:0;pointer-events:none}
+body.static .about{height:auto}
+body.static .ab-stage{position:relative;height:auto;min-height:100svh}
+body.static .ab-content{position:relative}
+body.static .ab-panel,body.static .ab-seam{display:none}
+@media (max-width:820px){
+  .ab-inner{grid-template-columns:1fr;gap:16px;padding-block:78px 24px;text-align:center}
+  .ab-photo{width:min(34vw,160px)}
+  .ab-frame{aspect-ratio:1/1}
+  .ab-photo figcaption{justify-content:center;font-size:9.5px;margin-top:8px}
+  .ab-text h2{font-size:clamp(34px,10vw,46px);margin-bottom:10px}
+  .ab-lead{margin-inline:auto;font-size:15.5px}
+  .ab-text p{margin-inline:auto;font-size:13.5px;margin-bottom:8px}
+  .ab-facts{justify-content:center;gap:8px;margin-top:12px}
+  .ab-facts li{padding:10px 12px}
+  .ab-cta{justify-content:center;margin-top:14px}
+  .ab-cta .btn{padding:11px 18px;font-size:13.5px}
+}

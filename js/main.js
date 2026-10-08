@@ -559,11 +559,40 @@
     addEventListener('scroll', () => set(false), { passive: true });
   }
 
+  function initAbout() {
+    const sec = $('#about'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), seam = $('#abSeam');
+    if (!sec) return;
+    if (reduceMotion) { document.body.classList.add('static'); return; }
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const ease = t => t * t * (3 - 2 * t), easeOut = t => 1 - Math.pow(1 - t, 3);
+    let range = 1, target = 0, cur = 0, running = false;
+    const measure = () => { range = Math.max(1, sec.offsetHeight - innerHeight); };
+    function render(p) {
+      const name = easeOut(clamp(p / .22));                              // 1. the name appears
+      L.style.setProperty('--na', name); R.style.setProperty('--na', name);
+      const open = ease(clamp((p - .3) / .4));                           // 2. the panels slide apart
+      L.style.transform = `translateX(${-101 * open}%)`;
+      R.style.transform = `translateX(${101 * open}%)`;
+      L.style.visibility = R.style.visibility = open >= 1 ? 'hidden' : 'visible';
+      seam.style.opacity = open > 0 && open < 1 ? Math.sin(open * Math.PI) : 0;
+      const c = ease(clamp((p - .38) / .4));                             // 3. the portrait and info arrive
+      content.style.opacity = .15 + .85 * c;
+      content.style.transform = `scale(${1.12 - .12 * c})`;
+      content.style.visibility = open > 0 ? 'visible' : 'hidden';
+      content.querySelectorAll('.ab-photo,.ab-text').forEach((n, i) => { const k = ease(clamp((p - .5 - i * .06) / .22)); n.style.opacity = k; n.style.transform = `translateY(${(1 - k) * 36}px)`; });
+    }
+    function loop() { cur += (target - cur) * .16; if (Math.abs(target - cur) < .0004) cur = target; render(cur); if (cur !== target) requestAnimationFrame(loop); else running = false; }
+    function update(snap) { target = clamp(-sec.getBoundingClientRect().top / range); if (snap) { cur = target; render(cur); return; } if (!running) { running = true; requestAnimationFrame(loop); } }
+    addEventListener('scroll', () => update(), { passive: true });
+    addEventListener('resize', () => { measure(); update(true); });
+    measure(); update(true); addEventListener('load', () => { measure(); update(true); });
+  }
+
   function boot() {
     $('#year').textContent = new Date().getFullYear();
     $('#statFirms').dataset.target = S.partners.length;
     renderTape(); renderPartners(); renderSocials(); renderVideos(); renderPayouts(); renderCerts(); initLightbox();
-    startBackground(); initFollowers(); initPortal(); initJourney(); initPillNav(); initSimulator();
+    startBackground(); initFollowers(); initPortal(); initAbout(); initJourney(); initPillNav(); initSimulator();
   }
 
   let seen = false;
