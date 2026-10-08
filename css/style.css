@@ -617,10 +617,6 @@ body.static .ab-panel,body.static .ab-seam{display:none}
   .ab-cta .btn{padding:11px 18px;font-size:13.5px}
 }
 
-.ab-cue{position:absolute;left:50%;bottom:max(22px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:12px;font:600 10px Montserrat,sans-serif;letter-spacing:.5em;text-indent:.5em;text-transform:uppercase;color:#efeae4;pointer-events:none}
-.ab-cue i{position:relative;display:block;width:1px;height:clamp(40px,8vh,72px);background:rgba(255,255,255,.22);overflow:hidden}
-.ab-cue b{position:absolute;left:0;top:-40%;width:100%;height:40%;background:linear-gradient(180deg,transparent,#fff);animation:cuedrop 2s cubic-bezier(.65,0,.35,1) infinite}
-body.static .ab-cue{display:none}
 body.ready .about{opacity:1}
 
 /* ---------- ABOUT, refined: matte material, real light and shadow, no glow ---------- */
@@ -640,8 +636,6 @@ body.ready .about{opacity:1}
 .ab-kick{color:#a89f96;letter-spacing:.4em}
 .ab-text h2{background:none;color:#f1ece4;-webkit-text-fill-color:#f1ece4;text-shadow:0 2px 0 rgba(0,0,0,.5)}
 .ab-facts li{background:rgba(255,255,255,.035);-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 24px -12px rgba(0,0,0,.7);border-radius:14px}
-.ab-cue{color:#bdb4ab}
-.ab-cue i{background:rgba(255,255,255,.18)}
 
 /* ---------- ABOUT: liquid red light behind frosted Apple-style glass ---------- */
 .ab-stage{background:#050404}
@@ -744,7 +738,6 @@ body.ready .ab-meta span{animation-play-state:running}
 body.ready .ab-sub{animation-play-state:running}
 .ab-sub i{display:block;width:clamp(24px,5vw,64px);height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5))}
 .ab-sub i:last-child{transform:scaleX(-1)}
-.ab-cue{bottom:clamp(60px,9vh,90px)}
 @media (max-width:700px){.ab-meta{font-size:9px;letter-spacing:.2em}.m-tr,.m-br{display:none}.ab-sub{letter-spacing:.2em;font-size:9px;white-space:normal;text-align:center;padding-inline:20px}.ab-sub i{display:none}}
 @media (prefers-reduced-motion:reduce){.ab-name{opacity:1;transform:none;filter:none}.ab-meta span,.ab-sub{opacity:1;animation:none}}
 

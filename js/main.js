@@ -496,7 +496,7 @@
   }
 
   function initAbout() {
-    const sec = $('#about'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), cue = $('#abCue'), meta = $('#abMeta'), sub = $('#abSub');
+    const sec = $('#about'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), meta = $('#abMeta'), sub = $('#abSub');
     if (!sec) return;
     if (reduceMotion) { document.body.classList.add('static'); return; }
     const stage0 = $('#abStage');
@@ -539,7 +539,6 @@
       const open = ease(clamp((p - .1) / .34));                           // 2. the panels slide apart
       L.style.transform = `translateX(${-101 * open}%)`;
       R.style.transform = `translateX(${101 * open}%)`;
-      cue.style.opacity = 1 - clamp(p / .08);
       const mo = 1 - clamp(open * 3); meta.style.setProperty('--mo', mo); sub.style.setProperty('--mo', mo); meta.style.visibility = sub.style.visibility = mo <= 0 ? 'hidden' : 'visible';
       const g = clamp(open / .1); L.style.setProperty('--g', g); R.style.setProperty('--g', g);
       L.style.opacity = R.style.opacity = 1 - .9 * open;                  // the halves fade as they part
