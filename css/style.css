@@ -632,3 +632,23 @@ body.static .ab-panel,body.static .ab-seam{display:none}
 .ab-cue b{position:absolute;left:0;top:-40%;width:100%;height:40%;background:linear-gradient(180deg,transparent,#fff);animation:cuedrop 2s cubic-bezier(.65,0,.35,1) infinite}
 body.static .ab-cue{display:none}
 body.ready .about{opacity:1}
+
+/* ---------- ABOUT, refined: matte material, real light and shadow, no glow ---------- */
+.ab-stage{background:#0b0a09}
+.ab-panel{--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background:var(--grain),radial-gradient(120% 90% at 50% -10%,#24211e 0%,#12100f 55%,#0a0908 100%);border:0}
+.ab-panel::before{display:none}
+.ab-l{box-shadow:inset -1px 0 0 rgba(255,255,255,.1),30px 0 70px rgba(0,0,0,.75)}
+.ab-r{box-shadow:inset 1px 0 0 rgba(255,255,255,.1),-30px 0 70px rgba(0,0,0,.75)}
+.ab-panel::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.05),transparent 22%,transparent 78%,rgba(0,0,0,.35))}
+.ab-name span{color:#ece6dd;filter:drop-shadow(0 -1px 0 rgba(255,255,255,.28)) drop-shadow(0 2px 0 rgba(0,0,0,.65)) drop-shadow(0 26px 40px rgba(0,0,0,.65))}
+.ab-seam{width:1px;margin-left:0;background:linear-gradient(180deg,transparent,rgba(255,255,255,.75) 30%,rgba(255,255,255,.75) 70%,transparent);box-shadow:none}
+.ab-bg{opacity:.28;filter:blur(24px) saturate(.5) brightness(.9)}
+.ab-bg::after{background:radial-gradient(ellipse at 50% 35%,rgba(11,10,9,.35),#0b0a09 78%)}
+.ab-frame{border:1px solid rgba(255,255,255,.14);box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 50px 80px -30px rgba(0,0,0,.9),0 12px 24px -8px rgba(0,0,0,.6)}
+.ab-photo figcaption i{background:#cfc8bf;box-shadow:none}
+.ab-kick{color:#a89f96;letter-spacing:.4em}
+.ab-text h2{background:none;color:#f1ece4;-webkit-text-fill-color:#f1ece4;text-shadow:0 2px 0 rgba(0,0,0,.5)}
+.ab-facts li{background:rgba(255,255,255,.035);-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 24px -12px rgba(0,0,0,.7);border-radius:14px}
+.ab-cue{color:#bdb4ab}
+.ab-cue i{background:rgba(255,255,255,.18)}
