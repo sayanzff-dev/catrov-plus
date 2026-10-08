@@ -73,7 +73,7 @@ window.SITE = {
         { market: "Futures", plan: "Rapid Daily", base: 0, code: 47, sizes: [ { size: "$25K", price: 159.98, final: 79.99 }, { size: "$50K", price: 299.98, final: 159.99 }, { size: "$100K", price: 499.98, final: 279.99 } ] },
         { market: "Futures", plan: "Direct",      base: 0, code: 40.14, sizes: [ { size: "$50K", price: 283.99, final: 169.99 } ] }
       ] }
-      ,{ name: "E8 Markets", color: "#8b5cf6", plans: [
+      ,{ name: "E8 Markets", color: "#1fe8c4", plans: [
         { market: "Futures", plan: "Zero MAX",     base: 0, code: 35, sizes: [ { size: "$50K", price: 328, final: 214 }, { size: "$100K", price: 588, final: 383 }, { size: "$200K", price: 1088, final: 708 } ] },
         { market: "Futures", plan: "Zero Starter", base: 0, code: 35, sizes: [ { size: "$50K", price: 178, final: 116 }, { size: "$100K", price: 278, final: 181 }, { size: "$200K", price: 558, final: 363 } ] },
         { market: "Futures", plan: "Signature", base: 0, code: 25, sizes: [ { size: "$25K", price: 120, final: 90 }, { size: "$50K", price: 170, final: 128 }, { size: "$100K", price: 280, final: 210 }, { size: "$150K", price: 450, final: 338 } ] }
