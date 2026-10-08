@@ -954,3 +954,8 @@ body.gate-open .about .ab-facts{transition-delay:.5s}body.gate-open .about .ab-c
 .about .ab-frame{border-radius:188px 188px 24px 24px;box-shadow:0 60px 100px -40px #000}
 .about .ab-frame img{transform:none}
 .about .ab-photo figcaption{margin-top:12px}
+.about .ab-photo{padding:10px}
+.about .ab-ring{border-radius:196px 196px 34px 34px}
+.about .ab-frame{border-radius:188px 188px 26px 26px;max-height:none;width:100%;aspect-ratio:4/5}
+.about .ab-frame img{object-position:50% 30%}
+@media (min-width:901px){.about .ab-photo{width:min(100%,calc(58svh * .8 + 20px))}}
