@@ -553,7 +553,7 @@
       L.style.transform = `translateX(${-101 * open}%)`;
       R.style.transform = `translateX(${101 * open}%)`;
       cue.style.opacity = 1 - clamp(p / .08);
-      meta.style.opacity = sub.style.opacity = 1 - clamp(open * 3);
+      const mo = 1 - clamp(open * 3); meta.style.setProperty('--mo', mo); sub.style.setProperty('--mo', mo); meta.style.visibility = sub.style.visibility = mo <= 0 ? 'hidden' : 'visible';
       lensFade = 1 - clamp(open / .08);
       const g = clamp(open / .1); L.style.setProperty('--g', g); R.style.setProperty('--g', g);
       L.style.opacity = R.style.opacity = 1 - .9 * open;                  // the halves fade as they part

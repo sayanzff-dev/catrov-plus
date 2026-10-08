@@ -743,7 +743,7 @@ body.ready .ab-meta span{animation-play-state:running}
 .m-tr{right:clamp(20px,3.4vw,52px);top:clamp(22px,4.4vh,44px);text-align:right;animation-delay:1.25s}
 .m-bl{left:clamp(20px,3.4vw,52px);bottom:clamp(24px,5vh,46px);animation-delay:1.4s}
 .m-br{right:clamp(20px,3.4vw,52px);bottom:clamp(24px,5vh,46px);text-align:right;animation-delay:1.55s}
-@keyframes metain{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes metain{from{opacity:0;transform:translateY(8px)}to{opacity:var(--mo,1);transform:none}}
 /* quiet tagline under the name */
 .ab-sub{position:absolute;left:0;right:0;justify-content:center;top:calc(50% + var(--ab-fs) * .42 + clamp(18px,3.4vh,34px));z-index:4;display:flex;align-items:center;gap:18px;white-space:nowrap;pointer-events:none;
   font:500 clamp(10px,1.1vw,12.5px) Montserrat,sans-serif;letter-spacing:.42em;text-transform:uppercase;color:rgba(236,230,221,.78);opacity:0;animation:metain 1.4s var(--ease) 1.8s forwards;animation-play-state:paused}
@@ -753,3 +753,5 @@ body.ready .ab-sub{animation-play-state:running}
 .ab-cue{bottom:clamp(60px,9vh,90px)}
 @media (max-width:700px){.ab-meta{font-size:9px;letter-spacing:.2em}.m-tr,.m-br{display:none}.ab-sub{letter-spacing:.2em;font-size:9px;white-space:normal;text-align:center;padding-inline:20px}.ab-sub i{display:none}}
 @media (prefers-reduced-motion:reduce){.ab-name{opacity:1;transform:none;filter:none}.ab-meta span,.ab-sub{opacity:1;animation:none}}
+
+.ab-meta span,.ab-sub{transition:opacity .2s linear}
