@@ -564,6 +564,15 @@
     const sec = $('#about'), L = $('#abL'), R = $('#abR'), content = $('#abContent'), cue = $('#abCue');
     if (!sec) return;
     if (reduceMotion) { document.body.classList.add('static'); return; }
+    const stage0 = $('#abStage');
+
+    // size the name from its real measured width so any font fits the screen
+    const nameEl = $('.ab-name span', sec);
+    function fitName() {
+      stage0.style.setProperty('--ab-fs', '100px');
+      const w = nameEl.getBoundingClientRect().width || 1;
+      stage0.style.setProperty('--ab-fs', Math.min(100 * (innerWidth * (innerWidth < 700 ? .9 : .86)) / w, innerHeight * .5) + 'px');
+    }
     const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
     const ease = t => t * t * (3 - 2 * t), easeOut = t => 1 - Math.pow(1 - t, 3);
     let range = 1, target = 0, cur = 0, running = false;
@@ -575,8 +584,22 @@
     let mx = .5, my = .5, sx = .5, sy = .5, vis = true;
     addEventListener('pointermove', e => { mx = e.clientX / innerWidth; my = e.clientY / innerHeight; }, { passive: true });
     new IntersectionObserver(es => { vis = es[0].isIntersecting; if (vis) tick(performance.now()); }, { threshold: 0 }).observe(stage);
+
+    const lens = $('#abLens'), world = $('#lensWorld'); let lx = innerWidth / 2, ly = innerHeight / 2, lastMove = 0, lensFade = 1;
+    addEventListener('pointermove', () => { lastMove = performance.now(); }, { passive: true });
+    function moveLens(now) {
+      const r = lens.offsetWidth / 2, t = now / 1000;
+      const idle = now - lastMove > 2500 || lastMove === 0;                  // no pointer (touch): the lens drifts on its own
+      const tx = idle ? innerWidth / 2 + Math.sin(t * .45) * innerWidth * .26 : mx * innerWidth;
+      const ty = idle ? innerHeight / 2 + Math.cos(t * .33) * innerHeight * .06 : my * innerHeight;
+      lx += (tx - lx) * .07; ly += (ty - ly) * .07;
+      lens.style.transform = `translate3d(${lx - r}px,${ly - r}px,0)`;
+      world.style.transform = `translate(${r}px,${r}px) scale(1.4) translate(${-lx}px,${-ly}px)`;
+      lens.style.opacity = lensFade;
+    }
     function tick(now) {
       if (!vis) return;
+      moveLens(now);
       sx += (mx - sx) * .045; sy += (my - sy) * .045;                   // spring-smoothed pointer
       const t = now / 1000;
       orbs.forEach((o, i) => {
@@ -595,6 +618,7 @@
       L.style.transform = `translateX(${-101 * open}%)`;
       R.style.transform = `translateX(${101 * open}%)`;
       cue.style.opacity = 1 - clamp(p / .08);
+      lensFade = 1 - clamp(open / .08);
       const g = clamp(open / .1); L.style.setProperty('--g', g); R.style.setProperty('--g', g);
       L.classList.toggle('moving', open > 0.001); R.classList.toggle('moving', open > 0.001);
       L.style.visibility = R.style.visibility = open >= 1 ? 'hidden' : 'visible';
