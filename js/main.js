@@ -533,6 +533,20 @@
       requestAnimationFrame(tick);
     }
     tick(performance.now());
+
+    // section 2 -> 3: as the portrait screen leaves, it fades and stretches; the next section fades and settles in
+    const nextSec = $('#growth');
+    function bridge() {
+      const r = sec.getBoundingClientRect(), q = clamp((innerHeight - r.bottom) / (innerHeight * .8));      // 0 -> 1 while the screen scrolls away
+      const e = ease(q);
+      content.style.transformOrigin = '50% 0%';
+      content.style.setProperty('--exit-o', 1 - e); content.style.setProperty('--exit-s', 1 + .22 * e); content.style.setProperty('--exit-b', (e * 8).toFixed(1) + 'px');
+      if (nextSec) {
+        const n = nextSec.getBoundingClientRect(), t = ease(clamp((innerHeight - n.top) / (innerHeight * .75)));
+        nextSec.style.setProperty('--in-o', t); nextSec.style.setProperty('--in-s', (1.14 - .14 * t).toFixed(3)); nextSec.style.setProperty('--in-b', ((1 - t) * 10).toFixed(1) + 'px');
+      }
+    }
+    addEventListener('scroll', bridge, { passive: true }); addEventListener('resize', bridge); bridge();
     function render(p) {
       const name = 1;                              // 1. the name appears
       L.style.setProperty('--na', name); R.style.setProperty('--na', name);
@@ -545,7 +559,7 @@
       L.classList.toggle('moving', open > 0.001); R.classList.toggle('moving', open > 0.001);
       L.style.visibility = R.style.visibility = open >= 1 ? 'hidden' : 'visible';
       const c = ease(clamp((p - .18) / .3));                             // 3. the portrait and info arrive
-      content.style.opacity = .15 + .85 * c;
+      content.style.setProperty('--c-o', .15 + .85 * c);
       content.style.transform = `scale(${1.12 - .12 * c})`;
       content.style.visibility = open > 0 ? 'visible' : 'hidden';
       content.querySelectorAll('.ab-photo,.ab-text').forEach((n, i) => { const k = ease(clamp((p - .22 - i * .05) / .18)); n.style.opacity = k; n.style.transform = `translateY(${(1 - k) * 36}px)`; });
